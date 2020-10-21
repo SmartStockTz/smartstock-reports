@@ -2,5 +2,170 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
-  "projects": {}
+  "projects": {
+    "reports": {
+      "projectType": "library",
+      "root": "projects/reports",
+      "sourceRoot": "projects/reports/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/reports/tsconfig.lib.json",
+            "project": "projects/reports/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/reports/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/reports/src/test.ts",
+            "tsConfig": "projects/reports/tsconfig.spec.json",
+            "karmaConfig": "projects/reports/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/reports/tsconfig.lib.json",
+              "projects/reports/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "reports-mock": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "projects/reports-mock",
+      "sourceRoot": "projects/reports-mock/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/reports-mock",
+            "index": "projects/reports-mock/src/index.html",
+            "main": "projects/reports-mock/src/main.ts",
+            "polyfills": "projects/reports-mock/src/polyfills.ts",
+            "tsConfig": "projects/reports-mock/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/reports-mock/src/favicon.ico",
+              "projects/reports-mock/src/assets"
+            ],
+            "styles": [
+              "projects/reports-mock/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/reports-mock/src/environments/environment.ts",
+                  "with": "projects/reports-mock/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "reports-mock:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "reports-mock:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "reports-mock:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/reports-mock/src/test.ts",
+            "polyfills": "projects/reports-mock/src/polyfills.ts",
+            "tsConfig": "projects/reports-mock/tsconfig.spec.json",
+            "karmaConfig": "projects/reports-mock/karma.conf.js",
+            "assets": [
+              "projects/reports-mock/src/favicon.ico",
+              "projects/reports-mock/src/assets"
+            ],
+            "styles": [
+              "projects/reports-mock/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/reports-mock/tsconfig.app.json",
+              "projects/reports-mock/tsconfig.spec.json",
+              "projects/reports-mock/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/reports-mock/e2e/protractor.conf.js",
+            "devServerTarget": "reports-mock:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "reports-mock:serve:production"
+            }
+          }
+        }
+      }
+    }},
+  "cli": {
+    "analytics": "a5708436-be0a-4017-b531-40b1f561eca2"
+  },
+  "defaultProject": "reports"
 }
