@@ -124,7 +124,7 @@ export class CartComponent implements OnInit {
   carts: MatTableDataSource<CartModel>;
   cartColumns = ['receipt', 'total_amount', 'total_items', 'seller', 'date'];
 
-  startDateFormControl = new FormControl('', [Validators.nullValidator]);
+  startDateFormControl = new FormControl(new Date(), [Validators.nullValidator]);
   endDateFormControl = new FormControl('', [Validators.nullValidator]);
   channelFormControl = new FormControl('', [Validators.nullValidator]);
   filterFormControl = new FormControl('', [Validators.nullValidator]);
@@ -137,7 +137,7 @@ export class CartComponent implements OnInit {
     this.startDate = toSqlDate(new Date());
     this.endDate = toSqlDate(new Date());
 
-    this.getSoldCarts(this.startDate, this.endDate, this.channel);
+    this.getSoldCarts( this.channel, this.startDate, this.endDate);
     this._dateRangeListener();
 
     this.filterFormControl.valueChanges.subscribe(filterValue => {
@@ -145,15 +145,17 @@ export class CartComponent implements OnInit {
     });
   }
 
-  getSoldCarts(channel: string, from: string, to: string) {
+  getSoldCarts(channel: string, from, to: string) {
     this.isLoading = true;
     this.report.getSoldCarts(from, to, channel).then(data => {
       this.isLoading = false;
       if (data && Array.isArray(data) && data.length > 0) {
         this.carts = new MatTableDataSource(data);
-        this.carts.paginator = this.paginator;
+        setTimeout(() => {
+          this.carts.paginator = this.paginator;
+          this.carts.sort = this.sort;
+        });
         this.stocks = data;
-        this.carts.sort = this.sort;
         this.noDataRetrieved = false;
       } else {
         this.noDataRetrieved = true;

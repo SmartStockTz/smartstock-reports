@@ -85,9 +85,11 @@ export class ExpireNearComponent implements OnInit {
       this.isLoading = false;
       if (data && Array.isArray(data) && data.length > 0) {
         this.expiredProducts = new MatTableDataSource(data);
-        this.expiredProducts.paginator = this.paginator;
         this.stocks = data;
-        this.expiredProducts.sort = this.sort;
+        setTimeout(() => {
+          this.expiredProducts.sort = this.sort;
+          this.expiredProducts.paginator = this.paginator;
+        });
         this.noDataRetrieved = false;
       } else {
         this.noDataRetrieved = true;

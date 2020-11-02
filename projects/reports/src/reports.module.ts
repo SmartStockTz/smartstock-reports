@@ -28,32 +28,58 @@ import {ProfitByCategoryComponent} from './components/profit-by-category.compone
 import {RouterModule, ROUTES, Routes} from '@angular/router';
 import {LibModule} from '@smartstocktz/core-libs';
 import {ProductPerformanceComponent} from './components/product-performance.component';
-// import {SalesTrendsComponent} from './components/sales-trends.component';
+import {IndexPage} from './pages/index.page';
+import {ReorderReportPageComponent} from './pages/reorder-report.page';
+import {SalesReportPageComponent} from './pages/sales-report.page';
+import {PerformanceReportPageComponent} from './pages/performance-report.page';
+import {ProfitCategoryPageComponent} from './pages/profit-category.page';
+import {ExpiredReportPageComponent} from './pages/expired-report.page';
+import {CartReportPageComponent} from './pages/cart-report.page';
+import {NearToExpireReportPageComponent} from './pages/near-to-expire-report.page';
+import {SalesTrendsComponent} from './components/sales-trends.component';
 
 
 const routes: Routes = [
-  {path: '', redirectTo: 'sales', pathMatch: 'full'},
   {path: 'sales', component: SalesPageComponent},
-  {path: 'stocks', component: StockPageComponent},
+  {path: 'stock', component: StockPageComponent},
+  {path: '', component: IndexPage},
+  {path: 'profit-by-category', component: ProfitCategoryPageComponent},
+  {path: 'performance-report', component: PerformanceReportPageComponent},
+  {path: 'sales-report', component: SalesReportPageComponent},
+  {path: 'cart-report', component: CartReportPageComponent},
+  {path: 'reorder-report', component: ReorderReportPageComponent},
+  {path: 'expired-report', component: ExpiredReportPageComponent},
+  {path: 'near-to-expire-report', component: NearToExpireReportPageComponent},
 ];
 
 @NgModule({
   declarations: [
     ExpiredComponent,
-    StockPageComponent,
     ReorderComponent,
     ExpireNearComponent,
     CartComponent,
-    SalesPageComponent,
     ProfitByCategoryComponent,
+    SalesTrendsComponent,
     ProductPerformanceComponent,
-  //  SalesTrendsComponent
+
+    // reports pages
+    CartReportPageComponent,
+    ExpiredReportPageComponent,
+    IndexPage,
+    NearToExpireReportPageComponent,
+    PerformanceReportPageComponent,
+    ProfitCategoryPageComponent,
+    ReorderReportPageComponent,
+    SalesPageComponent,
+    SalesReportPageComponent,
+    StockPageComponent
   ],
   exports: [
-    ExpiredComponent,
-    StockPageComponent,
-    ReorderComponent,
-    ExpireNearComponent
+    // ExpiredComponent,
+    // ReorderComponent,
+    // ExpireNearComponent,
+    // SalesTrendsComponent,
+    // ProductPerformanceComponent,
   ],
   imports: [
     CommonModule,

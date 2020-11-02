@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
@@ -6,6 +6,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {json2csv} from '../services/json2csv.service';
 import {FormControl, Validators} from '@angular/forms';
 import {ReportService} from '../services/report.service';
+import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {merge} from "rxjs";
 
 @Component({
   selector: 'smartstock-expired-products-report',
@@ -31,12 +33,12 @@ import {ReportService} from '../services/report.service';
 
           <ng-container matColumnDef="product">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
-            <td mat-cell *matCellDef="let element">{{element.product}}</td>
+            <td mat-cell *matCellDef="let row">{{row.product}}</td>
           </ng-container>
 
           <ng-container matColumnDef="expire">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Expiry Date</th>
-            <td mat-cell *matCellDef="let element">{{element.expire | date}}</td>
+            <td mat-cell *matCellDef="let row">{{row.expire | date}}</td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="stockColumns"></tr>
@@ -57,7 +59,7 @@ import {ReportService} from '../services/report.service';
     ReportService
   ]
 })
-export class ExpiredComponent implements OnInit {
+export class ExpiredComponent implements OnInit, AfterViewInit {
   constructor(private readonly report: ReportService,
               private readonly snack: MatSnackBar) {
   }
@@ -67,8 +69,11 @@ export class ExpiredComponent implements OnInit {
   expiredProducts: MatTableDataSource<any>;
   stockColumns = ['product', 'expire'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
   filterFormControl = new FormControl('', [Validators.nullValidator]);
+
+  ngAfterViewInit(): void {
+  }
 
   ngOnInit(): void {
     this.isLoading = true;
@@ -76,8 +81,10 @@ export class ExpiredComponent implements OnInit {
       this.isLoading = false;
       if (data && Array.isArray(data) && data.length > 0) {
         this.expiredProducts = new MatTableDataSource(data);
-        this.expiredProducts.paginator = this.paginator;
-        this.expiredProducts.sort = this.sort;
+        setTimeout(() => {
+          this.expiredProducts.sort = this.sort;
+          this.expiredProducts.paginator = this.paginator;
+        });
         this.noDataRetrieved = false;
       } else {
         this.noDataRetrieved = true;

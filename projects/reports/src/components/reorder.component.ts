@@ -121,8 +121,10 @@ export class ReorderComponent implements OnInit {
       this.isLoading = false;
       if (data && Array.isArray(data) && data.length > 0) {
         this.stockReorderDatasource = new MatTableDataSource(data);
-        this.stockReorderDatasource.paginator = this.paginator;
-        this.stockReorderDatasource.sort = this.sort;
+        setTimeout(() => {
+          this.stockReorderDatasource.paginator = this.paginator;
+          this.stockReorderDatasource.sort = this.sort;
+        });
         this.stockReportGetProgress = false;
         this.noDataRetrieved = false;
       } else {

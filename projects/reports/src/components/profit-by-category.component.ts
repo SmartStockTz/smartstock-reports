@@ -123,7 +123,7 @@ import {toSqlDate} from '@smartstocktz/core-libs';
 })
 export class ProfitByCategoryComponent extends DeviceInfoUtil implements OnInit {
   private productPerformanceFetchProgress = false;
-  startDateFormControl = new FormControl(Date.now().toString(), [Validators.nullValidator]);
+  startDateFormControl = new FormControl(new Date(), [Validators.nullValidator]);
   endDateFormControl = new FormControl(Date.now().toString(), [Validators.nullValidator]);
   channelFormControl = new FormControl('retail', [Validators.nullValidator]);
   filterFormControl = new FormControl('', [Validators.nullValidator]);
@@ -154,8 +154,7 @@ export class ProfitByCategoryComponent extends DeviceInfoUtil implements OnInit 
   stockColumns = ['category', 'sales', 'quantitySold', 'firstSold', 'lastSold'];
 
 
-  ngOnInit() {
-    this.productPerformanceDatasource.sort = this.sort;
+  ngOnInit(): void {
     this.channelFormControl.setValue('retail');
     this.startDate = toSqlDate(new Date());
     this.endDate = toSqlDate(new Date());
@@ -178,8 +177,10 @@ export class ProfitByCategoryComponent extends DeviceInfoUtil implements OnInit 
       this.noDataRetrieved = false; // loading is done and some data is received
       this.productPerformanceReport = data.length > 0 ? data[0].total : 0;
       this.productPerformanceDatasource.data = data;
-      this.productPerformanceDatasource.paginator = this.paginator;
-      this.productPerformanceDatasource.sort = this.sort;
+      setTimeout(() => {
+        this.productPerformanceDatasource.paginator = this.paginator;
+        this.productPerformanceDatasource.sort = this.sort;
+      });
       this.productPerformanceFetchProgress = false;
     }).catch(reason => {
       this.isLoading = false;
