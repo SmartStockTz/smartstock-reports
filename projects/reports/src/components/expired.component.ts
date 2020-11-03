@@ -51,7 +51,9 @@ import {merge} from "rxjs";
     </div>
 
     <mat-menu #exportMenu>
-      <button mat-menu-item (click)="exportReport()"> Export</button>
+      <button mat-menu-item (click)="exportReport()">
+        <mat-icon color="primary">get_app</mat-icon> CSV
+      </button>
     </mat-menu>
   `,
   styleUrls: ['../styles/expired.style.scss'],
@@ -104,7 +106,7 @@ export class ExpiredComponent implements OnInit, AfterViewInit {
 
   exportReport() {
     // console.log(this.stocks);
-    json2csv(this.stockColumns, this.expiredProducts.filteredData).then(console.log);
+    json2csv(this.stockColumns, this.expiredProducts.filteredData).catch();
   }
 
 }

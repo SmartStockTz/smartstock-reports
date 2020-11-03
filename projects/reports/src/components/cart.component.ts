@@ -102,7 +102,9 @@ import {toSqlDate} from '@smartstocktz/core-libs';
     </div>
 
     <mat-menu #exportMenu>
-      <button mat-menu-item (click)="exportReport()"> Export</button>
+      <button mat-menu-item (click)="exportReport()">
+        <mat-icon color="primary">get_app</mat-icon> CSV
+      </button>
     </mat-menu>
   `,
   styleUrls: ['../styles/cart.component.scss'],
@@ -170,7 +172,8 @@ export class CartComponent implements OnInit {
 
   exportReport() {
     // console.log(this.stocks);
-    json2csv(this.cartColumns, this.carts.filteredData).catch();
+    const exportedDataCartColumns = ['_id', 'amount', 'quantity', 'seller', 'date'];
+    json2csv(exportedDataCartColumns, this.carts.filteredData).catch();
   }
 
   private _dateRangeListener() {

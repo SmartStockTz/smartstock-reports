@@ -54,7 +54,9 @@ import {ReportService} from '../services/report.service';
     </div>
 
     <mat-menu #exportMenu>
-      <button mat-menu-item (click)="exportReport()"> Export</button>
+      <button mat-menu-item (click)="exportReport()">
+        <mat-icon color="primary">get_app</mat-icon> CSV
+      </button>
     </mat-menu>
   `,
   styleUrls: ['../styles/expireNear.style.scss'],
@@ -109,7 +111,7 @@ export class ExpireNearComponent implements OnInit {
 
   exportReport() {
     // console.log(this.stocks);
-    json2csv(this.stockColumns, this.expiredProducts.filteredData).then(console.log);
+    json2csv(this.stockColumns, this.expiredProducts.filteredData).catch();
   }
 
 }

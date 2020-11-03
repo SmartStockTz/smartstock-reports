@@ -49,7 +49,7 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
     {
       name: 'Reorder',
       path: '/report/reorder-report',
-      icon: 'airport_shuttle'
+      icon: 'import_export'
     },
     {
       name: 'Expired',
@@ -59,7 +59,7 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
     {
       name: 'Near to Expire',
       path: '/report/near-to-expire-report',
-      icon: 'airport_shuttle'
+      icon: 'auto_delete'
     }
   ];
 

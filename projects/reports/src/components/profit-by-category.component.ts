@@ -12,6 +12,7 @@ import {ProductPerformanceI} from './product-performance.component';
 import {ReportService} from '../services/report.service';
 import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 import {toSqlDate} from '@smartstocktz/core-libs';
+import {json2csv} from "../services/json2csv.service";
 
 @Component({
   selector: 'smartstock-profit-by-category',
@@ -41,6 +42,9 @@ import {toSqlDate} from '@smartstocktz/core-libs';
               <mat-label>Filter</mat-label>
               <input matInput [formControl]="filterFormControl" placeholder="Eg. Piriton">
             </mat-form-field>
+            <button [mat-menu-trigger-for]="exportMenu" mat-icon-button>
+              <mat-icon>more_vert</mat-icon>
+            </button>
             <!--<mat-form-field>-->
             <!--<mat-label>Sales type</mat-label>-->
             <!--<mat-select [formControl]="channelFormControl">-->
@@ -117,6 +121,12 @@ import {toSqlDate} from '@smartstocktz/core-libs';
           <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
         </mat-card>
       </div>
+
+      <mat-menu #exportMenu>
+        <button mat-menu-item (click)="exportReport()">
+          <mat-icon color="primary">get_app</mat-icon> CSV
+        </button>
+      </mat-menu>
     </div>
   `,
   styleUrls: ['../styles/profit-by-category.style.scss']
@@ -208,4 +218,10 @@ export class ProfitByCategoryComponent extends DeviceInfoUtil implements OnInit 
     });
   }
 
+
+  exportReport() {
+    // console.log(this.stocks);
+    const exportedDataColumns = ['_id', 'sales', 'quantitySold', 'firstSold', 'lastSold'];
+    json2csv(exportedDataColumns, this.productPerformanceDatasource.filteredData).catch();
+  }
 }

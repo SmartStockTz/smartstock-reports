@@ -11,6 +11,7 @@ import {MatSort} from '@angular/material/sort';
 import {ReportService} from '../services/report.service';
 import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 import { toSqlDate } from '@smartstocktz/core-libs';
+import {json2csv} from "../services/json2csv.service";
 
 
 export interface ProductPerformanceI {
@@ -52,6 +53,9 @@ export interface ProductPerformanceI {
               <mat-label>Filter</mat-label>
               <input matInput [formControl]="filterFormControl" placeholder="Eg. Piriton">
             </mat-form-field>
+            <button [mat-menu-trigger-for]="exportMenu" mat-icon-button>
+              <mat-icon>more_vert</mat-icon>
+            </button>
             <!--<mat-form-field>-->
             <!--<mat-label>Sales type</mat-label>-->
             <!--<mat-select [formControl]="channelFormControl">-->
@@ -122,6 +126,11 @@ export interface ProductPerformanceI {
           <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
         </mat-card>
       </div>
+      <mat-menu #exportMenu>
+        <button mat-menu-item (click)="exportReport()">
+          <mat-icon color="primary">get_app</mat-icon> CSV
+        </button>
+      </mat-menu>
     </div>
   `,
   styleUrls: ['../styles/product-performance.style.scss'],
@@ -216,4 +225,9 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
     });
   }
 
+  exportReport() {
+    // console.log(this.stocks);
+    const exportedDataColumns = ['_id', 'category', 'quantitySold', 'firstSold', 'lastSold', 'costOfGoodsSold', 'grossProfit'];
+    json2csv(exportedDataColumns, this.productPerformanceDatasource.filteredData).catch();
+  }
 }
