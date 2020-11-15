@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ReorderComponent } from '../components/reorder.component';
 
@@ -6,7 +6,7 @@ describe('StockReorderReportComponent', () => {
   let component: ReorderComponent;
   let fixture: ComponentFixture<ReorderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ReorderComponent ]
     })

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ExpiredComponent } from '../components/expired.component';
 
@@ -6,7 +6,7 @@ describe('ExpiredProductsReportComponent', () => {
   let component: ExpiredComponent;
   let fixture: ComponentFixture<ExpiredComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ExpiredComponent ]
     })
