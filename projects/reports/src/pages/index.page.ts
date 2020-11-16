@@ -39,7 +39,7 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
     {
       name: 'Product Performance',
       path: '/report/performance-report',
-      icon: 'list'
+      icon: 'trending_up'
     },
     {
       name: 'Cart Report',
@@ -60,6 +60,11 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
       name: 'Near to Expire',
       path: '/report/near-to-expire-report',
       icon: 'auto_delete'
+    },
+    {
+      name: 'Stock Tracking',
+      path: '/report/stock-tracking',
+      icon: 'description'
     }
   ];
 

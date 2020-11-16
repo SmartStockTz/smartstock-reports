@@ -1,21 +1,23 @@
 {
   "name": "@smartstocktz/reports",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/smartstocktz"
   },
   "repository": {
     "url": "git://github.com/smartstocktz/smartstock-reports.git"
   },
+  "bundledDependencies": [
+    "highcharts"
+  ],
   "peerDependencies": {
-    "@angular/common": "^10.1.6",
-    "@angular/core": "^10.1.6",
-    "@angular/cdk": "^10.2.5",
-    "@angular/material": "^10.2.5",
+    "@angular/common": "^11.0.0",
+    "@angular/core": "^11.0.0",
+    "@angular/cdk": "^11.0.0",
+    "@angular/material": "^11.0.0",
     "@smartstocktz/core-libs": "^0.0.19",
     "bfastjs": "^4.0.0-beta.25",
-    "moment": "^2.29.1",
-    "highcharts": "^8.2.0"
+    "moment": "^2.29.1"
   },
   "dependencies": {
     "tslib": "^2.0.0"
