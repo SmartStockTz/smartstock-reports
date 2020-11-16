@@ -37,6 +37,7 @@ import {ExpiredReportPageComponent} from './pages/expired-report.page';
 import {CartReportPageComponent} from './pages/cart-report.page';
 import {NearToExpireReportPageComponent} from './pages/near-to-expire-report.page';
 import {SalesTrendsComponent} from './components/sales-trends.component';
+import {StockTrackingPage} from './pages/stock-tracking.page';
 
 
 const routes: Routes = [
@@ -44,6 +45,7 @@ const routes: Routes = [
   {path: 'stock', component: StockPageComponent},
   {path: '', component: IndexPage},
   {path: 'profit-by-category', component: ProfitCategoryPageComponent},
+  {path: 'stock-tracking', component: StockTrackingPage},
   {path: 'performance-report', component: PerformanceReportPageComponent},
   {path: 'sales-report', component: SalesReportPageComponent},
   {path: 'cart-report', component: CartReportPageComponent},
@@ -54,6 +56,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
+    StockTrackingPage,
     ExpiredComponent,
     ReorderComponent,
     ExpireNearComponent,
@@ -61,8 +64,6 @@ const routes: Routes = [
     ProfitByCategoryComponent,
     SalesTrendsComponent,
     ProductPerformanceComponent,
-
-    // reports pages
     CartReportPageComponent,
     ExpiredReportPageComponent,
     IndexPage,
@@ -74,13 +75,7 @@ const routes: Routes = [
     SalesReportPageComponent,
     StockPageComponent
   ],
-  exports: [
-    // ExpiredComponent,
-    // ReorderComponent,
-    // ExpireNearComponent,
-    // SalesTrendsComponent,
-    // ProductPerformanceComponent,
-  ],
+  exports: [],
   imports: [
     CommonModule,
     {

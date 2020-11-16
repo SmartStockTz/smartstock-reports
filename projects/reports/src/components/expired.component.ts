@@ -6,8 +6,6 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {json2csv} from '../services/json2csv.service';
 import {FormControl, Validators} from '@angular/forms';
 import {ReportService} from '../services/report.service';
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {merge} from "rxjs";
 
 @Component({
   selector: 'smartstock-expired-products-report',
@@ -52,7 +50,8 @@ import {merge} from "rxjs";
 
     <mat-menu #exportMenu>
       <button mat-menu-item (click)="exportReport()">
-        <mat-icon color="primary">get_app</mat-icon> CSV
+        <mat-icon color="primary">get_app</mat-icon>
+        CSV
       </button>
     </mat-menu>
   `,
@@ -104,9 +103,9 @@ export class ExpiredComponent implements OnInit, AfterViewInit {
     });
   }
 
-  exportReport() {
-    // console.log(this.stocks);
-    json2csv(this.stockColumns, this.expiredProducts.filteredData).catch();
+  exportReport(): void {
+    json2csv('expired_report.csv', this.stockColumns, this.expiredProducts.filteredData).catch(reason => {
+    });
   }
 
 }

@@ -3,16 +3,13 @@ import {FormControl, Validators} from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {Router} from '@angular/router';
-import {StorageService} from '@smartstocktz/core-libs';
+import {DeviceInfoUtil, LogService, StorageService, toSqlDate} from '@smartstocktz/core-libs';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {LogService} from '@smartstocktz/core-libs';
 import {Observable, of} from 'rxjs';
 import {MatTableDataSource} from '@angular/material/table';
 import {ProductPerformanceI} from './product-performance.component';
 import {ReportService} from '../services/report.service';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
-import {toSqlDate} from '@smartstocktz/core-libs';
-import {json2csv} from "../services/json2csv.service";
+import {json2csv} from '../services/json2csv.service';
 
 @Component({
   selector: 'smartstock-profit-by-category',
@@ -124,7 +121,8 @@ import {json2csv} from "../services/json2csv.service";
 
       <mat-menu #exportMenu>
         <button mat-menu-item (click)="exportReport()">
-          <mat-icon color="primary">get_app</mat-icon> CSV
+          <mat-icon color="primary">get_app</mat-icon>
+          CSV
         </button>
       </mat-menu>
     </div>
@@ -169,8 +167,8 @@ export class ProfitByCategoryComponent extends DeviceInfoUtil implements OnInit 
     this.startDate = toSqlDate(new Date());
     this.endDate = toSqlDate(new Date());
 
-    this._getProductReport(this.channel, this.startDate, this.endDate);
-    this._dateRangeListener();
+    this.getProductReport(this.channel, this.startDate, this.endDate);
+    this.dateRangeListener();
 
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.productPerformanceDatasource.filter = filterValue.trim().toLowerCase();
@@ -178,7 +176,7 @@ export class ProfitByCategoryComponent extends DeviceInfoUtil implements OnInit 
   }
 
 
-  private _getProductReport(channel: string, from: string, to: string) {
+  private getProductReport(channel: string, from: string, to: string): void {
     this.isLoading = true; // begin fetching data
     this.productPerformanceFetchProgress = true;
     // console.log('from: ' + from + ' to: ' + to);
@@ -203,25 +201,23 @@ export class ProfitByCategoryComponent extends DeviceInfoUtil implements OnInit 
     });
   }
 
-  private _dateRangeListener() {
+  private dateRangeListener(): void {
     this.startDateFormControl.valueChanges.subscribe(value => {
       this.startDate = toSqlDate(value);
-      this._getProductReport(this.channel, this.startDate, this.endDate);
+      this.getProductReport(this.channel, this.startDate, this.endDate);
     });
     this.endDateFormControl.valueChanges.subscribe(value => {
       this.endDate = toSqlDate(value);
-      this._getProductReport(this.channel, this.startDate, this.endDate);
+      this.getProductReport(this.channel, this.startDate, this.endDate);
     });
     this.channelFormControl.valueChanges.subscribe(value => {
       this.channel = value;
-      this._getProductReport(this.channel, this.startDate, this.endDate);
+      this.getProductReport(this.channel, this.startDate, this.endDate);
     });
   }
 
-
-  exportReport() {
-    // console.log(this.stocks);
+  exportReport(): void {
     const exportedDataColumns = ['_id', 'sales', 'quantitySold', 'firstSold', 'lastSold'];
-    json2csv(exportedDataColumns, this.productPerformanceDatasource.filteredData).catch();
+    json2csv('profit_by_category.csv', exportedDataColumns, this.productPerformanceDatasource.filteredData).catch();
   }
 }
