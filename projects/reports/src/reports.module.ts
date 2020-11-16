@@ -38,6 +38,7 @@ import {CartReportPageComponent} from './pages/cart-report.page';
 import {NearToExpireReportPageComponent} from './pages/near-to-expire-report.page';
 import {SalesTrendsComponent} from './components/sales-trends.component';
 import {StockTrackingPage} from './pages/stock-tracking.page';
+import {StockTrackingComponent} from "./components/stock-tracking.component";
 
 
 const routes: Routes = [
@@ -57,6 +58,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     StockTrackingPage,
+    StockTrackingComponent,
     ExpiredComponent,
     ReorderComponent,
     ExpireNearComponent,

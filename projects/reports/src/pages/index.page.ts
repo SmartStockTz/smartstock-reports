@@ -34,7 +34,7 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
     {
       name: 'Profit By Category',
       path: '/report/profit-by-category',
-      icon: 'redeem'
+      icon: 'category'
     },
     {
       name: 'Product Performance',
@@ -44,7 +44,7 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
     {
       name: 'Cart Report',
       path: '/report/cart-report',
-      icon: 'straighten'
+      icon: 'shopping_cart'
     },
     {
       name: 'Reorder',
@@ -54,7 +54,7 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
     {
       name: 'Expired',
       path: '/report/expired-report',
-      icon: 'airport_shuttle'
+      icon: 'delete_forever'
     },
     {
       name: 'Near to Expire',
