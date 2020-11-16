@@ -2,9 +2,8 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {FormControl, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {StorageService} from '@smartstocktz/core-libs';
+import {LogService, StorageService} from '@smartstocktz/core-libs';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {LogService} from '@smartstocktz/core-libs';
 import {Observable, of} from 'rxjs';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
@@ -73,7 +72,8 @@ import {ReportService} from '../services/report.service';
 
     <mat-menu #exportMenu>
       <button mat-menu-item (click)="exportReport()">
-        <mat-icon color="primary">get_app</mat-icon> CSV
+        <mat-icon color="primary">get_app</mat-icon>
+        CSV
       </button>
     </mat-menu>
   `,
@@ -144,20 +144,8 @@ export class ReorderComponent implements OnInit {
   }
 
   exportReport(): void {
-    // console.log(this.stocks);
-    json2csv(this.stockColumns, this.stockReorderDatasource.filteredData).catch();
+    json2csv('reorder.csv', this.stockColumns, this.stockReorderDatasource.filteredData).catch(reason => {
+    });
   }
-
-  // dateRange() {
-  //   if(this.startDateFormControl.value !== '' && this.endDateFormControl.value !== '') {
-  //     this.stockDatasource.data = this.stockDatasource.data.filter(value=>Date.parse(value.expire)
-  //     >= this.startDate && Date.parse(value.expire) <= this.endDate);
-
-  //   } else if(this.startDateFormControl.value !== '') {
-  //     this.stockDatasource.data = this.stockDatasource.data.filter(value=>Date.parse(value.expire) >= this.startDate) ;
-  //   } else if(this.endDateFormControl.value !== '') {
-  //     this.stockDatasource.data = this.stockDatasource.data.filter(value=>Date.parse(value.expire) <= this.endDate) ;
-  //   }
-  // }
 
 }

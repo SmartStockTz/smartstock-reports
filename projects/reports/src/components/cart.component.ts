@@ -103,7 +103,8 @@ import {toSqlDate} from '@smartstocktz/core-libs';
 
     <mat-menu #exportMenu>
       <button mat-menu-item (click)="exportReport()">
-        <mat-icon color="primary">get_app</mat-icon> CSV
+        <mat-icon color="primary">get_app</mat-icon>
+        CSV
       </button>
     </mat-menu>
   `,
@@ -139,8 +140,8 @@ export class CartComponent implements OnInit {
     this.startDate = toSqlDate(new Date());
     this.endDate = toSqlDate(new Date());
 
-    this.getSoldCarts( this.channel, this.startDate, this.endDate);
-    this._dateRangeListener();
+    this.getSoldCarts(this.channel, this.startDate, this.endDate);
+    this.dateRangeListener();
 
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.carts.filter = filterValue.trim().toLowerCase();
@@ -170,13 +171,13 @@ export class CartComponent implements OnInit {
     });
   }
 
-  exportReport() {
-    // console.log(this.stocks);
+  exportReport(): void {
     const exportedDataCartColumns = ['_id', 'amount', 'quantity', 'seller', 'date'];
-    json2csv(exportedDataCartColumns, this.carts.filteredData).catch();
+    json2csv('cart_report.csv', exportedDataCartColumns, this.carts.filteredData).catch(reason => {
+    });
   }
 
-  private _dateRangeListener() {
+  private dateRangeListener(): void {
     this.startDateFormControl.valueChanges.subscribe(value => {
       this.startDate = toSqlDate(value);
       this.getSoldCarts(this.channel, this.startDate, this.endDate);

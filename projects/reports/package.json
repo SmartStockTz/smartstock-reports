@@ -11,10 +11,10 @@
     "highcharts"
   ],
   "peerDependencies": {
-    "@angular/common": "^10.1.6",
-    "@angular/core": "^10.1.6",
-    "@angular/cdk": "^10.2.5",
-    "@angular/material": "^10.2.5",
+    "@angular/common": "^11.0.0",
+    "@angular/core": "^11.0.0",
+    "@angular/cdk": "^11.0.0",
+    "@angular/material": "^11.0.0",
     "@smartstocktz/core-libs": "^0.0.19",
     "bfastjs": "^4.0.0-beta.25",
     "moment": "^2.29.1"

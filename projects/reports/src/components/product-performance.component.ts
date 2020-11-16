@@ -1,17 +1,14 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {StorageService} from '@smartstocktz/core-libs';
+import {DeviceInfoUtil, LogService, StorageService, toSqlDate} from '@smartstocktz/core-libs';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
-import {LogService} from '@smartstocktz/core-libs';
 import {Observable, of} from 'rxjs';
 import {FormControl, Validators} from '@angular/forms';
 import {MatSort} from '@angular/material/sort';
 import {ReportService} from '../services/report.service';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
-import { toSqlDate } from '@smartstocktz/core-libs';
-import {json2csv} from "../services/json2csv.service";
+import {json2csv} from '../services/json2csv.service';
 
 
 export interface ProductPerformanceI {
@@ -128,7 +125,8 @@ export interface ProductPerformanceI {
       </div>
       <mat-menu #exportMenu>
         <button mat-menu-item (click)="exportReport()">
-          <mat-icon color="primary">get_app</mat-icon> CSV
+          <mat-icon color="primary">get_app</mat-icon>
+          CSV
         </button>
       </mat-menu>
     </div>
@@ -159,7 +157,7 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
               private readonly indexDb: StorageService,
               private readonly snack: MatSnackBar,
               private readonly logger: LogService,
-              private readonly _report: ReportService,
+              private readonly reportService: ReportService,
   ) {
     super();
   }
@@ -171,13 +169,13 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
   stockColumns = ['product', 'category', 'quantitySold', 'firstSold', 'lastSold', 'costOfGoodSold', 'grossProfit'];
 
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.channelFormControl.setValue('retail');
     this.startDate = toSqlDate(new Date());
     this.endDate = toSqlDate(new Date());
 
-    this._getProductReport(this.channel, this.startDate, this.endDate);
-    this._dateRangeListener();
+    this.getProductReport(this.channel, this.startDate, this.endDate);
+    this.dateRangeListener();
 
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.productPerformanceDatasource.filter = filterValue.trim().toLowerCase();
@@ -185,11 +183,10 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
   }
 
 
-  private _getProductReport(channel: string, from: string, to: string) {
+  private getProductReport(channel: string, from: string, to: string): void {
     this.isLoading = true; // begin fetching data
     this.productPerformanceFetchProgress = true;
-    // console.log('from: ' + from + ' to: ' + to);
-    this._report.getProductPerformanceReport(channel, from, to).then(data => {
+    this.reportService.getProductPerformanceReport(channel, from, to).then(data => {
       this.isLoading = false;
       this.noDataRetrieved = false; // loading is done and some data is received
       this.productPerformanceReport = data.length > 0 ? data[0].total : 0;
@@ -210,24 +207,23 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
     });
   }
 
-  private _dateRangeListener() {
+  private dateRangeListener(): void {
     this.startDateFormControl.valueChanges.subscribe(value => {
       this.startDate = toSqlDate(value);
-      this._getProductReport(this.channel, this.startDate, this.endDate);
+      this.getProductReport(this.channel, this.startDate, this.endDate);
     });
     this.endDateFormControl.valueChanges.subscribe(value => {
       this.endDate = toSqlDate(value);
-      this._getProductReport(this.channel, this.startDate, this.endDate);
+      this.getProductReport(this.channel, this.startDate, this.endDate);
     });
     this.channelFormControl.valueChanges.subscribe(value => {
       this.channel = value;
-      this._getProductReport(this.channel, this.startDate, this.endDate);
+      this.getProductReport(this.channel, this.startDate, this.endDate);
     });
   }
 
-  exportReport() {
-    // console.log(this.stocks);
+  exportReport(): void {
     const exportedDataColumns = ['_id', 'category', 'quantitySold', 'firstSold', 'lastSold', 'costOfGoodsSold', 'grossProfit'];
-    json2csv(exportedDataColumns, this.productPerformanceDatasource.filteredData).catch();
+    json2csv('product_performance.csv', exportedDataColumns, this.productPerformanceDatasource.filteredData).catch();
   }
 }
