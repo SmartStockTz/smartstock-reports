@@ -12,7 +12,11 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
       </ng-template>
       <ng-template #body>
         <div class="container col-xl-9 col-lg-9 col-md-10 col-sm-11">
-
+          <div class="row">
+            <div style="margin-bottom: 10px" class="col-12">
+              <smartstock-stock-tracking></smartstock-stock-tracking>
+            </div>
+          </div>
         </div>
       </ng-template>
     </smartstock-layout-sidenav>

@@ -284,4 +284,25 @@ export class ReportService {
     }
     return status;
   }
+
+
+  async getStockTracking(from: string, to: string, channel: string, skip = 0, size = 100): Promise<CartModel[]> {
+    // const activeShop = await this.storage.getActiveShop();
+
+    return new Promise<any>(async (resolve, reject) => {
+      try {
+        const activeShop = await this.storage.getActiveShop();
+        this.httpClient.get(this.settings.ssmFunctionsURL +
+          `/report/${activeShop.projectId}/${channel}/${from}/${to}`, {
+          headers: this.settings.ssmFunctionsHeader
+        }).subscribe(value => {
+          resolve(value);
+        }, error => {
+          reject(error);
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
 }
