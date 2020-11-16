@@ -80,7 +80,7 @@ import {toSqlDate} from '@smartstocktz/core-libs';
 
             <ng-container matColumnDef="seller">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Seller</th>
-              <td mat-cell *matCellDef="let element">{{element.seller }}</td>
+              <td mat-cell *matCellDef="let element">{{element.sellerObject != null ? element.sellerObject.firstname + " " + element.sellerObject.lastname : element.seller}}</td>
               <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
@@ -152,7 +152,9 @@ export class CartComponent implements OnInit {
     this.isLoading = true;
     this.report.getSoldCarts(from, to, channel).then(data => {
       this.isLoading = false;
+      
       if (data && Array.isArray(data) && data.length > 0) {
+        console.log(data);
         this.carts = new MatTableDataSource(data);
         setTimeout(() => {
           this.carts.paginator = this.paginator;
