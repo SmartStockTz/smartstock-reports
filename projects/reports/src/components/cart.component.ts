@@ -154,7 +154,6 @@ export class CartComponent implements OnInit {
       this.isLoading = false;
       
       if (data && Array.isArray(data) && data.length > 0) {
-        console.log(data);
         this.carts = new MatTableDataSource(data);
         setTimeout(() => {
           this.carts.paginator = this.paginator;
