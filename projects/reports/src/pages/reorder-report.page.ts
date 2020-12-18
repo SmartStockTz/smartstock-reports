@@ -16,19 +16,31 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
               </mat-sidenav>
 
               <mat-sidenav-content>
-                  <smartstock-toolbar [heading]="'Reorder'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
+                  <smartstock-toolbar [heading]="'Stock Reports'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
 
-
-                  <div [ngStyle]="{padding: (isMobile || !enoughWidth())?'24px 0':'24px 16px'}"
-                       [ngClass]="(isMobile || !enoughWidth())?'container-fluid':'container'">
-                      <div class="col-12 col-lg-10 col-xl-10 offset-xl-1 offset-lg-1 offset-md-0 offset-sm-0">
-                          <div class="row">
-                              <div style="margin-bottom: 10px" class="col-12">
-                                  <smartstock-stock-reorder-report></smartstock-stock-reorder-report>
-                              </div>
-                          </div>
+                    <div class="row m-0">
+                      <div class="col-lg-6 py-3">
+                        <smartstock-expired-products-report></smartstock-expired-products-report>
                       </div>
-                  </div>
+                      <div class="col-lg-6 py-3">
+                        <smartstock-products-about-to-expire></smartstock-products-about-to-expire>
+                      </div>
+                    </div>
+                    <div class="row m-0">
+                      <div class="col-lg-6 py-3">
+                        <smartstock-stock-reorder-report></smartstock-stock-reorder-report>
+                      </div>
+                      <div class="col-lg-6 py-3"></div>
+                    </div>
+<!--                  <div [ngStyle]="{padding: (isMobile || !enoughWidth())?'24px 0':'24px 16px'}"-->
+<!--                       [ngClass]="(isMobile || !enoughWidth())?'container-fluid':'container'">-->
+<!--                      <div class="col-12 col-lg-10 col-xl-10 offset-xl-1 offset-lg-1 offset-md-0 offset-sm-0">-->
+<!--                          <div class="row">-->
+<!--                              <div style="margin-bottom: 10px" class="col-12">-->
+<!--                              </div>-->
+<!--                          </div>-->
+<!--                      </div>-->
+<!--                  </div>-->
 
               </mat-sidenav-content>
           </mat-sidenav-container>

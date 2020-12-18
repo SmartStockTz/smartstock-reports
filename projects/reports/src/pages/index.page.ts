@@ -9,7 +9,8 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
         <smartstock-drawer></smartstock-drawer>
       </mat-sidenav>
       <mat-sidenav-content style="min-height: 100vh">
-        <smartstock-toolbar searchPlaceholder="Filter product" [heading]="'Reports'" [sidenav]="sidenav"></smartstock-toolbar>
+        <smartstock-toolbar searchPlaceholder="Filter product" [heading]="'Reports'"
+                            [sidenav]="sidenav"></smartstock-toolbar>
         <div class="container col-xl-10 col-lg-10 col-sm-9 col-md-9 col-sm-12 col-10" style="padding: 16px 0">
           <h1>Go To</h1>
           <div class="row">
@@ -32,38 +33,13 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 export class IndexPage extends DeviceInfoUtil implements OnInit {
   pages = [
     {
-      name: 'Profit By Category',
-      path: '/report/profit-by-category',
-      icon: 'category'
-    },
-    {
-      name: 'Product Performance',
-      path: '/report/performance-report',
+      name: 'Sales Report',
+      path: '/report/sales-report',
       icon: 'trending_up'
     },
     {
-      name: 'Cart Report',
-      path: '/report/cart-report',
-      icon: 'shopping_cart'
-    },
-    {
-      name: 'Reorder',
-      path: '/report/reorder-report',
-      icon: 'import_export'
-    },
-    {
-      name: 'Expired',
-      path: '/report/expired-report',
-      icon: 'delete_forever'
-    },
-    {
-      name: 'Near to Expire',
-      path: '/report/near-to-expire-report',
-      icon: 'auto_delete'
-    },
-    {
-      name: 'Stock Tracking',
-      path: '/report/stock-tracking',
+      name: 'Stock Report',
+      path: '/report/stock-report',
       icon: 'description'
     }
   ];

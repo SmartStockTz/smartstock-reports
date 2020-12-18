@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {json2csv} from '../services/json2csv.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
@@ -15,13 +15,18 @@ import {toSqlDate} from '@smartstocktz/core-libs';
     <div class="col-12" style="margin-top: 1em">
       <div>
         <mat-card class="mat-elevation-z3">
-
-          <div style="display: flex; flex-flow: row; align-items: center">
-            <h6 class="col-8">Cart Report</h6>
-            <span style="flex-grow: 1"></span>
-            <button [mat-menu-trigger-for]="exportMenu" mat-icon-button>
+          <div class="row pt-3 m-0 justify-content-center align-items-center">
+            <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">shopping_cart</mat-icon>
+            <p class="mr-auto my-0 h6">Cart Report</p>
+            <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
               <mat-icon>more_vert</mat-icon>
             </button>
+          </div>
+          <hr class="w-75 mt-0 mx-auto" color="primary">
+
+          <div style="display: flex; flex-flow: row; align-items: center">
+<!--            <h6 class="col-8">Cart Report</h6>-->
+            <span style="flex-grow: 1"></span>
           </div>
           <mat-card-header>
             <mat-form-field style="margin: 0 4px;">
@@ -80,7 +85,7 @@ import {toSqlDate} from '@smartstocktz/core-libs';
 
             <ng-container matColumnDef="seller">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Seller</th>
-              <td mat-cell *matCellDef="let element">{{element.seller }}</td>
+              <td mat-cell *matCellDef="let element">{{element.sellerObject != null ? ((element.sellerObject.firstname | titlecase) + " " + element.sellerObject.lastname | titlecase) : element.seller}} </td>
               <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
@@ -117,10 +122,9 @@ export class CartComponent implements OnInit {
 
   constructor(private readonly report: ReportService, private readonly snack: MatSnackBar) {
   }
-
+  channel = 'retail';
   startDate;
   endDate;
-  channel = 'retail';
   isLoading = false;
   noDataRetrieved = true;
   stocks = [];
@@ -134,6 +138,7 @@ export class CartComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @Input() salesChannel;
 
   ngOnInit(): void {
     this.channelFormControl.setValue('retail');
@@ -141,6 +146,10 @@ export class CartComponent implements OnInit {
     this.endDate = toSqlDate(new Date());
 
     this.getSoldCarts(this.channel, this.startDate, this.endDate);
+    this.salesChannel.subscribe(value => {
+      this.channel = value;
+      this.getSoldCarts(value, this.startDate, this.endDate);
+    });
     this.dateRangeListener();
 
     this.filterFormControl.valueChanges.subscribe(filterValue => {
