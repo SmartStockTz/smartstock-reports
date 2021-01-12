@@ -43,6 +43,7 @@ import {TotalSalesComponent} from './components/total-sales.component';
 import {SalesGrowthComponent} from './components/sales-growth.component';
 import {SalesBySellerComponent} from './components/sales-by-seller.component';
 import {StockTrackingComponent} from "./components/stock-tracking.component";
+import {ProfitComponent} from './components/profit.component';
 
 
 const routes: Routes = [
@@ -77,7 +78,8 @@ const routes: Routes = [
     SalesByCategoryComponent,
     TotalSalesComponent,
     SalesGrowthComponent,
-    SalesBySellerComponent
+    SalesBySellerComponent,
+    ProfitComponent
   ],
   exports: [],
     imports: [

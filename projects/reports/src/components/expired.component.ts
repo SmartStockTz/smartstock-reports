@@ -14,7 +14,7 @@ import {ReportService} from '../services/report.service';
       <mat-card class="mat-elevation-z3">
         <div class="row pt-3 m-0 justify-content-center align-items-center">
           <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">delete</mat-icon>
-          <p class="mr-auto my-0 h6">Expired <Products></Products></p>
+          <p class="mr-auto my-0 h6">Expired Products</p>
           <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
             <mat-icon>more_vert</mat-icon>
           </button>

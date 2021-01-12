@@ -46,6 +46,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
               </mat-form-field>
             </div>
             <smartstock-total-sales [salesChannel]="salesChannel.valueChanges"></smartstock-total-sales>
+            <smartstock-profit [salesChannel]="salesChannel.valueChanges"></smartstock-profit>
             <div class="row m-0 py-2" style="justify-content: space-evenly">
               <div class="col-md-11 col-lg-4 py-3">
                 <smartstock-sales-growth [salesChannel]="salesChannel.valueChanges"></smartstock-sales-growth>

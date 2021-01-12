@@ -34,6 +34,7 @@ import {CartReportPageComponent} from './pages/cart-report.page';
 import {ReorderReportPageComponent} from './pages/reorder-report.page';
 import {ExpiredReportPageComponent} from './pages/expired-report.page';
 import {PerformanceReportPageComponent} from './pages/performance-report.page';
+import {LibModule} from '@smartstocktz/core-libs';
 // import {SalesTrendsComponent} from './components/sales-trends.component';
 // import {ProductPerformanceComponent} from './components/product-performance.component';
 
@@ -77,34 +78,35 @@ const routes: Routes = [
     // SalesTrendsComponent,
     // ProductPerformanceComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    MatDatepickerModule,
-    //   LibModule,
-    MatSidenavModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatDatepickerModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatIconModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatNativeDateModule,
-    MatTooltipModule,
-    MatSelectModule,
-    // SatDatepickerModule,
-    // SatNativeDateModule,
-    MatDividerModule,
-    MatInputModule,
-    MatMenuModule,
-    MatRippleModule,
-    //   DashboardModule
-  ]
+    imports: [
+        CommonModule,
+        RouterModule.forChild(routes),
+        MatDatepickerModule,
+        //   LibModule,
+        MatSidenavModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatDatepickerModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatIconModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        MatNativeDateModule,
+        MatTooltipModule,
+        MatSelectModule,
+        // SatDatepickerModule,
+        // SatNativeDateModule,
+        MatDividerModule,
+        MatInputModule,
+        MatMenuModule,
+        MatRippleModule,
+        LibModule,
+        //   DashboardModule
+    ]
 })
 
 export class AppModule { }

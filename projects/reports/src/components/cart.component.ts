@@ -97,7 +97,7 @@ import {toSqlDate} from '@smartstocktz/core-libs';
 
             <tr mat-header-row *matHeaderRowDef="cartColumns"></tr>
             <tr matTooltip="{{row.product}}" class="table-data-row" mat-row
-                *matRowDef="let row; columns: cartColumns;"></tr>
+                *matRowDef="let row; columns: cartColumns;" (click)="openCartDetails(row)"></tr>
             <tr mat-footer-row style="font-size: 36px" *matFooterRowDef="cartColumns"></tr>
 
           </table>
@@ -202,4 +202,7 @@ export class CartComponent implements OnInit {
     });
   }
 
+  openCartDetails(data): any {
+    console.log(data);
+  }
 }
