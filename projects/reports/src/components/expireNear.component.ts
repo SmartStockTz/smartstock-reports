@@ -12,15 +12,20 @@ import {ReportService} from '../services/report.service';
   template: `
     <div>
       <mat-card class="mat-elevation-z3">
+        <div class="row pt-3 m-0 justify-content-center align-items-center">
+          <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">auto_delete</mat-icon>
+          <p class="mr-auto my-0 h6">Products About to Expire</p>
+          <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
+            <mat-icon>more_vert</mat-icon>
+          </button>
+        </div>
+        <hr class="w-75 mt-0 mx-auto" color="primary">
         <div style="display: flex; flex-wrap: wrap; flex-flow: row; align-items: center; margin-right: 100px;">
-          <h6 class="col-8">Near to Expire</h6>
+          <span class="flex-grow-1"></span>
           <mat-form-field>
             <mat-label>Filter</mat-label>
             <input matInput [formControl]="filterFormControl" placeholder="Eg. Piriton">
           </mat-form-field>
-          <button [mat-menu-trigger-for]="exportMenu" mat-icon-button>
-            <mat-icon>more_vert</mat-icon>
-          </button>
         </div>
 
         <smartstock-data-not-ready [isLoading]="isLoading" *ngIf="noDataRetrieved  || isLoading"></smartstock-data-not-ready>

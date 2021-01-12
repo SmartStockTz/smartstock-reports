@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {DeviceInfoUtil, LogService, StorageService, toSqlDate} from '@smartstocktz/core-libs';
 import {MatPaginator} from '@angular/material/paginator';
@@ -28,8 +28,14 @@ export interface ProductPerformanceI {
     <div class="col-12">
       <div>
         <mat-card class="mat-elevation-z3">
-          <h6>Product Performance Report</h6>
-
+          <div class="row pt-3 m-0 justify-content-center align-items-center">
+            <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">shopping_cart</mat-icon>
+            <p class="mr-auto my-0 h6">Product Sales Summary</p>
+            <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </div>
+          <hr class="w-75 mt-0 mx-auto" color="primary">
           <mat-card-header>
             <mat-form-field style="margin: 0 4px;">
               <mat-label>From date</mat-label>
@@ -50,9 +56,6 @@ export interface ProductPerformanceI {
               <mat-label>Filter</mat-label>
               <input matInput [formControl]="filterFormControl" placeholder="Eg. Piriton">
             </mat-form-field>
-            <button [mat-menu-trigger-for]="exportMenu" mat-icon-button>
-              <mat-icon>more_vert</mat-icon>
-            </button>
             <!--<mat-form-field>-->
             <!--<mat-label>Sales type</mat-label>-->
             <!--<mat-select [formControl]="channelFormControl">-->
@@ -149,6 +152,7 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
   productPerformanceReport: any;
   isLoading = false;
   noDataRetrieved = true;
+  @Input() salesChannel;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

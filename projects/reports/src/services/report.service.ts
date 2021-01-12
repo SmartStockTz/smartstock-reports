@@ -36,12 +36,12 @@ export class ReportService {
     });
   }
 
-  getSalesTrend(beginDate: string, endDate: string): Promise<any> {
+  getSalesTrend(beginDate: string, endDate: string, channel: string): Promise<any> {
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
         this.httpClient.get(this.settings.ssmFunctionsURL +
-          `/dashboard/admin/salesGraphData/day/${activeShop.projectId}/${beginDate}/${endDate}`, {
+          `/dashboard/admin/salesGraphData/day/${activeShop.projectId}/${channel}/${beginDate}/${endDate}`, {
           headers: this.settings.ssmFunctionsHeader
         }).subscribe(value => {
           resolve(value);
@@ -72,15 +72,17 @@ export class ReportService {
     });
   }
 
-  async getTotalSale(beginDate: Date, endDate: Date): Promise<number> {
+  async getTotalSale(beginDate: Date, endDate: Date, channel: string): Promise<number> {
     const activeShop = await this.storage.getActiveShop();
     const total: number = await BFast.database(activeShop.projectId).collection('sales')
       .query()
+      // .equalTo('channel', channel)
       .lessThanOrEqual('date', toSqlDate(endDate))
       .greaterThanOrEqual('date', toSqlDate(beginDate))
       .count(true).find();
     let sales: SalesModel[] = await BFast.database(activeShop.projectId).collection('sales')
       .query()
+      // .equalTo('channel', channel)
       .lessThanOrEqual('date', toSqlDate(endDate))
       .greaterThanOrEqual('date', toSqlDate(beginDate))
       .skip(0)
@@ -197,6 +199,28 @@ export class ReportService {
         const activeShop = await this.storage.getActiveShop();
         this.httpClient.get(this.settings.ssmFunctionsURL +
           `/dashboard/sales-reports/cartOrderReport/${activeShop.projectId}/${channel}/${from}/${to}`, {
+          headers: this.settings.ssmFunctionsHeader
+        }).subscribe(value => {
+          resolve(value);
+        }, error => {
+          reject(error);
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+
+  async getSellerSales(from: string, to: string, channel: string): Promise<CartModel[]> {
+    // const activeShop = await this.storage.getActiveShop();
+
+    return new Promise<any>(async (resolve, reject) => {
+      try {
+        const activeShop = await this.storage.getActiveShop();
+        this.httpClient.get(this.settings.ssmFunctionsURL +
+          `/dashboard/sales-reports/sellers/${activeShop.projectId}/${channel}/${from}/${to}`, {
+          // `/dashboard/sales-reports/sellers/${activeShop.projectId}/${channel}/${from}/${to}`, {
           headers: this.settings.ssmFunctionsHeader
         }).subscribe(value => {
           resolve(value);

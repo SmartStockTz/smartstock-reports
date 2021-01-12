@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
@@ -17,8 +17,14 @@ import {json2csv} from '../services/json2csv.service';
     <div class="col-12">
       <div>
         <mat-card class="mat-elevation-z3">
-          <h6>Profit By Category</h6>
-
+          <div class="row pt-3 m-0 justify-content-center align-items-center">
+            <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">category</mat-icon>
+            <p class="mr-auto my-0 h6">Sales By Category</p>
+            <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </div>
+          <hr class="w-75 mt-0 mx-auto" color="primary">
           <mat-card-header>
             <mat-form-field style="margin: 0 4px;">
               <mat-label>From date</mat-label>
@@ -39,9 +45,6 @@ import {json2csv} from '../services/json2csv.service';
               <mat-label>Filter</mat-label>
               <input matInput [formControl]="filterFormControl" placeholder="Eg. Piriton">
             </mat-form-field>
-            <button [mat-menu-trigger-for]="exportMenu" mat-icon-button>
-              <mat-icon>more_vert</mat-icon>
-            </button>
             <!--<mat-form-field>-->
             <!--<mat-label>Sales type</mat-label>-->
             <!--<mat-select [formControl]="channelFormControl">-->
@@ -138,10 +141,10 @@ export class ProfitByCategoryComponent extends DeviceInfoUtil implements OnInit 
 
   startDate;
   endDate;
-  channel = 'retail';
-  productPerformanceReport: any;
+  channel = 'retail';  productPerformanceReport: any;
   isLoading = false;
   noDataRetrieved = true;
+  @Input() salesChannel;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

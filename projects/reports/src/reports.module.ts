@@ -38,6 +38,10 @@ import {CartReportPageComponent} from './pages/cart-report.page';
 import {NearToExpireReportPageComponent} from './pages/near-to-expire-report.page';
 import {SalesTrendsComponent} from './components/sales-trends.component';
 import {StockTrackingPage} from './pages/stock-tracking.page';
+import {SalesByCategoryComponent} from './components/sales-by-category.component';
+import {TotalSalesComponent} from './components/total-sales.component';
+import {SalesGrowthComponent} from './components/sales-growth.component';
+import {SalesBySellerComponent} from './components/sales-by-seller.component';
 import {StockTrackingComponent} from "./components/stock-tracking.component";
 
 
@@ -45,14 +49,8 @@ const routes: Routes = [
   {path: 'sales', component: SalesPageComponent},
   {path: 'stock', component: StockPageComponent},
   {path: '', component: IndexPage},
-  {path: 'profit-by-category', component: ProfitCategoryPageComponent},
-  {path: 'stock-tracking', component: StockTrackingPage},
-  {path: 'performance-report', component: PerformanceReportPageComponent},
-  {path: 'sales-report', component: SalesReportPageComponent},
-  {path: 'cart-report', component: CartReportPageComponent},
-  {path: 'reorder-report', component: ReorderReportPageComponent},
-  {path: 'expired-report', component: ExpiredReportPageComponent},
-  {path: 'near-to-expire-report', component: NearToExpireReportPageComponent},
+  {path: 'stock-report', component: ReorderReportPageComponent},
+  {path: 'sales-report', component: CartReportPageComponent},
 ];
 
 @NgModule({
@@ -75,44 +73,48 @@ const routes: Routes = [
     ReorderReportPageComponent,
     SalesPageComponent,
     SalesReportPageComponent,
-    StockPageComponent
+    StockPageComponent,
+    SalesByCategoryComponent,
+    TotalSalesComponent,
+    SalesGrowthComponent,
+    SalesBySellerComponent
   ],
   exports: [],
-  imports: [
-    CommonModule,
-    {
-      ngModule: RouterModule,
-      providers: [
+    imports: [
+        CommonModule,
         {
-          multi: true,
-          provide: ROUTES,
-          useValue: routes
-        }
-      ]
-    },
-    MatDatepickerModule,
-    LibModule,
-    MatSidenavModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatDatepickerModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatIconModule,
-    MatButtonModule,
-    MatProgressSpinnerModule,
-    MatNativeDateModule,
-    MatTooltipModule,
-    MatSelectModule,
-    MatDividerModule,
-    MatInputModule,
-    MatMenuModule,
-    MatRippleModule,
-    LibModule
-  ]
+            ngModule: RouterModule,
+            providers: [
+                {
+                    multi: true,
+                    provide: ROUTES,
+                    useValue: routes
+                }
+            ]
+        },
+        MatDatepickerModule,
+        LibModule,
+        MatSidenavModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatDatepickerModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatIconModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        MatNativeDateModule,
+        MatTooltipModule,
+        MatSelectModule,
+        MatDividerModule,
+        MatInputModule,
+        MatMenuModule,
+        MatRippleModule,
+        LibModule,
+    ]
 })
 export class ReportsModule {
 }
