@@ -118,7 +118,7 @@ export class SalesGrowthComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   private initiateGraph(data: any) {
-    const monthSalesData = {
+    let monthSalesData = {
       Jan: 0,
       Feb: 0,
       Mar: 0,
@@ -132,6 +132,13 @@ export class SalesGrowthComponent implements OnInit {
       Nov: 0,
       Dec: 0
     };
+    if(this.selectedYear === new Date().getFullYear()){
+    let monthSalesDataKeys = Object.keys(monthSalesData);
+     monthSalesDataKeys = monthSalesDataKeys.splice((new Date().getMonth()) +1,11 - (new Date().getMonth()));
+    	monthSalesDataKeys.forEach(value =>{
+    		delete monthSalesData[value];
+    	});
+    }
 
     data.forEach(val => {
         const convDate = new Date(val._id).getMonth();
@@ -141,7 +148,7 @@ export class SalesGrowthComponent implements OnInit {
     // @ts-ignore
     this.salesGrowthChart = Highcharts.chart('salesGrowth', {
       chart: {
-        type: 'line'
+        type: 'areaspline'
       },
       title: {
         text: null
@@ -190,6 +197,9 @@ export class SalesGrowthComponent implements OnInit {
         //     }
         //   }
         // }
+           series: {
+            fillOpacity: 0
+        }
       },
       legend: {
         enabled: false

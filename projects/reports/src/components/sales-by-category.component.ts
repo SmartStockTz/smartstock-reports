@@ -80,6 +80,7 @@ export class SalesByCategoryComponent implements OnInit {
   salesYearFormControl = new FormControl(moment());
   selectedYear = new Date().getFullYear();
   selectedMonth = new Date().getMonth();
+  totalSales= 0;
   month;
   sellerSalesData = {
     Jan: 1,
@@ -130,8 +131,12 @@ export class SalesByCategoryComponent implements OnInit {
   // tslint:disable-next-line:typedef
   private getSalesByCategory() {
     this.salesStatusProgress = true;
-    this.report.getSalesByCategory(this.channel, this.selectedYear + '-' + (this.selectedMonth + 1) + '-01',
-      this.selectedYear + '-' + (this.selectedMonth + 1) + '-31').then(status => {
+    this.selectedMonth += 1;
+    if (this.selectedMonth < 10) {
+      this.selectedMonth = '0' + this.selectedMonth;
+    }
+    this.report.getSalesByCategory(this.channel, this.selectedYear + '-' + this.selectedMonth + '-01',
+      this.selectedYear + '-' + this.selectedMonth + '-31').then(status => {
       this.salesStatusProgress = false;
       this.salesByCategoryStatus = status;
       this.initiateGraph(this.salesByCategoryStatus);
@@ -157,13 +162,29 @@ export class SalesByCategoryComponent implements OnInit {
         plotBackgroundColor: null,
         plotBorderWidth: null,
         plotShadow: false,
-        type: 'pie'
-      },
+        type: 'pie',
+        events: {
+          load(event) {
+            const total = this.series[0].data[0].total;
+            const text = this.renderer.text(
+              'Total: ' + total,
+              this.plotLeft, this.plotHeight
+            ).attr({
+              zIndex: 5
+            }).add();
+          }
+        }
+        },
       title: {
         text: null
       },
+      legend: {
+        layout: 'horizontal',
+        align: 'center',
+        verticalAlign: 'top',
+      },
       tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        pointFormat: '{series.name}<br>: <b>{point.percentage:.1f}% </b><br><b>: {point.y}/=</b>'
       },
       accessibility: {
         point: {
@@ -177,7 +198,7 @@ export class SalesByCategoryComponent implements OnInit {
           dataLabels: {
             enabled: true,
             format: '<b>{point.name}</b>'
-          }
+          },
         }
       },
       series: [{

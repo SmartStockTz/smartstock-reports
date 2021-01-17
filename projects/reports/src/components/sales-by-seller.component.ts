@@ -100,6 +100,9 @@ export class SalesBySellerComponent implements OnInit {
     this.getSalesBySeller();
   }
 
+ capitalizeFirstLetter(data): any {
+    return data[0].toUpperCase() + data.slice(1);
+}
   // tslint:disable-next-line:typedef
   private getSalesBySeller() {
     this.salesStatusProgress = true;
@@ -131,13 +134,21 @@ export class SalesBySellerComponent implements OnInit {
       Nov: 0,
       Dec: 0
     };
-
+    if (this.selectedYear === new Date().getFullYear()) {
+    let sellerSalesDataKeys = Object.keys(sellerSalesData);
+    sellerSalesDataKeys = sellerSalesDataKeys.splice((new Date().getMonth()) + 1, 11 - (new Date().getMonth()));
+    sellerSalesDataKeys.forEach(value => {
+      delete sellerSalesData[value];
+    });
+    }
     data.forEach(val => {
-        const seller = val.sellerId;
+        const seller = val.seller;
+
         if (seller){
           const convDate = new Date(val.date).getMonth();
-          const id = seller;
-          // const id = seller.firstname.toString() + ' ' + seller.lastname.toString();
+       //   const id = seller;
+          const id = this.capitalizeFirstLetter(seller.firstname.toString()) + ' ' + this.capitalizeFirstLetter(seller.lastname.toString());
+
           if (sellersData[id]){
             const amount = parseFloat(val.amount) + sellersData[id][Object.keys(sellerSalesData)[convDate]];
             sellersData[id][Object.keys(sellerSalesData)[convDate]] = parseFloat(amount);
@@ -170,7 +181,7 @@ export class SalesBySellerComponent implements OnInit {
     // @ts-ignore
     this.salesBySellerChart = Highcharts.chart('salesBySeller', {
         chart: {
-          // type: 'histogram',
+           type: 'areaspline',
           // height: 400,
           // width: 200
         },
@@ -181,7 +192,7 @@ export class SalesBySellerComponent implements OnInit {
         xAxis: {
           categories: Object.keys(sellerSalesData),
           title: {
-            text: 'this.selectedYear'
+            text: this.selectedYear
           }
         },
         // @ts-ignore
@@ -192,7 +203,7 @@ export class SalesBySellerComponent implements OnInit {
           // lineColor: '#1b5e20',
           labels: {
             // @ts-ignore
-            formatter: function () {
+            formatter() {
               return this.value;
             }
           }
@@ -217,6 +228,10 @@ export class SalesBySellerComponent implements OnInit {
           //     }
           //   }
           // }
+   series: {
+            fillOpacity: 0
+        }
+
         },
         legend: {
           enabled: false

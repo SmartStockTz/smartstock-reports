@@ -44,6 +44,8 @@ import {SalesGrowthComponent} from './components/sales-growth.component';
 import {SalesBySellerComponent} from './components/sales-by-seller.component';
 import {StockTrackingComponent} from "./components/stock-tracking.component";
 import {ProfitComponent} from './components/profit.component';
+import {CartDetailsComponent} from './components/cart-details.component';
+import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 
 
 const routes: Routes = [
@@ -79,7 +81,8 @@ const routes: Routes = [
     TotalSalesComponent,
     SalesGrowthComponent,
     SalesBySellerComponent,
-    ProfitComponent
+    ProfitComponent,
+    CartDetailsComponent
   ],
   exports: [],
     imports: [
@@ -116,7 +119,11 @@ const routes: Routes = [
         MatMenuModule,
         MatRippleModule,
         LibModule,
-    ]
+        MatBottomSheetModule
+    ],
+     entryComponents: [
+    CartDetailsComponent
+  ],
 })
 export class ReportsModule {
 }

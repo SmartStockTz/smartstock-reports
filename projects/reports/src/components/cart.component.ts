@@ -8,6 +8,8 @@ import {CartModel} from '../models/cart.model';
 import {FormControl, Validators} from '@angular/forms';
 import {ReportService} from '../services/report.service';
 import {toSqlDate} from '@smartstocktz/core-libs';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {CartDetailsComponent} from './cart-details.component';
 
 @Component({
   selector: 'smartstock-cart-report',
@@ -120,7 +122,7 @@ import {toSqlDate} from '@smartstocktz/core-libs';
 })
 export class CartComponent implements OnInit {
 
-  constructor(private readonly report: ReportService, private readonly snack: MatSnackBar) {
+  constructor(private readonly report: ReportService, private readonly snack: MatSnackBar, private _cartDetails: MatBottomSheet) {
   }
 
   startDate;
@@ -202,7 +204,19 @@ export class CartComponent implements OnInit {
     });
   }
 
-  openCartDetails(data): any {
-    console.log(data);
+  openCartDetails(cartDetailsData): any {
+      this._cartDetails.open(CartDetailsComponent, {
+      data: {
+        id: cartDetailsData._id,
+        channel: cartDetailsData.channel,
+        date: cartDetailsData.date,
+        amount: cartDetailsData.amount,
+        businessName: cartDetailsData.sellerObject.businessName,
+        sellerFirstName: cartDetailsData.sellerObject.firstname,
+        sellerLastName: cartDetailsData.sellerObject.lastname,
+        region: cartDetailsData.sellerObject.region,
+        items: cartDetailsData.items
+      }
+      });
   }
 }

@@ -167,6 +167,8 @@ export class SalesTrendsComponent implements OnInit {
         //     }
         //   }
         // }
+
+
       },
       legend: {
         enabled: false

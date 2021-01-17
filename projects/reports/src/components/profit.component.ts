@@ -11,7 +11,7 @@ import * as Highcharts from 'highcharts';
       <div class="pb-3">
         <div class="row m-0" style="justify-content: space-evenly">
 
-          <div class="col-md-6 col-lg-5">
+          <div class="col-md-11 col-lg-5">
             <mat-card class="d-flex  mat-elevation-z3 align-items-center col-md-7 my-3 py-4 profit">
               <svg width="36" height="40" viewBox="0 0 76 83" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -50,7 +50,7 @@ import * as Highcharts from 'highcharts';
                                            *ngIf="todaySalesProgress  || (!todaySales && todaySales==null)"></smartstock-data-not-ready>
               </div>
             </mat-card>
-              <mat-card class=" mat-elevation-z3 my-3 box-shadow  py-4 profit">
+              <mat-card class="mat-elevation-z3 my-3 py-4 profit">
               <div class="row m-0 justify-content-center align-items-center">
                 <svg class="pr-2" width="36" height="40" viewBox="0 0 76 83" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -86,7 +86,7 @@ import * as Highcharts from 'highcharts';
               <hr class="w-75 mt-0 mx-auto" color="primary">
 
                 <div class="d-flex justify-content-center align-items-center py-3" style="height: 350px">
-                  <div style="width: 100%; height: 100%" id="grossProfit"></div>
+                  <div class="w-100 h-100" id="grossProfit"></div>
 <!--                  <smartstock-data-not-ready style="position: absolute" [width]="100" height="100"-->
 <!--                                             [isLoading]="salesStatusProgress"-->
 <!--                                             *ngIf="salesStatusProgress  || (!salesGrowthStatus)"></smartstock-data-not-ready>-->
@@ -268,27 +268,64 @@ export class ProfitComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   private initiateGraph(data: any) {
-    this.grossProfitChart = Highcharts.chart('grossProfit', {
-      chart: {
-        type: 'column'
-      },
-      title: {
+    // @ts-ignore
+    this.grossProfitChart = Highcharts.chart('grossProfit',  {
+    chart: {
+    // renderTo: 'grossProfit',
+  //     margin: 0,
+        type: 'column',
+    },
+    title: {
         text: null
-      },
-      xAxis: {
-        categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
-      },
-      credits: {
-        enabled: false
-      },
-      series: [{
-        name: 'John',
-        data: [5, 3, 4, 7, 2]
-      }, {
-        name: 'Joe',
-        data: [3, 4, 4, -2, 5]
-      }]
-    });
+    },
+    xAxis: {
+        categories: [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec'
+        ]
+    },
+    yAxis: [{
+        title: {
+            text: 'Employees'
+        }
+    }],
+    tooltip: {
+        shared: true
+    },
+    plotOptions: {
+        column: {
+            grouping: false,
+        }
+    },
+    series: [{
+        name: '2020',
+        color: 'rgba(27, 94, 32,.7)',
+        data: [150, 73, 50, 40, 4, 10, 40, 14, 40, 4, 10, 30],
+        pointPadding: 0.2,
+        pointPlacement: -0.3
+    }, {
+        name: '2021',
+        color: 'rgba(27, 94, 32,1)',
+        data: [140, 40, 4, 40, 4, 10, 40, 4, 40, 14, 10, 20],
+        pointPadding: 0.2,
+        pointPlacement: 0
+    }]
+});
+
+// setTimeout( () => this.hcChart = Highcharts.chart(this.grossProfit.nativeElement, options ) );
+
+    this.grossProfitChart.reflow();
+    // @ts-ignore
     this.netProfitChart = Highcharts.chart('netProfit', {
       chart: {
         type: 'column'
@@ -298,24 +335,10 @@ export class ProfitComponent implements OnInit {
       },
       xAxis: {
         categories: ['Apples', 'Oranges', 'Pears', 'Grapes']
-      },   plotOptions: {
-        area: {
-          // pointStart: saleDays[0],
-          marker: {
-            enabled: false,
-            symbol: 'circle',
-            radius: 4,
-            states: {
-              hover: {
-                enabled: true
-              }
-            }
-          }
-        }
       },
       series: [{
         name: 'John',
-        data: [5, 3, 4, 7]
+        data: [5, 3, -4, 7]
       }, {
         name: 'Joe',
         data: [3, 4, 4, -2]
