@@ -197,7 +197,9 @@ export class ReportService {
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
-        this.httpClient.get(this.settings.ssmFunctionsURL +
+        // this.httpClient.get(this.settings.ssmFunctionsURL +
+        console.log(activeShop.projectId + '/' + from + '/' + to);
+        this.httpClient.get('localhost:3000' +
           `/dashboard/sales-reports/cartOrderReport/${activeShop.projectId}/${channel}/${from}/${to}`, {
           headers: this.settings.ssmFunctionsHeader
         }).subscribe(value => {

@@ -138,7 +138,7 @@ export class SalesByCategoryComponent implements OnInit {
     this.report.getSalesByCategory(this.channel, this.selectedYear + '-' + this.selectedMonth + '-01',
       this.selectedYear + '-' + this.selectedMonth + '-31').then(status => {
       this.salesStatusProgress = false;
-      this.salesByCategoryStatus = status;
+      console.log(status);
       this.initiateGraph(this.salesByCategoryStatus);
     }).catch(reason => {
       this.salesStatusProgress = false;

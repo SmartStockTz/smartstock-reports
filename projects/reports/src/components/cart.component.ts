@@ -10,6 +10,7 @@ import {ReportService} from '../services/report.service';
 import {toSqlDate} from '@smartstocktz/core-libs';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {CartDetailsComponent} from './cart-details.component';
+import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'smartstock-cart-report',
@@ -27,7 +28,7 @@ import {CartDetailsComponent} from './cart-details.component';
           <hr class="w-75 mt-0 mx-auto" color="primary">
 
           <div style="display: flex; flex-flow: row; align-items: center">
-<!--            <h6 class="col-8">Cart Report</h6>-->
+            <!--            <h6 class="col-8">Cart Report</h6>-->
             <span style="flex-grow: 1"></span>
           </div>
           <mat-card-header>
@@ -65,7 +66,7 @@ import {CartDetailsComponent} from './cart-details.component';
           </div>
 
           <smartstock-data-not-ready *ngIf="noDataRetrieved  && !isLoading"></smartstock-data-not-ready>
-          <table mat-table *ngIf="!noDataRetrieved  && !isLoading" [dataSource]="carts" matSort>
+          <table mat-table *ngIf="!noDataRetrieved  && !isLoading && enoughWidth()" [dataSource]="carts" matSort>
 
             <ng-container matColumnDef="receipt">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Cart Receipt</th>
@@ -87,12 +88,13 @@ import {CartDetailsComponent} from './cart-details.component';
 
             <ng-container matColumnDef="seller">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Seller</th>
-              <td mat-cell *matCellDef="let element">{{element.sellerObject != null ? ((element.sellerObject.firstname | titlecase) + " " + element.sellerObject.lastname | titlecase) : element.seller}} </td>
+              <td mat-cell
+                  *matCellDef="let element">{{element.sellerObject != null ? ((element.sellerObject.firstname | titlecase) + " " + element.sellerObject.lastname | titlecase) : element.seller}} </td>
               <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
             <ng-container matColumnDef="date">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Sold</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
               <td mat-cell *matCellDef="let element">{{element.date }}</td>
               <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
@@ -103,7 +105,43 @@ import {CartDetailsComponent} from './cart-details.component';
             <tr mat-footer-row style="font-size: 36px" *matFooterRowDef="cartColumns"></tr>
 
           </table>
-          <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
+
+          <table mat-table *ngIf="!noDataRetrieved  && !isLoading && !enoughWidth()" [dataSource]="carts" matSort>
+
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Sold</th>
+              <td mat-cell *matCellDef="let element">{{element.date }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="total_items">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
+              <td mat-cell *matCellDef="let element" class="text-center">{{element.quantity}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="total_amount">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+              <td mat-cell *matCellDef="let element">{{element.amount}}</td>
+            </ng-container>
+
+
+            <!--            <ng-container matColumnDef="seller">-->
+            <!--&lt;!&ndash;              <th mat-header-cell *matHeaderCellDef mat-sort-header>Seller</th>&ndash;&gt;-->
+            <!--              <td mat-cell-->
+            <!--                  *matCellDef="let element">{{element.sellerObject != null ? ((element.sellerObject.firstname | titlecase) + " " + element.sellerObject.lastname | titlecase) : element.seller}} </td>-->
+            <!--            </ng-container>-->
+
+            <!--            <ng-container matColumnDef="date">-->
+            <!--&lt;!&ndash;              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Sold</th>&ndash;&gt;-->
+            <!--              <td mat-cell *matCellDef="let element">{{element.date }}</td>-->
+            <!--              <td mat-footer-cell *matFooterCellDef></td>-->
+            <!--            </ng-container>-->
+
+            <tr mat-header-row *matHeaderRowDef="cartColumnsMobile"></tr>
+            <tr matTooltip="{{row.product}}" class="table-data-row" mat-row
+                *matRowDef="let row; columns: cartColumnsMobile;" (click)="openCartDetails(row)"></tr>
+
+          </table>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20, 100]" showFirstLastButtons></mat-paginator>
         </mat-card>
       </div>
     </div>
@@ -120,9 +158,10 @@ import {CartDetailsComponent} from './cart-details.component';
     ReportService
   ]
 })
-export class CartComponent implements OnInit {
+export class CartComponent extends DeviceInfoUtil implements OnInit {
 
   constructor(private readonly report: ReportService, private readonly snack: MatSnackBar, private _cartDetails: MatBottomSheet) {
+    super();
   }
 
   startDate;
@@ -133,6 +172,7 @@ export class CartComponent implements OnInit {
   stocks = [];
   carts: MatTableDataSource<CartModel>;
   cartColumns = ['receipt', 'total_amount', 'total_items', 'seller', 'date'];
+  cartColumnsMobile = ['date', 'total_items', 'total_amount'];
 
   startDateFormControl = new FormControl(new Date(), [Validators.nullValidator]);
   endDateFormControl = new FormControl('', [Validators.nullValidator]);
@@ -205,7 +245,7 @@ export class CartComponent implements OnInit {
   }
 
   openCartDetails(cartDetailsData): any {
-      this._cartDetails.open(CartDetailsComponent, {
+    this._cartDetails.open(CartDetailsComponent, {
       data: {
         id: cartDetailsData._id,
         channel: cartDetailsData.channel,
@@ -217,6 +257,6 @@ export class CartComponent implements OnInit {
         region: cartDetailsData.sellerObject.region,
         items: cartDetailsData.items
       }
-      });
+    });
   }
 }

@@ -46,6 +46,7 @@ import {StockTrackingComponent} from "./components/stock-tracking.component";
 import {ProfitComponent} from './components/profit.component';
 import {CartDetailsComponent} from './components/cart-details.component';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
+import {MatListModule} from '@angular/material/list';
 
 
 const routes: Routes = [
@@ -85,42 +86,43 @@ const routes: Routes = [
     CartDetailsComponent
   ],
   exports: [],
-    imports: [
-        CommonModule,
+  imports: [
+    CommonModule,
+    {
+      ngModule: RouterModule,
+      providers: [
         {
-            ngModule: RouterModule,
-            providers: [
-                {
-                    multi: true,
-                    provide: ROUTES,
-                    useValue: routes
-                }
-            ]
-        },
-        MatDatepickerModule,
-        LibModule,
-        MatSidenavModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatDatepickerModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatIconModule,
-        MatButtonModule,
-        MatProgressSpinnerModule,
-        MatNativeDateModule,
-        MatTooltipModule,
-        MatSelectModule,
-        MatDividerModule,
-        MatInputModule,
-        MatMenuModule,
-        MatRippleModule,
-        LibModule,
-        MatBottomSheetModule
-    ],
+          multi: true,
+          provide: ROUTES,
+          useValue: routes
+        }
+      ]
+    },
+    MatDatepickerModule,
+    LibModule,
+    MatSidenavModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatIconModule,
+    MatButtonModule,
+    MatProgressSpinnerModule,
+    MatNativeDateModule,
+    MatTooltipModule,
+    MatSelectModule,
+    MatDividerModule,
+    MatInputModule,
+    MatMenuModule,
+    MatRippleModule,
+    LibModule,
+    MatBottomSheetModule,
+    MatListModule
+  ],
      entryComponents: [
     CartDetailsComponent
   ],
