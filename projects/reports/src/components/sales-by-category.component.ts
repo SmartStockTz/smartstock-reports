@@ -1,14 +1,21 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
-import {LogService, toSqlDate} from '@smartstocktz/core-libs';
-import {ReportService} from '../services/report.service';
+import { LogService, toSqlDate } from '@smartstocktz/core-libs';
+import { ReportService } from '../services/report.service';
 // @ts-ignore
-import {default as _rollupMoment, Moment} from 'moment';
+import { default as _rollupMoment, Moment } from 'moment';
 import * as _moment from 'moment';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import {MatDatepicker} from '@angular/material/datepicker';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
-import {FormControl} from '@angular/forms';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+import { MatDatepicker } from '@angular/material/datepicker';
+import {
+  MomentDateAdapter,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
+import { FormControl } from '@angular/forms';
 
 const moment = _rollupMoment || _moment;
 
@@ -29,31 +36,57 @@ export const MY_FORMATS = {
   template: `
     <mat-card class="mat-elevation-z3" style="height: 100%;border-radius: 15px">
       <div class="row pt-3 m-0 justify-content-center align-items-center">
-        <mat-icon color="primary" style="width: 40px;height:40px;font-size: 36px">category</mat-icon>
-        <p class="m-0 h6">Sales By Category in {{month}} {{selectedYear}}</p>
+        <mat-icon
+          color="primary"
+          style="width: 40px;height:40px;font-size: 36px"
+          >category</mat-icon
+        >
+        <p class="m-0 h6">
+          Sales By Category in {{ month }} {{ selectedYear }}
+        </p>
         <div class="row">
           <mat-form-field style="width: 50px;visibility: hidden">
             <!--            <mat-label>Year</mat-label>-->
-            <input matInput hidden [matDatepicker]="dp" [formControl]="salesYearFormControl">
+            <input
+              matInput
+              hidden
+              [matDatepicker]="dp"
+              [formControl]="salesYearFormControl"
+            />
             <!--            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>-->
-            <mat-datepicker #dp
-                            startView="multi-year"
-                            (yearSelected)="chosenYearHandler($event)"
-                            (monthSelected)="chosenMonthHandler($event, dp)"
-                            panelClass="example-month-picker">
+            <mat-datepicker
+              #dp
+              startView="multi-year"
+              (yearSelected)="chosenYearHandler($event)"
+              (monthSelected)="chosenMonthHandler($event, dp)"
+              panelClass="example-month-picker"
+            >
             </mat-datepicker>
           </mat-form-field>
-          <button mat-icon-button color="primary" class="mr-0 ml-auto" (click)="dp.open()" matTooltip="Select Year">
+          <button
+            mat-icon-button
+            color="primary"
+            class="mr-0 ml-auto"
+            (click)="dp.open()"
+            matTooltip="Select Year"
+          >
             <mat-icon>today</mat-icon>
           </button>
         </div>
       </div>
-      <hr class="w-75 mt-0 mx-auto" color="primary">
-      <div class="d-flex justify-content-center align-items-center py-3" style="min-height: 200px">
+      <hr class="w-75 mt-0 mx-auto" color="primary" />
+      <div
+        class="d-flex justify-content-center align-items-center py-3"
+        style="min-height: 200px"
+      >
         <div style="width: 100%; height: 100%" id="salesByCategory"></div>
-        <smartstock-data-not-ready style="position: absolute" [width]="100" height="100"
-                                   [isLoading]="salesStatusProgress"
-                                   *ngIf="salesStatusProgress  || (!salesByCategoryStatus)"></smartstock-data-not-ready>
+        <smartstock-data-not-ready
+          style="position: absolute"
+          [width]="100"
+          height="100"
+          [isLoading]="salesStatusProgress"
+          *ngIf="salesStatusProgress || !salesByCategoryStatus"
+        ></smartstock-data-not-ready>
       </div>
     </mat-card>
   `,
@@ -65,22 +98,22 @@ export const MY_FORMATS = {
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
 
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
   ],
 })
 export class SalesByCategoryComponent implements OnInit {
   salesStatusProgress = false;
-  salesByCategoryStatus: { x: string, y: number }[];
+  salesByCategoryStatus: { x: string; y: number }[];
   salesByCategoryChart: Highcharts.Chart = undefined;
   @Input() salesChannel;
   channel = 'retail';
   salesYearFormControl = new FormControl(moment());
   selectedYear = new Date().getFullYear();
   selectedMonth = new Date().getMonth();
-  totalSales= 0;
+  totalSales = 0;
   month;
   sellerSalesData = {
     Jan: 1,
@@ -94,16 +127,17 @@ export class SalesByCategoryComponent implements OnInit {
     Sep: 9,
     Oct: 10,
     Nov: 11,
-    Dec: 12
+    Dec: 12,
   };
-  constructor(private readonly  report: ReportService,
-              private readonly logger: LogService) {
-  }
+  constructor(
+    private readonly report: ReportService,
+    private readonly logger: LogService
+  ) {}
 
   ngOnInit(): void {
     this.month = Object.keys(this.sellerSalesData)[this.selectedMonth];
     this.getSalesByCategory();
-    this.salesChannel.subscribe(value => {
+    this.salesChannel.subscribe((value) => {
       this.channel = value;
       this.getSalesByCategory();
     });
@@ -118,7 +152,10 @@ export class SalesByCategoryComponent implements OnInit {
   }
 
   // tslint:disable-next-line:typedef
-  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
+  chosenMonthHandler(
+    normalizedMonth: Moment,
+    datepicker: MatDatepicker<Moment>
+  ) {
     const ctrlValue = this.salesYearFormControl.value;
     ctrlValue.month(normalizedMonth.month());
     this.salesYearFormControl.setValue(ctrlValue);
@@ -133,27 +170,34 @@ export class SalesByCategoryComponent implements OnInit {
     this.salesStatusProgress = true;
     this.selectedMonth += 1;
     if (this.selectedMonth < 10) {
-      this.selectedMonth = '0' + this.selectedMonth;
+      // tslint:disable-next-line: radix
+      this.selectedMonth = parseInt('0' + this.selectedMonth);
     }
-    this.report.getSalesByCategory(this.channel, this.selectedYear + '-' + this.selectedMonth + '-01',
-      this.selectedYear + '-' + this.selectedMonth + '-31').then(status => {
-      this.salesStatusProgress = false;
-      console.log(status);
-      this.initiateGraph(this.salesByCategoryStatus);
-    }).catch(reason => {
-      this.salesStatusProgress = false;
-      this.logger.i(reason);
-      // this.logger.i(reason, 'StockStatusComponent:26');
-    });
+    this.report
+      .getSalesByCategory(
+        this.channel,
+        this.selectedYear + '-' + this.selectedMonth + '-01',
+        this.selectedYear + '-' + this.selectedMonth + '-31'
+      )
+      .then((status) => {
+        this.salesStatusProgress = false;
+        console.log(status);
+        this.initiateGraph(this.salesByCategoryStatus);
+      })
+      .catch((reason) => {
+        this.salesStatusProgress = false;
+        this.logger.i(reason);
+        // this.logger.i(reason, 'StockStatusComponent:26');
+      });
   }
 
   // tslint:disable-next-line:typedef
   private initiateGraph(data: any) {
-    const x = data.map(value => value.sales);
-    const y: any[] = data.map(value => {
+    const x = data.map((value) => value.sales);
+    const y: any[] = data.map((value) => {
       return {
         y: value.y,
-        name: value.x
+        name: value.x,
       };
     });
     // @ts-ignore
@@ -166,17 +210,17 @@ export class SalesByCategoryComponent implements OnInit {
         events: {
           load(event) {
             const total = this.series[0].data[0].total;
-            const text = this.renderer.text(
-              'Total: ' + total,
-              this.plotLeft, this.plotHeight
-            ).attr({
-              zIndex: 5
-            }).add();
-          }
-        }
+            const text = this.renderer
+              .text('Total: ' + total, this.plotLeft, this.plotHeight)
+              .attr({
+                zIndex: 5,
+              })
+              .add();
+          },
         },
+      },
       title: {
-        text: null
+        text: null,
       },
       legend: {
         layout: 'horizontal',
@@ -184,12 +228,13 @@ export class SalesByCategoryComponent implements OnInit {
         verticalAlign: 'top',
       },
       tooltip: {
-        pointFormat: '{series.name}<br>: <b>{point.percentage:.1f}% </b><br><b>: {point.y}/=</b>'
+        pointFormat:
+          '{series.name}<br>: <b>{point.percentage:.1f}% </b><br><b>: {point.y}/=</b>',
       },
       accessibility: {
         point: {
-          valueSuffix: '%'
-        }
+          valueSuffix: '%',
+        },
       },
       plotOptions: {
         pie: {
@@ -197,32 +242,33 @@ export class SalesByCategoryComponent implements OnInit {
           cursor: 'pointer',
           dataLabels: {
             enabled: true,
-            format: '<b>{point.name}</b>'
+            format: '<b>{point.name}</b>',
           },
-        }
+        },
       },
-      series: [{
-        name: '',
-        colorByPoint: true,
-        data: data.map(val => {
-          if (val.channel === this.channel) {
-            return {
-              name: val._id,
-              y: val.sales,
-              sliced: true,
-              selected: true
-            };
-          } else {
-            return {
-              name: val._id,
-              y: 0,
-              sliced: true,
-              selected: true
-            };
-          }
-        })
-      }]
+      series: [
+        {
+          name: '',
+          colorByPoint: true,
+          data: data.map((val) => {
+            if (val.channel === this.channel) {
+              return {
+                name: val._id,
+                y: val.sales,
+                sliced: true,
+                selected: true,
+              };
+            } else {
+              return {
+                name: val._id,
+                y: 0,
+                sliced: true,
+                selected: true,
+              };
+            }
+          }),
+        },
+      ],
     });
   }
-
 }
