@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
 import {DeviceInfoUtil} from '@smartstocktz/core-libs';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'smartstock-sales-reports',
@@ -17,27 +18,21 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
               </mat-sidenav>
 
               <mat-sidenav-content>
-                  <smartstock-toolbar [heading]="'Total Sales Report'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
+                  <smartstock-toolbar [heading]="'Sales Report'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
 
-
-                  <div [ngStyle]="{padding: (isMobile || !enoughWidth())?'24px 0':'40px 16px'}"
-                       [ngClass]="(isMobile || !enoughWidth())?'container-fluid':'container'">
-                      <div class="col-12 col-lg-10 col-xl-10 offset-xl-1 offset-lg-1 offset-md-0 offset-sm-0">
-                          <div class="row">
-                              <div style="margin-bottom: 10px" class="col-12">
-                                  <smartstock-report-sale-trends></smartstock-report-sale-trends>
-                              </div>
-                          </div>
-                          <!--<div class="row">-->
-                          <!--<div style="margin-bottom: 10px" class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">-->
-                          <!--<smartstock-expired-products-report></smartstock-expired-products-report>-->
-                          <!--</div>-->
-                          <!--<div style="margin-bottom: 10px" class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">-->
-                          <!--<smartstock-products-about-to-expire></smartstock-products-about-to-expire>-->
-                          <!--</div>-->
-                          <!--</div>-->
-                      </div>
-                  </div>
+                <div class="pt-5" style="min-height: 90vh;display: flex;flex-direction: column; justify-content: space-evenly">
+<!--                  <div class="row col-11 m-0 pt-5 justify-content-end">-->
+<!--                    <mat-form-field appearance="outline">-->
+<!--                      <mat-label>Sales Type</mat-label>-->
+<!--                      <mat-select [formControl]="salesChannel" value="retail">-->
+<!--                        <mat-option value="retail">Retail</mat-option>-->
+<!--                        <mat-option value="whole">Wholesale</mat-option>-->
+<!--                      </mat-select>-->
+<!--                    </mat-form-field>-->
+<!--                  </div>-->
+                  <smartstock-total-sales ></smartstock-total-sales>
+                  <smartstock-report-sale-trends></smartstock-report-sale-trends>
+                </div>
 
               </mat-sidenav-content>
           </mat-sidenav-container>
@@ -47,7 +42,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 })
 export class SalesReportPageComponent extends DeviceInfoUtil implements OnInit {
   isMobile = false;
-
+  // salesChannel = new FormControl('retail');
   @ViewChild('sidenav') sidenav: MatSidenav;
 
   constructor() {

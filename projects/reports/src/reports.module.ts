@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {StockPageComponent} from './pages/stock.page';
@@ -42,11 +42,15 @@ import {SalesByCategoryComponent} from './components/sales-by-category.component
 import {TotalSalesComponent} from './components/total-sales.component';
 import {SalesGrowthComponent} from './components/sales-growth.component';
 import {SalesBySellerComponent} from './components/sales-by-seller.component';
-import {StockTrackingComponent} from "./components/stock-tracking.component";
+import {StockTrackingComponent} from './components/stock-tracking.component';
 import {ProfitComponent} from './components/profit.component';
 import {CartDetailsComponent} from './components/cart-details.component';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatListModule} from '@angular/material/list';
+import {SalesGrowthPageComponent} from './pages/sales-growth.page';
+import {SalesOrderPageComponent} from './pages/sales-order.page';
+import {SalesPerformancePageComponent} from './pages/sales-performance.page';
+import {MatMomentDateModule} from '@angular/material-moment-adapter';
 
 
 const routes: Routes = [
@@ -54,7 +58,10 @@ const routes: Routes = [
   {path: 'stock', component: StockPageComponent},
   {path: '', component: IndexPage},
   {path: 'stock-report', component: ReorderReportPageComponent},
-  {path: 'sales-report', component: CartReportPageComponent},
+  {path: 'sales-report', component: SalesReportPageComponent},
+  {path: 'sales-order', component: SalesOrderPageComponent},
+  {path: 'sales-growth', component: SalesGrowthPageComponent},
+  {path: 'sales-performance', component: SalesPerformancePageComponent},
 ];
 
 @NgModule({
@@ -83,7 +90,10 @@ const routes: Routes = [
     SalesGrowthComponent,
     SalesBySellerComponent,
     ProfitComponent,
-    CartDetailsComponent
+    CartDetailsComponent,
+    SalesOrderPageComponent,
+    SalesPerformancePageComponent,
+    SalesGrowthPageComponent,
   ],
   exports: [],
   imports: [
@@ -95,7 +105,8 @@ const routes: Routes = [
           multi: true,
           provide: ROUTES,
           useValue: routes
-        }
+        },
+        DatePipe
       ]
     },
     MatDatepickerModule,
@@ -121,7 +132,8 @@ const routes: Routes = [
     MatRippleModule,
     LibModule,
     MatBottomSheetModule,
-    MatListModule
+    MatListModule,
+    MatMomentDateModule
   ],
      entryComponents: [
     CartDetailsComponent

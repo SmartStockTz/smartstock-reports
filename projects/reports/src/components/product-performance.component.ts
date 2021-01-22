@@ -194,7 +194,6 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
       this.isLoading = false;
       this.noDataRetrieved = false; // loading is done and some data is received
       this.productPerformanceReport = data.length > 0 ? data[0].total : 0;
-      console.log(data);
       this.productPerformanceDatasource = new MatTableDataSource(data);
       setTimeout(() => {
         this.productPerformanceDatasource.paginator = this.paginator;

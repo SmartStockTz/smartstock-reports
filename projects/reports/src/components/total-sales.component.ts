@@ -52,8 +52,8 @@ import {toSqlDate} from '@smartstocktz/core-libs';
             </mat-card>
           </div>
 
-
-          <div class="col-md-6 col-lg-4">
+<div class="row col-lg-8">
+          <div class=" col-md-6 col-lg-6 px-0">
             <mat-card class="d-flex mx-auto mat-elevation-z3 align-items-center my-3 box-shadow  py-4 total-sales">
               <svg width="36" height="40" viewBox="0 0 76 83" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -95,7 +95,7 @@ import {toSqlDate} from '@smartstocktz/core-libs';
             </mat-card>
           </div>
 
-          <div class="col-md-6 col-lg-4">
+          <div class="col-md-6 col-lg-6 px-0">
             <mat-card class="d-flex mx-auto mat-elevation-z3 align-items-center my-3 box-shadow  py-4 total-sales">
               <svg width="36" height="40" viewBox="0 0 76 83" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -136,6 +136,7 @@ import {toSqlDate} from '@smartstocktz/core-libs';
               <!--                        <hr class="ml-2 w-75">-->
             </mat-card>
           </div>
+</div>
         </div>
 
       </div>
@@ -154,11 +155,9 @@ export class TotalSalesComponent implements OnInit {
   monthlySales = 0;
   startDate = new Date();
   endDate = new Date();
-  channel = 'retail';
 
   @Input() dateRange: Observable<{ begin: Date, end: Date }>;
   @Input() initialDataRange: { begin: Date, end: Date };
-  @Input() salesChannel;
 
   constructor(private readonly report: ReportService) {
   }
@@ -167,22 +166,14 @@ export class TotalSalesComponent implements OnInit {
     this.getTodaySales();
     this.getWeekSales();
     this.getMonthSales();
-
-    this.salesChannel.subscribe(value => {
-      this.channel = value;
-      this.getTodaySales();
-      this.getWeekSales();
-      this.getMonthSales();
-    });
-
   }
 
 
   // tslint:disable-next-line:typedef
   getTodaySales() {
     this.todaySalesProgress = true;
-    this.report.getTotalSale(this.startDate, this.endDate, this.channel).then(data => {
-      this.todaySales = data;
+    this.report.getSalesOverview(toSqlDate(this.startDate), toSqlDate(this.endDate), 'day').then(data => {
+      this.todaySales = data[0].amount;
       this.todaySalesProgress = false;
     }).catch(reason => {
       this.todaySalesProgress = false;
@@ -196,8 +187,8 @@ export class TotalSalesComponent implements OnInit {
   getWeekSales() {
     this.weekSalesProgress = true;
     this.startDate = new Date(new Date().setDate(new Date().getDate() - new Date().getDay()));
-    this.report.getTotalSale(this.startDate, this.endDate, this.channel).then(data => {
-      this.weekSales = data;
+    this.report.getSalesOverview(toSqlDate(this.startDate), toSqlDate(this.endDate), 'month').then(data => {
+      this.weekSales = data[0].amount;
       this.weekSalesProgress = false;
     }).catch(reason => {
       this.weekSalesProgress = false;
@@ -211,8 +202,9 @@ export class TotalSalesComponent implements OnInit {
   getMonthSales(){
     this.monthlySalesProgress = true;
     this.startDate = new Date(new Date().setDate(new Date().getDate() - (new Date().getDate() - 1)));
-    this.report.getTotalSale(this.startDate, this.endDate, this.channel).then(data => {
-      this.monthlySales = data;
+    this.report.getSalesOverview(toSqlDate(this.startDate), toSqlDate(this.endDate), 'month').then(data => {
+      this.monthlySales = data[0].amount;
+      console.log(data.amount);
       this.monthlySalesProgress = false;
     }).catch(reason => {
       this.monthlySalesProgress = false;

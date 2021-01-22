@@ -19,7 +19,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 @Component({
-  selector: 'smartstock-sales-reports',
+  selector: 'smartstock-sales-order',
   template: `
     <div>
       <mat-sidenav-container class="my-drawer-container">
@@ -45,19 +45,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 </mat-select>
               </mat-form-field>
             </div>
-            <smartstock-total-sales></smartstock-total-sales>
-            <smartstock-profit [salesChannel]="salesChannel.valueChanges"></smartstock-profit>
-            <div class="row m-0 py-2" style="justify-content: space-evenly">
-              <div class="col-md-11 col-lg-4 py-3">
-                <smartstock-sales-growth [salesChannel]="salesChannel.valueChanges"></smartstock-sales-growth>
-              </div>
-              <div class="col-md-8 col-lg-4 py-3">
-                <smartstock-sales-by-category [salesChannel]="salesChannel.valueChanges"></smartstock-sales-by-category>
-              </div>
-              <div class=" col-md-11 col-lg-4 py-3">
-                <smartstock-sales-by-seller [salesChannel]="salesChannel.valueChanges"></smartstock-sales-by-seller>
-              </div>
-            </div>
             <div class="row m-0 py-2">
               <div class="col-lg-6 py-3">
                 <smartstock-report-sale-trends></smartstock-report-sale-trends>
@@ -66,26 +53,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 <smartstock-cart-report [salesChannel]="salesChannel.valueChanges"></smartstock-cart-report>
               </div>
             </div>
-            <div class="row m-0 py-2">
-              <div class="col-lg-6 py-3">
-                <smartstock-profit-by-category
-                  [salesChannel]="salesChannel.valueChanges"></smartstock-profit-by-category>
-              </div>
-              <div class="col-lg-6 py-3">
-                <smartstock-product-performance-report [salesChannel]="salesChannel.valueChanges"></smartstock-product-performance-report>
-              </div>
-            </div>
           </div>
-          <!--                  <div [ngStyle]="{padding: (isMobile || !enoughWidth())?'24px 0':'40px 16px'}"-->
-          <!--                       [ngClass]="(isMobile || !enoughWidth())?'container-fluid':'container'">-->
-          <!--                      <div class="col-12 col-lg-10 col-xl-10 offset-xl-1 offset-lg-1 offset-md-0 offset-sm-0">-->
-          <!--                          <div class="row">-->
-          <!--                              <div style="margin-bottom: 10px" class="col-12">-->
-          <!--                                  <smartstock-cart-report></smartstock-cart-report>-->
-          <!--                              </div>-->
-          <!--                          </div>-->
-          <!--                      </div>-->
-          <!--                  </div>-->
 
         </mat-sidenav-content>
       </mat-sidenav-container>
@@ -93,7 +61,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   `,
   styleUrls: ['../styles/cart.component.scss']
 })
-export class CartReportPageComponent extends DeviceInfoUtil implements OnInit {
+export class SalesOrderPageComponent extends DeviceInfoUtil implements OnInit {
   isMobile = false;
   displayedColumns: string[] = ['position', 'name', 'weight'];
   dataSource = ELEMENT_DATA;

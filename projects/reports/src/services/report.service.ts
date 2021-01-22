@@ -36,12 +36,31 @@ export class ReportService {
     });
   }
 
-  getSalesTrend(beginDate: string, endDate: string, channel: string): Promise<any> {
+  getSalesTrendold(beginDate: string, endDate: string, channel: string): Promise<any> {
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
         this.httpClient.get(this.settings.ssmFunctionsURL +
           `/dashboard/admin/salesGraphData/day/${activeShop.projectId}/${channel}/${beginDate}/${endDate}`, {
+          headers: this.settings.ssmFunctionsHeader
+        }).subscribe(value => {
+          resolve(value);
+        }, error => {
+          reject(error);
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  getSalesOverview(beginDate: string, endDate: string, period: string): Promise<any> {
+    return new Promise<any>(async (resolve, reject) => {
+      try {
+        const activeShop = await this.storage.getActiveShop();
+        // this.httpClient.get(this.settings.ssmFunctionsURL +
+        this.httpClient.get( 'http://localhost:3000' +
+          `/reports/sales/overview/${beginDate}/${endDate}/${period}`, {
           headers: this.settings.ssmFunctionsHeader
         }).subscribe(value => {
           resolve(value);
@@ -126,7 +145,7 @@ export class ReportService {
       try {
         const activeShop = await this.storage.getActiveShop();
         BFast.functions()
-          .request(`/dashboard/sales-reports/profitByCategory/${activeShop.projectId}/${from}/${to}`).get({
+          .request(`/dashboard/sales-reports/profitByCategory/${activeShop.projectId}/${channel}/${from}/${to}`).get({
           headers: this.settings.ssmFunctionsHeader
         }).then(value => {
           resolve(value);
@@ -197,9 +216,7 @@ export class ReportService {
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
-        // this.httpClient.get(this.settings.ssmFunctionsURL +
-        console.log(activeShop.projectId + '/' + from + '/' + to);
-        this.httpClient.get('localhost:3000' +
+        this.httpClient.get(this.settings.ssmFunctionsURL +
           `/dashboard/sales-reports/cartOrderReport/${activeShop.projectId}/${channel}/${from}/${to}`, {
           headers: this.settings.ssmFunctionsHeader
         }).subscribe(value => {

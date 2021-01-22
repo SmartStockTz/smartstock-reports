@@ -40,7 +40,7 @@ export const MY_FORMATS = {
                             startView="multi-year"
                             (yearSelected)="chosenYearHandler($event)"
                             (monthSelected)="chosenMonthHandler($event, dp)"
-                            panelClass="example-month-picker">
+                            >
             </mat-datepicker>
           </mat-form-field>
           <button mat-icon-button color="primary" class="mr-0 ml-auto" (click)="dp.open()" matTooltip="Select Year">
@@ -80,7 +80,7 @@ export class SalesByCategoryComponent implements OnInit {
   salesYearFormControl = new FormControl(moment());
   selectedYear = new Date().getFullYear();
   selectedMonth = new Date().getMonth();
-  totalSales= 0;
+  totalSales = 0;
   month;
   sellerSalesData = {
     Jan: 1,
@@ -133,11 +133,13 @@ export class SalesByCategoryComponent implements OnInit {
     this.salesStatusProgress = true;
     this.selectedMonth += 1;
     if (this.selectedMonth < 10) {
-      this.selectedMonth = '0' + this.selectedMonth;
+      // tslint:disable-next-line:radix
+      this.selectedMonth = parseInt('0' + this.selectedMonth);
     }
     this.report.getSalesByCategory(this.channel, this.selectedYear + '-' + this.selectedMonth + '-01',
       this.selectedYear + '-' + this.selectedMonth + '-31').then(status => {
       this.salesStatusProgress = false;
+      this.salesByCategoryStatus = status;
       console.log(status);
       this.initiateGraph(this.salesByCategoryStatus);
     }).catch(reason => {

@@ -19,7 +19,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 @Component({
-  selector: 'smartstock-sales-reports',
+  selector: 'smartstock-sales-performance',
   template: `
     <div>
       <mat-sidenav-container class="my-drawer-container">
@@ -45,12 +45,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 </mat-select>
               </mat-form-field>
             </div>
-            <smartstock-total-sales></smartstock-total-sales>
-            <smartstock-profit [salesChannel]="salesChannel.valueChanges"></smartstock-profit>
             <div class="row m-0 py-2" style="justify-content: space-evenly">
-              <div class="col-md-11 col-lg-4 py-3">
-                <smartstock-sales-growth [salesChannel]="salesChannel.valueChanges"></smartstock-sales-growth>
-              </div>
               <div class="col-md-8 col-lg-4 py-3">
                 <smartstock-sales-by-category [salesChannel]="salesChannel.valueChanges"></smartstock-sales-by-category>
               </div>
@@ -59,12 +54,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
               </div>
             </div>
             <div class="row m-0 py-2">
-              <div class="col-lg-6 py-3">
-                <smartstock-report-sale-trends></smartstock-report-sale-trends>
-              </div>
-              <div class="col-lg-6 py-3">
-                <smartstock-cart-report [salesChannel]="salesChannel.valueChanges"></smartstock-cart-report>
-              </div>
             </div>
             <div class="row m-0 py-2">
               <div class="col-lg-6 py-3">
@@ -93,7 +82,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   `,
   styleUrls: ['../styles/cart.component.scss']
 })
-export class CartReportPageComponent extends DeviceInfoUtil implements OnInit {
+export class SalesPerformancePageComponent extends DeviceInfoUtil implements OnInit {
   isMobile = false;
   displayedColumns: string[] = ['position', 'name', 'weight'];
   dataSource = ELEMENT_DATA;

@@ -106,7 +106,7 @@ export class SalesGrowthComponent implements OnInit {
   // tslint:disable-next-line:typedef
   private getSalesStatus(channel: string, year: number) {
     this.salesStatusProgress = true;
-    this.report.getSalesTrend(year + '-01-01', year + '-12-31', channel).then(status => {
+    this.report.getSalesOverview(year + '-01-01', year + '-12-31', channel).then(status => {
       this.salesStatusProgress = false;
       this.salesGrowthStatus = status;
       this.initiateGraph(this.salesGrowthStatus);
