@@ -73,7 +73,7 @@ export const MY_FORMATS = {
 })
 export class SalesByCategoryComponent implements OnInit {
   salesStatusProgress = false;
-  salesByCategoryStatus: { x: string, y: number }[];
+  salesByCategoryStatus: { x: string; y: number }[];
   salesByCategoryChart: Highcharts.Chart = undefined;
   @Input() salesChannel;
   channel = 'retail';
@@ -94,16 +94,17 @@ export class SalesByCategoryComponent implements OnInit {
     Sep: 9,
     Oct: 10,
     Nov: 11,
-    Dec: 12
+    Dec: 12,
   };
-  constructor(private readonly  report: ReportService,
-              private readonly logger: LogService) {
-  }
+  constructor(
+    private readonly report: ReportService,
+    private readonly logger: LogService
+  ) {}
 
   ngOnInit(): void {
     this.month = Object.keys(this.sellerSalesData)[this.selectedMonth];
     this.getSalesByCategory();
-    this.salesChannel.subscribe(value => {
+    this.salesChannel.subscribe((value) => {
       this.channel = value;
       this.getSalesByCategory();
     });
@@ -118,7 +119,10 @@ export class SalesByCategoryComponent implements OnInit {
   }
 
   // tslint:disable-next-line:typedef
-  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>) {
+  chosenMonthHandler(
+    normalizedMonth: Moment,
+    datepicker: MatDatepicker<Moment>
+  ) {
     const ctrlValue = this.salesYearFormControl.value;
     ctrlValue.month(normalizedMonth.month());
     this.salesYearFormControl.setValue(ctrlValue);
@@ -151,11 +155,11 @@ export class SalesByCategoryComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   private initiateGraph(data: any) {
-    const x = data.map(value => value.sales);
-    const y: any[] = data.map(value => {
+    const x = data.map((value) => value.sales);
+    const y: any[] = data.map((value) => {
       return {
         y: value.y,
-        name: value.x
+        name: value.x,
       };
     });
     // @ts-ignore
@@ -168,17 +172,17 @@ export class SalesByCategoryComponent implements OnInit {
         events: {
           load(event) {
             const total = this.series[0].data[0].total;
-            const text = this.renderer.text(
-              'Total: ' + total,
-              this.plotLeft, this.plotHeight
-            ).attr({
-              zIndex: 5
-            }).add();
-          }
-        }
+            const text = this.renderer
+              .text('Total: ' + total, this.plotLeft, this.plotHeight)
+              .attr({
+                zIndex: 5,
+              })
+              .add();
+          },
         },
+      },
       title: {
-        text: null
+        text: null,
       },
       legend: {
         layout: 'horizontal',
@@ -186,12 +190,13 @@ export class SalesByCategoryComponent implements OnInit {
         verticalAlign: 'top',
       },
       tooltip: {
-        pointFormat: '{series.name}<br>: <b>{point.percentage:.1f}% </b><br><b>: {point.y}/=</b>'
+        pointFormat:
+          '{series.name}<br>: <b>{point.percentage:.1f}% </b><br><b>: {point.y}/=</b>',
       },
       accessibility: {
         point: {
-          valueSuffix: '%'
-        }
+          valueSuffix: '%',
+        },
       },
       plotOptions: {
         pie: {
@@ -199,32 +204,33 @@ export class SalesByCategoryComponent implements OnInit {
           cursor: 'pointer',
           dataLabels: {
             enabled: true,
-            format: '<b>{point.name}</b>'
+            format: '<b>{point.name}</b>',
           },
-        }
+        },
       },
-      series: [{
-        name: '',
-        colorByPoint: true,
-        data: data.map(val => {
-          if (val.channel === this.channel) {
-            return {
-              name: val._id,
-              y: val.sales,
-              sliced: true,
-              selected: true
-            };
-          } else {
-            return {
-              name: val._id,
-              y: 0,
-              sliced: true,
-              selected: true
-            };
-          }
-        })
-      }]
+      series: [
+        {
+          name: '',
+          colorByPoint: true,
+          data: data.map((val) => {
+            if (val.channel === this.channel) {
+              return {
+                name: val._id,
+                y: val.sales,
+                sliced: true,
+                selected: true,
+              };
+            } else {
+              return {
+                name: val._id,
+                y: 0,
+                sliced: true,
+                selected: true,
+              };
+            }
+          }),
+        },
+      ],
     });
   }
-
 }

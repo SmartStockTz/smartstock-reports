@@ -135,9 +135,7 @@ const routes: Routes = [
     MatListModule,
     MatMomentDateModule
   ],
-     entryComponents: [
-    CartDetailsComponent
-  ],
+  entryComponents: [CartDetailsComponent],
 })
 export class ReportsModule {
 }

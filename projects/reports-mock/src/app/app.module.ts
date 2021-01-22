@@ -17,6 +17,7 @@ import {AuthGuard} from './guards/auth.guard';
 import {HttpClientModule} from '@angular/common/http';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatDialogModule} from '@angular/material/dialog';
+import {ConfigsService} from '@smartstocktz/core-libs';
 
 const routes: Routes = [
   {path: '', component: WelcomePage},
@@ -32,7 +33,7 @@ const routes: Routes = [
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
+    RouterModule.forRoot(routes, {relativeLinkResolution: 'legacy'}),
     BrowserAnimationsModule,
     RouterModule,
     MatCardModule,
@@ -49,11 +50,32 @@ const routes: Routes = [
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor() {
+  constructor(private readonly configs: ConfigsService) {
     BFast.init({
       applicationId: 'smartstock_lb',
       projectId: 'smartstock',
       appPassword: 'ZMUGVn72o3yd8kSbMGhfWpI80N9nA2IHjxWKlAhG'
     });
+
+    this.configs.menu = [
+      {
+        name: 'Report',
+        link: '/report',
+        roles: ['admin'],
+        icon: 'table_chart',
+        pages: [
+          {
+            link: '/report/sales',
+            name: 'sales',
+            roles: ['*']
+          },
+          {
+            link: '/report/stocks',
+            name: 'stocks',
+            roles: ['*']
+          }
+        ]
+      }
+    ];
   }
 }

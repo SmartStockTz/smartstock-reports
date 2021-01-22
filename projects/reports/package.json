@@ -1,6 +1,6 @@
 {
   "name": "@smartstocktz/reports",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/smartstocktz"
   },
@@ -15,8 +15,8 @@
     "@angular/core": "^11.0.0",
     "@angular/cdk": "^11.0.0",
     "@angular/material": "^11.0.0",
-    "@smartstocktz/core-libs": "^0.0.19",
-    "bfastjs": "^4.0.0-beta.25",
+    "@smartstocktz/core-libs": "^0.0.24",
+    "bfastjs": "^4.0.5",
     "moment": "^2.29.1"
   },
   "dependencies": {
