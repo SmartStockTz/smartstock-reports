@@ -25,7 +25,7 @@ export interface ProductPerformanceI {
 @Component({
   selector: 'smartstock-product-performance-report',
   template: `
-    <div class="col-12">
+    <div class="col-lg-10 mx-auto py-4">
       <div>
         <mat-card class="mat-elevation-z3">
           <div class="row pt-3 m-0 justify-content-center align-items-center">
@@ -83,7 +83,7 @@ export interface ProductPerformanceI {
               </ng-container>
 
               <ng-container matColumnDef="quantitySold">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity sold</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
                 <td mat-cell *matCellDef="let element">{{element.quantitySold | number}}</td>
                 <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
@@ -123,7 +123,7 @@ export interface ProductPerformanceI {
             </table>
           </div>
 
-          <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
+          <mat-paginator [pageSizeOptions]="[5, 10, 20, 100]" showFirstLastButtons></mat-paginator>
         </mat-card>
       </div>
       <mat-menu #exportMenu>

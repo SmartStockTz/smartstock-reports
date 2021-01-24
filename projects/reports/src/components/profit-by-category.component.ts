@@ -116,9 +116,9 @@ import {json2csv} from '../services/json2csv.service';
               <!--          <tr mat-footer-row style="font-size: 36px" *matFooterRowDef="stockColumns"></tr>-->
 
             </table>
+            <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
           </div>
 
-          <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
         </mat-card>
       </div>
 

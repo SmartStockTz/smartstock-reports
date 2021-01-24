@@ -26,7 +26,7 @@ export const MY_FORMATS = {
 @Component({
   selector: 'smartstock-sales-growth',
   template: `
-    <mat-card class="mat-elevation-z3" style="height: 100%;border-radius: 15px">
+    <mat-card class="mat-elevation-z3" style="border-radius: 15px; border-left: 5px solid green;">
       <div class="row pt-3 m-0 justify-content-center align-items-center">
         <mat-icon color="primary" style="width: 40px;height:40px;font-size: 36px">trending_up</mat-icon>
         <p class="m-0 h6">Sales Growth in {{selectedYear}}</p>

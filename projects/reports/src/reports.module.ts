@@ -51,6 +51,7 @@ import {SalesGrowthPageComponent} from './pages/sales-growth.page';
 import {SalesOrderPageComponent} from './pages/sales-order.page';
 import {SalesPerformancePageComponent} from './pages/sales-performance.page';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
+import {PeriodDateRangeComponent} from './components/period-date-range.component';
 
 
 const routes: Routes = [
@@ -94,6 +95,7 @@ const routes: Routes = [
     SalesOrderPageComponent,
     SalesPerformancePageComponent,
     SalesGrowthPageComponent,
+    PeriodDateRangeComponent
   ],
   exports: [],
   imports: [

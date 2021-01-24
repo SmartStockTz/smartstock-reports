@@ -36,6 +36,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
           <smartstock-toolbar [heading]="'Sales Reports'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
 
           <div style="min-height: 90vh;display: flex;flex-direction: column; justify-content: space-evenly">
+            <smartstock-period-date-range></smartstock-period-date-range>
             <div class="row col-11 m-0 pt-5 justify-content-end">
               <mat-form-field appearance="outline">
                 <mat-label>Sales Type</mat-label>
@@ -45,26 +46,11 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="row m-0 py-2" style="justify-content: space-evenly">
-              <div class="col-md-8 col-lg-4 py-3">
-                <smartstock-sales-by-category [salesChannel]="salesChannel.valueChanges"></smartstock-sales-by-category>
-              </div>
-              <div class=" col-md-11 col-lg-4 py-3">
-                <smartstock-sales-by-seller [salesChannel]="salesChannel.valueChanges"></smartstock-sales-by-seller>
-              </div>
-            </div>
-            <div class="row m-0 py-2">
-            </div>
-            <div class="row m-0 py-2">
-              <div class="col-lg-6 py-3">
-                <smartstock-profit-by-category
-                  [salesChannel]="salesChannel.valueChanges"></smartstock-profit-by-category>
-              </div>
-              <div class="col-lg-6 py-3">
-                <smartstock-product-performance-report [salesChannel]="salesChannel.valueChanges"></smartstock-product-performance-report>
-              </div>
-            </div>
+            <smartstock-product-performance-report [salesChannel]="salesChannel.valueChanges"></smartstock-product-performance-report>
+            <smartstock-sales-by-category></smartstock-sales-by-category>
+            <smartstock-sales-by-seller ></smartstock-sales-by-seller>
           </div>
+
           <!--                  <div [ngStyle]="{padding: (isMobile || !enoughWidth())?'24px 0':'40px 16px'}"-->
           <!--                       [ngClass]="(isMobile || !enoughWidth())?'container-fluid':'container'">-->
           <!--                      <div class="col-12 col-lg-10 col-xl-10 offset-xl-1 offset-lg-1 offset-md-0 offset-sm-0">-->

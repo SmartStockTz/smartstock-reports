@@ -52,7 +52,7 @@ import {toSqlDate} from '@smartstocktz/core-libs';
             </mat-card>
           </div>
 
-<div class="row col-lg-8">
+<div class="row m-0 col-lg-8">
           <div class=" col-md-6 col-lg-6 px-0">
             <mat-card class="d-flex mx-auto mat-elevation-z3 align-items-center my-3 box-shadow  py-4 total-sales">
               <svg width="36" height="40" viewBox="0 0 76 83" fill="none" xmlns="http://www.w3.org/2000/svg">

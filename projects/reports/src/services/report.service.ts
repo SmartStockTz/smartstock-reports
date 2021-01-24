@@ -140,12 +140,12 @@ export class ReportService {
     });
   }
 
-  getSalesByCategory(channel: string, from: string, to: string): Promise<any> {
+  getSalesByCategory(period: string, from: string, to: string): Promise<any> {
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
         BFast.functions()
-          .request(`/dashboard/sales-reports/profitByCategory/${activeShop.projectId}/${channel}/${from}/${to}`).get({
+          .request(`http://localhost:3000/reports/sales/performance/category/${from}/${to}/${period}`).get({
           headers: this.settings.ssmFunctionsHeader
         }).then(value => {
           resolve(value);
@@ -231,14 +231,14 @@ export class ReportService {
   }
 
 
-  async getSellerSales(from: string, to: string, channel: string): Promise<CartModel[]> {
+  async getSellerSales(from: string, to: string, period: string): Promise<CartModel[]> {
     // const activeShop = await this.storage.getActiveShop();
 
     return new Promise<any>(async (resolve, reject) => {
       try {
-        const activeShop = await this.storage.getActiveShop();
-        this.httpClient.get(this.settings.ssmFunctionsURL +
-          `/dashboard/sales-reports/sellers/${activeShop.projectId}/${channel}/${from}/${to}`, {
+        // this.httpClient.get(this.settings.ssmFunctionsURL +
+        this.httpClient.get('http://localhost:3000' +
+          `/reports/sales/performance/sellers/${from}/${to}/${period}`, {
           // `/dashboard/sales-reports/sellers/${activeShop.projectId}/${channel}/${from}/${to}`, {
           headers: this.settings.ssmFunctionsHeader
         }).subscribe(value => {

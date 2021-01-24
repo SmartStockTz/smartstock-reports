@@ -89,6 +89,47 @@ export const MY_FORMATS = {
         <!--        </button>-->
       </div>
       <div class="row m-0 py-2">
+        <div class="col-lg-7 py-3">
+          <mat-card class="mat-elevation-z3" style="border-radius: 15px; border-left: 5px solid green;">
+            <div class="row pt-3 m-0 justify-content-center align-items-center">
+              <mat-icon color="primary" style="width: 40px;height:40px;font-size: 36px">trending_up</mat-icon>
+              <p class="m-0 h6">Daily Sales</p>
+            </div>
+            <hr class="w-75 mt-0 mx-auto" color="primary">
+            <!--            <div class="d-flex flex-row flex-wrap btn-block align-items-center">-->
+            <!--              <span class="flex-grow-1"></span>-->
+            <!--              <div>-->
+            <!--                <mat-form-field style="margin-right: 8px">-->
+            <!--                  <mat-label>From Date</mat-label>-->
+            <!--                  <input matInput [matDatepicker]="pickerFromSaleTrendDay" [formControl]="salesTrendDayFromDateFormControl">-->
+            <!--                  <mat-datepicker-toggle matSuffix [for]="pickerFromSaleTrendDay"></mat-datepicker-toggle>-->
+            <!--                  <mat-datepicker [touchUi]="true" #pickerFromSaleTrendDay></mat-datepicker>-->
+            <!--                </mat-form-field>-->
+            <!--                <mat-form-field>-->
+            <!--                  <mat-label>To Date</mat-label>-->
+            <!--                  <input matInput [matDatepicker]="pickerToSaleTrendDay" [formControl]="salesTrendDayToDateFormControl">-->
+            <!--                  <mat-datepicker-toggle matSuffix [for]="pickerToSaleTrendDay"></mat-datepicker-toggle>-->
+            <!--                  <mat-datepicker [touchUi]="true" #pickerToSaleTrendDay></mat-datepicker>-->
+            <!--                </mat-form-field>-->
+            <!--                <button (click)="refreshTrendReport()" [disabled]="salesByDayTrendProgress" mat-flat-button-->
+            <!--                        class="ft-button dashboard-refresh-button" color="primary">-->
+            <!--                  <mat-icon *ngIf="!salesByDayTrendProgress">refresh</mat-icon>-->
+            <!--                  <mat-progress-spinner *ngIf="salesByDayTrendProgress" style="display: inline-block"-->
+            <!--                                        mode="indeterminate"-->
+            <!--                                        [diameter]="15" color="primary">-->
+            <!--                  </mat-progress-spinner>-->
+            <!--                </button>-->
+            <!--              </div>-->
+            <!--            </div>-->
+
+            <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+                <div id="salesTrendByDay"></div>
+              <smartstock-data-not-ready style="position: absolute" [width]="100" height="100" [isLoading]="isLoading"
+                                           *ngIf="noDataRetrieved || isLoading"></smartstock-data-not-ready>
+            </div>
+          </mat-card>
+
+        </div>
         <div class="col-lg-5 py-3">
           <mat-card class="mat-elevation-z3">
             <div class="row pt-3 m-0 justify-content-center align-items-center">
@@ -132,10 +173,10 @@ export const MY_FORMATS = {
 
 
             <div style="display: flex; justify-content: center">
-              <mat-spinner *ngIf="isLoading"></mat-spinner>
+<!--              <mat-spinner *ngIf="isLoading"></mat-spinner>-->
+              <smartstock-data-not-ready [width]="100" height="100" [isLoading]="isLoading" *ngIf="noDataRetrieved  && !isLoading"></smartstock-data-not-ready>
             </div>
 
-            <smartstock-data-not-ready *ngIf="noDataRetrieved  && !isLoading"></smartstock-data-not-ready>
 
             <table mat-table *ngIf="!noDataRetrieved  && !isLoading" [dataSource]="salesData" matSort>
 
@@ -161,52 +202,6 @@ export const MY_FORMATS = {
             </table>
             <mat-paginator [pageSizeOptions]="[5, 10, 20, 100]" showFirstLastButtons></mat-paginator>
           </mat-card>
-        </div>
-        <div class="col-lg-7 py-3">
-          <mat-card class="mat-elevation-z3">
-            <div class="row pt-3 m-0 justify-content-center align-items-center">
-              <mat-icon color="primary" style="width: 40px;height:40px;font-size: 36px">trending_up</mat-icon>
-              <p class="m-0 h6">Daily Sales</p>
-            </div>
-            <hr class="w-75 mt-0 mx-auto" color="primary">
-            <!--            <div class="d-flex flex-row flex-wrap btn-block align-items-center">-->
-            <!--              <span class="flex-grow-1"></span>-->
-            <!--              <div>-->
-            <!--                <mat-form-field style="margin-right: 8px">-->
-            <!--                  <mat-label>From Date</mat-label>-->
-            <!--                  <input matInput [matDatepicker]="pickerFromSaleTrendDay" [formControl]="salesTrendDayFromDateFormControl">-->
-            <!--                  <mat-datepicker-toggle matSuffix [for]="pickerFromSaleTrendDay"></mat-datepicker-toggle>-->
-            <!--                  <mat-datepicker [touchUi]="true" #pickerFromSaleTrendDay></mat-datepicker>-->
-            <!--                </mat-form-field>-->
-            <!--                <mat-form-field>-->
-            <!--                  <mat-label>To Date</mat-label>-->
-            <!--                  <input matInput [matDatepicker]="pickerToSaleTrendDay" [formControl]="salesTrendDayToDateFormControl">-->
-            <!--                  <mat-datepicker-toggle matSuffix [for]="pickerToSaleTrendDay"></mat-datepicker-toggle>-->
-            <!--                  <mat-datepicker [touchUi]="true" #pickerToSaleTrendDay></mat-datepicker>-->
-            <!--                </mat-form-field>-->
-            <!--                <button (click)="refreshTrendReport()" [disabled]="salesByDayTrendProgress" mat-flat-button-->
-            <!--                        class="ft-button dashboard-refresh-button" color="primary">-->
-            <!--                  <mat-icon *ngIf="!salesByDayTrendProgress">refresh</mat-icon>-->
-            <!--                  <mat-progress-spinner *ngIf="salesByDayTrendProgress" style="display: inline-block"-->
-            <!--                                        mode="indeterminate"-->
-            <!--                                        [diameter]="15" color="primary">-->
-            <!--                  </mat-progress-spinner>-->
-            <!--                </button>-->
-            <!--              </div>-->
-            <!--            </div>-->
-
-            <div class="row">
-              <div class="col-12">
-                <!--<mat-card>-->
-                <div id="salesTrendByDay"></div>
-                <smartstock-data-not-ready [isLoading]="isLoading"
-                                           *ngIf="noDataRetrieved || isLoading"></smartstock-data-not-ready>
-                <!--<smartstock-data-not-ready></smartstock-data-not-ready>-->
-                <!--</mat-card>-->
-              </div>
-            </div>
-          </mat-card>
-
         </div>
       </div>
 

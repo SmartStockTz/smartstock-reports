@@ -52,10 +52,10 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 <smartstock-sales-growth [salesChannel]="salesChannel.valueChanges"></smartstock-sales-growth>
               </div>
               <div class="col-md-8 col-lg-4 py-3">
-                <smartstock-sales-by-category [salesChannel]="salesChannel.valueChanges"></smartstock-sales-by-category>
+                <smartstock-sales-by-category ></smartstock-sales-by-category>
               </div>
               <div class=" col-md-11 col-lg-4 py-3">
-                <smartstock-sales-by-seller [salesChannel]="salesChannel.valueChanges"></smartstock-sales-by-seller>
+                <smartstock-sales-by-seller></smartstock-sales-by-seller>
               </div>
             </div>
             <div class="row m-0 py-2">
