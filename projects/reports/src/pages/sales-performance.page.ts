@@ -49,7 +49,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
               </mat-form-field>
               <smartstock-period-date-range class="col-lg-7"></smartstock-period-date-range>
             </div>
-            <smartstock-period-date-range class="col-lg-8 mx-auto"></smartstock-period-date-range>
 
             <!--            <div class="row col-11 m-0 pt-5 justify-content-end">-->
 <!--              <mat-form-field appearance="outline">-->
@@ -61,8 +60,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
 <!--              </mat-form-field>-->
 <!--            </div>-->
             <smartstock-product-performance-report [salesChannel]="salesChannel.valueChanges"></smartstock-product-performance-report>
-            <smartstock-sales-by-category></smartstock-sales-by-category>
-            <smartstock-sales-by-seller ></smartstock-sales-by-seller>
+<!--            <smartstock-sales-by-category></smartstock-sales-by-category>-->
+            <smartstock-sales-by-seller [performanceByForm]="performanceBy.valueChanges" ></smartstock-sales-by-seller>
           </div>
 
         </mat-sidenav-content>

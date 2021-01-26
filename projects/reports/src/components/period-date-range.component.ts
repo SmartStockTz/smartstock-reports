@@ -41,7 +41,7 @@ export const MY_FORMATS = {
   selector: 'smartstock-period-date-range',
   template: `
       <div class="row  justify-content-end ">
-        <mat-form-field class="col-11 col-sm-3" appearance="outline">
+        <mat-form-field class="col-11 col-sm-3 col-lg-4" appearance="outline">
           <mat-label>Sales By</mat-label>
           <mat-select [formControl]="periodFormControl" value="retail">
             <mat-option value="day">Day</mat-option>
@@ -49,8 +49,8 @@ export const MY_FORMATS = {
             <mat-option value="year">Year</mat-option>
           </mat-select>
         </mat-form-field>
-        <div class="row m-0 col-sm-9">
-        <mat-form-field class="px-3 mx-auto col-sm-6" appearance="outline">
+        <div class="row col-sm-8">
+        <mat-form-field class="px-3 ml-auto col-sm-6" appearance="outline">
           <mat-label>Start Date</mat-label>
           <input matInput [matDatepicker]="dp" [min]="minDate" [max]="maxDate" [formControl]="fromDateFormControl">
           <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
@@ -62,7 +62,7 @@ export const MY_FORMATS = {
           >
           </mat-datepicker>
         </mat-form-field>
-        <mat-form-field class="px-3 mx-auto col-sm-6" appearance="outline">
+        <mat-form-field class="px-3 ml-auto col-sm-6" appearance="outline">
           <mat-label>End Date</mat-label>
           <input matInput [matDatepicker]="dp2" [min]="minDate" [max]="maxDate" [formControl]="toDateFormControl">
           <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>

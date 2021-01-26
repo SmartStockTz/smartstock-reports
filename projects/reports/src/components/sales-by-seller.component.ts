@@ -28,7 +28,7 @@ import {PeriodDateRangeService} from '../services/period-date-range.service';
               <div style="width: 100%; height: 100%" id="salesBySeller"></div>
               <smartstock-data-not-ready style="position: absolute" [width]="100" height="100"
                                          [isLoading]="salesStatusProgress"
-                                         *ngIf="salesStatusProgress  || (!salesBySellerData)"></smartstock-data-not-ready>
+                                         *ngIf="salesStatusProgress  || (!salesPerformanceData)"></smartstock-data-not-ready>
             </div>
           </mat-card>
         </div>
@@ -53,14 +53,19 @@ import {PeriodDateRangeService} from '../services/period-date-range.service';
             <div style="display: flex; justify-content: center">
 
               <smartstock-data-not-ready [width]="100" height="100" [isLoading]="salesStatusProgress"
-                                         *ngIf="salesStatusProgress  || (!salesBySellerData)"></smartstock-data-not-ready>
+                                         *ngIf="salesStatusProgress  || (!salesPerformanceData)"></smartstock-data-not-ready>
             </div>
-            <table *ngIf="!salesStatusProgress  && salesBySellerData" mat-table [dataSource]="salesBySellerData" matSort>
+            <table *ngIf="!salesStatusProgress  && salesPerformanceData" mat-table [dataSource]="salesPerformanceData" matSort>
 
-              <ng-container matColumnDef="seller">
+              <ng-container matColumnDef="seller/category">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Seller</th>
-                <td mat-cell
-                    *matCellDef="let element">{{element.sellerFirstname === null ? element.sellerId : element.sellerFirstname | titlecase}} {{element.sellerLastname | titlecase}}</td>
+                <div *ngIf="performanceBy === 'seller'" >
+                  <td mat-cell
+                      *matCellDef="let element">{{element.sellerFirstname === null ? element.sellerId : element.sellerFirstname | titlecase}} {{element.sellerLastname | titlecase}}</td>
+                </div>
+                <div  *ngIf="performanceBy === 'category'">
+                <td mat-cell  *matCellDef="let element">{{element.category}}</td>
+                </div>
                 <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
 
@@ -108,14 +113,16 @@ import {PeriodDateRangeService} from '../services/period-date-range.service';
 })
 export class SalesBySellerComponent implements OnInit {
   salesStatusProgress = false;
-  salesBySellerData: MatTableDataSource<any>;
+  salesPerformanceData: MatTableDataSource<any>;
   salesBySellerChart: Highcharts.Chart = undefined;
   selectedYear = new Date().getFullYear();
-  salesBySellerColumns = ['seller', 'quantity', 'amount', 'date'];
+  salesBySellerColumns = ['seller/category', 'quantity', 'amount', 'date'];
   filterFormControl = new FormControl('', [Validators.nullValidator]);
   period = 'day';
   startDate = toSqlDate(new Date(new Date().setDate(new Date().getDate() - 7)));
   endDate = toSqlDate(new Date());
+  performanceBy = 'category';
+  @Input() performanceByForm;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -128,29 +135,34 @@ export class SalesBySellerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getSalesBySeller();
+    this.getSalesPerformance();
+    this.performanceByForm.subscribe(value => {
+      this.performanceBy = value;
+      this.getSalesPerformance();
+    });
+    console.log(this.performanceBy);
     this.periodDateRangeService.castPeriod.subscribe((value) => {
       if (value) {
         this.period = value;
-        this.getSalesBySeller();
+        this.getSalesPerformance();
       }
     });
     this.periodDateRangeService.castStartDate.subscribe((value) => {
       if (value) {
         this.startDate = value;
-        this.getSalesBySeller();
+        this.getSalesPerformance();
       }
     });
     this.periodDateRangeService.castEndDate.subscribe((value) => {
       if (value) {
         this.endDate = value;
-        this.getSalesBySeller();
+        this.getSalesPerformance();
       }
     });
 
 
     this.filterFormControl.valueChanges.subscribe(filterValue => {
-      this.salesBySellerData.filter = filterValue.trim().toLowerCase();
+      this.salesPerformanceData.filter = filterValue.trim().toLowerCase();
     });
   }
 
@@ -159,59 +171,84 @@ export class SalesBySellerComponent implements OnInit {
   }
 
   // tslint:disable-next-line:typedef
-  private getSalesBySeller() {
+  private getSalesPerformance() {
     this.salesStatusProgress = true;
-    this.report.getSellerSales(this.startDate, this.endDate, this.period).then(data => {
-      this.salesStatusProgress = false;
-      this.salesBySellerData = new MatTableDataSource<any>(data);
-      setTimeout(() => {
-        this.salesBySellerData.paginator = this.paginator;
-        this.salesBySellerData.sort = this.sort;
+    if (this.performanceBy === 'seller') {
+      this.report.getSellerSales(this.startDate, this.endDate, this.period).then(sellerData => {
+        this.salesStatusProgress = false;
+        this.salesPerformanceData = new MatTableDataSource<any>(sellerData);
+        setTimeout(() => {
+          this.salesPerformanceData.paginator = this.paginator;
+          this.salesPerformanceData.sort = this.sort;
+        });
+        // @ts-ignore
+        this.initiateGraph(sellerData, null);
+      }).catch(reason => {
+        this.salesStatusProgress = false;
+        this.logger.i(reason);
       });
-
-      // @ts-ignore
-      this.initiateGraph(data);
-    }).catch(reason => {
-      this.salesStatusProgress = false;
-      this.logger.i(reason);
-      // this.logger.i(reason, 'StockStatusComponent:26');
-    });
+    }
+    else if (this.performanceBy === 'category') {
+      this.report.getSalesByCategory(this.period, this.startDate, this.endDate).then(categoryData => {
+        this.salesStatusProgress = false;
+        this.salesPerformanceData = new MatTableDataSource<any>(categoryData);
+        setTimeout(() => {
+          this.salesPerformanceData.paginator = this.paginator;
+          this.salesPerformanceData.sort = this.sort;
+        });
+        this.initiateGraph(null, categoryData);
+      }).catch(reason => {
+        this.salesStatusProgress = false;
+        this.logger.i(reason);
+      });
+    }
   }
 
   exportReport(): void {
-    const exportedDataColumns = ['seller', 'quantity', 'amount', 'date'];
-    json2csv('profit_by_category.csv', exportedDataColumns, this.salesBySellerData.filteredData).catch();
+    const exportedDataColumns = ['seller/category', 'quantity', 'amount', 'date'];
+    json2csv('profit_by_category.csv', exportedDataColumns, this.salesPerformanceData.filteredData).catch();
   }
 
 
   // tslint:disable-next-line:typedef
-  private initiateGraph(data: [{ sellerFirstname: any, sellerLastname: any, sellerId: any, quantity: any, amount: any, date: any }]) {
+  private initiateGraph(sellerData: [{ sellerFirstname: any, sellerLastname: any, sellerId: any, quantity: any, amount: any, date: any }],
+                        categoryData: [{ category: any, quantity: any, amount: any, date: any }]) {
     const days = new Set();
     const sellersIds = new Set();
-    const sellersData = {};
+    const sellersCategoryData = {};
+    let data;
+    if (this.performanceBy === 'seller') {
+      data = sellerData;
+    } else if (this.performanceBy === 'seller') {
+      data = categoryData;
+    }
+
 
     Object.keys(data).forEach(key => {
       days.add(data[key].date);
       let id;
       // @ts-ignore
-      if (data[key].sellerFirstname === null) {
-        id = data[key].sellerId;
-      } else {
-        id = this.capitalizeFirstLetter(data[key].sellerFirstname.toString()) + ' '
-          + this.capitalizeFirstLetter(data[key].sellerLastname.toString());
+      if (this.performanceBy === 'seller') {
+        if (data[key].sellerFirstname === null) {
+          id = data[key].sellerId;
+        } else {
+          id = this.capitalizeFirstLetter(data[key].sellerFirstname.toString()) + ' '
+            + this.capitalizeFirstLetter(data[key].sellerLastname.toString());
+        }
+        sellersIds.add({name: id, id: data[key].sellerId});
+      } else if (this.performanceBy === 'seller') {
+        sellersIds.add({name: data[key].category, id: data[key].category});
       }
-      sellersIds.add({name: id, id: data[key].sellerId});
-    });
+
+      });
 
     sellersIds.forEach((seller: { name, id }) => {
       const tempDataArray = [];
       days.forEach(date => {
         const filterdSales = Object.values(data).filter(value => value.date === date && value.sellerId === seller.id);
         if (filterdSales && filterdSales.length === 1) {
-          // const tempData = new Map();
           tempDataArray.push(filterdSales[0].amount);
         } else {
-          // const tempData = new Map();
           tempDataArray.push(0);
         }
         // Object.values(data).forEach(value => {
@@ -222,44 +259,44 @@ export class SalesBySellerComponent implements OnInit {
         //       + this.capitalizeFirstLetter(value.sellerLastname.toString());
         //   }
         //   if (value.date === date) {
-        //     if (sellersData[id]) {
+        //     if (sellersCategoryData[id]) {
         //       const tempData = new Map();
         //       let tempDataArray = [];
-        //       if (sellersData[id].length > 0) {
-        //         tempDataArray = sellersData[id];
+        //       if (sellersCategoryData[id].length > 0) {
+        //         tempDataArray = sellersCategoryData[id];
         //       }
         //       tempData.set(date, value.amount);
         //       tempDataArray.push(tempData);
-        //       sellersData[id] = tempDataArray;
+        //       sellersCategoryData[id] = tempDataArray;
         //     } else {
         //       const tempData = new Map();
         //       const tempDataArray = [];
         //       tempData.set(date, value.amount);
         //       tempDataArray.push(tempData);
-        //       sellersData[id] = tempDataArray;
+        //       sellersCategoryData[id] = tempDataArray;
         //     }
         //   } else {
-        //     if (sellersData[id]) {
+        //     if (sellersCategoryData[id]) {
         //       const tempData = new Map();
         //       let tempDataArray = [];
-        //       if (sellersData[id].length > 0) {
-        //         tempDataArray = sellersData[id];
+        //       if (sellersCategoryData[id].length > 0) {
+        //         tempDataArray = sellersCategoryData[id];
         //       }
         //       tempData.set(date, 0);
         //       tempDataArray.push(tempData);
-        //       sellersData[id] = tempDataArray;
+        //       sellersCategoryData[id] = tempDataArray;
         //     } else {
         //       const tempData = new Map();
         //       const tempDataArray = [];
         //       tempData.set(date, 0);
         //       tempDataArray.push(tempData);
-        //       sellersData[id] = tempDataArray;
+        //       sellersCategoryData[id] = tempDataArray;
         //     }
         //   }
         // });
-        // sellersData[id] =
+        // sellersCategoryData[id] =
       });
-      sellersData[seller.name as string] = tempDataArray;
+      sellersCategoryData[seller.name as string] = tempDataArray;
     });
     let index = 0;
     const saleDays = [];
@@ -276,7 +313,7 @@ export class SalesBySellerComponent implements OnInit {
     );
 
     console.log(days);
-    console.log(sellersData);
+    console.log(sellersCategoryData);
     const totalSales = [];
     //
     // // console.log(data);
@@ -305,17 +342,17 @@ export class SalesBySellerComponent implements OnInit {
     //     }
     //   }
     //
-    //   if (sellersData[id]) {
+    //   if (sellersCategoryData[id]) {
     //     let tempData = [];
-    //     if (sellersData[id].length > 0) {
-    //       tempData = sellersData[id];
+    //     if (sellersCategoryData[id].length > 0) {
+    //       tempData = sellersCategoryData[id];
     //     }
     //     tempData.push(element.amount);
-    //     sellersData[id] = tempData;
+    //     sellersCategoryData[id] = tempData;
     //   } else {
     //     const tempData = [];
     //     tempData.push(element.amount);
-    //     sellersData[id] = tempData;
+    //     sellersCategoryData[id] = tempData;
     //   }
     //
     //
@@ -346,17 +383,17 @@ export class SalesBySellerComponent implements OnInit {
     //   }
     //
     //
-    //   // if (sellersData[id]) {
+    //   // if (sellersCategoryData[id]) {
     //   //   let tempData = [];
-    //   //   if (sellersData[id].length > 0) {
-    //   //     tempData = sellersData[id];
+    //   //   if (sellersCategoryData[id].length > 0) {
+    //   //     tempData = sellersCategoryData[id];
     //   //   }
     //   //   tempData.push(data[key].amount);
-    //   //   sellersData[id] = tempData;
+    //   //   sellersCategoryData[id] = tempData;
     //   // } else {
     //   //   const tempData = [];
     //   //   tempData.push(data[key].amount);
-    //   //   sellersData[id] = tempData;
+    //   //   sellersCategoryData[id] = tempData;
     //   // }
     // });
 
@@ -373,7 +410,7 @@ export class SalesBySellerComponent implements OnInit {
       }
     );
     console.log(totalSales);
-    console.log(sellersData);
+    console.log(sellersCategoryData);
 
     // @ts-ignore
     this.salesBySellerChart = Highcharts.chart('salesBySeller', {
@@ -417,10 +454,10 @@ export class SalesBySellerComponent implements OnInit {
           }
 
         },
-        series: Object.keys(sellersData).map(key => {
+        series: Object.keys(sellersCategoryData).map(key => {
           return {
             name: key,
-            data: sellersData[key]
+            data: sellersCategoryData[key]
           };
         }),
       }
