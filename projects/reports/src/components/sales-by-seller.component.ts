@@ -1,31 +1,15 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import * as Highcharts from 'highcharts';
-import {LogService} from '@smartstocktz/core-libs';
+import {LogService, toSqlDate} from '@smartstocktz/core-libs';
 import {ReportService} from '../services/report.service';
-import * as _moment from 'moment';
-// @ts-ignore
-import {default as _rollupMoment, Moment} from 'moment';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatDatepicker} from '@angular/material/datepicker';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {FormControl, Validators} from '@angular/forms';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {json2csv} from '../services/json2csv.service';
 import {DatePipe} from '@angular/common';
-
-const moment = _rollupMoment || _moment;
-
-export const MY_FORMATS = {
-  parse: {
-    dateInput: 'YYYY',
-  },
-  display: {
-    dateInput: 'YYYY',
-    monthYearA11yLabel: 'YYYY',
-  },
-};
+import {PeriodDateRangeService} from '../services/period-date-range.service';
 
 @Component({
   selector: 'smartstock-sales-by-seller',
@@ -37,21 +21,6 @@ export const MY_FORMATS = {
             <div class="row pt-3 m-0 justify-content-center align-items-center">
               <mat-icon color="primary" style="width: 40px;height:40px;font-size: 36px">people</mat-icon>
               <p class="m-0 h6">Sales By Seller</p>
-              <div class="row">
-                <mat-form-field style="width: 50px;visibility: hidden">
-                  <!--            <mat-label>Year</mat-label>-->
-                  <input matInput hidden [matDatepicker]="dp" [formControl]="salesYearFormControl">
-                  <!--            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>-->
-                  <mat-datepicker #dp
-                                  startView="multi-year"
-                                  (yearSelected)="chosenYearHandler($event,dp)"
-                                  panelClass="example-month-picker">
-                  </mat-datepicker>
-                </mat-form-field>
-                <button mat-icon-button color="primary" class="mr-0 ml-auto" (click)="dp.open()" matTooltip="Select Year">
-                  <mat-icon>today</mat-icon>
-                </button>
-              </div>
             </div>
 
             <hr class="w-75 mt-0 mx-auto" color="primary">
@@ -74,20 +43,6 @@ export const MY_FORMATS = {
             </div>
             <hr class="w-75 mt-0 mx-auto" color="primary">
             <mat-card-header>
-              <!--              <mat-form-field style="margin: 0 4px;">-->
-              <!--                <mat-label>From date</mat-label>-->
-              <!--                <input matInput (click)="startDatePicker.open()" [matDatepicker]="startDatePicker"-->
-              <!--                       [formControl]="startDateFormControl">-->
-              <!--                <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>-->
-              <!--                <mat-datepicker #startDatePicker></mat-datepicker>-->
-              <!--              </mat-form-field>-->
-              <!--              <mat-form-field style="margin: 0 4px;">-->
-              <!--                <mat-label>To date</mat-label>-->
-              <!--                <input matInput (click)="endDatePicker.open()" [matDatepicker]="endDatePicker"-->
-              <!--                       [formControl]="endDateFormControl">-->
-              <!--                <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>-->
-              <!--                <mat-datepicker #endDatePicker></mat-datepicker>-->
-              <!--              </mat-form-field>-->
               <span style="flex-grow: 1;"></span>
               <mat-form-field>
                 <mat-label>Filter</mat-label>
@@ -96,18 +51,11 @@ export const MY_FORMATS = {
             </mat-card-header>
 
             <div style="display: flex; justify-content: center">
-<!--              <mat-spinner *ngIf="salesStatusProgress"></mat-spinner>-->
 
               <smartstock-data-not-ready [width]="100" height="100" [isLoading]="salesStatusProgress"
                                          *ngIf="salesStatusProgress  || (!salesBySellerData)"></smartstock-data-not-ready>
             </div>
             <table *ngIf="!salesStatusProgress  && salesBySellerData" mat-table [dataSource]="salesBySellerData" matSort>
-
-              <!--          <ng-container matColumnDef="product">-->
-              <!--            <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>-->
-              <!--            <td mat-cell *matCellDef="let element">{{element._id}}</td>-->
-              <!--            <td mat-footer-cell *matFooterCellDef></td>-->
-              <!--          </ng-container>-->
 
               <ng-container matColumnDef="seller">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Seller</th>
@@ -130,7 +78,9 @@ export const MY_FORMATS = {
 
               <ng-container matColumnDef="date">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-                <td mat-cell *matCellDef="let element">{{element.date | date}}</td>
+                <td mat-cell
+                    *matCellDef="let element">{{period === 'day' ? (element.date | date: 'dd MMM YYYY') : period === 'month' ? (element.date | date: 'MMM YYYY') : (element.date)}}
+                </td>
                 <td mat-footer-cell *matFooterCellDef>
                 </td>
               </ng-container>
@@ -154,60 +104,54 @@ export const MY_FORMATS = {
     </div>
   `,
   styleUrls: ['../styles/sales-by-category.style.scss'],
-  providers: [
-    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
-    // application's root module. We provide it at the component level here, due to limitations of
-    // our example generation script.
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-    },
 
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
-  ],
 })
 export class SalesBySellerComponent implements OnInit {
   salesStatusProgress = false;
-  salesBySellerStatus;
   salesBySellerData: MatTableDataSource<any>;
   salesBySellerChart: Highcharts.Chart = undefined;
-  salesYearFormControl = new FormControl(moment());
   selectedYear = new Date().getFullYear();
   salesBySellerColumns = ['seller', 'quantity', 'amount', 'date'];
   filterFormControl = new FormControl('', [Validators.nullValidator]);
+  period = 'day';
+  startDate = toSqlDate(new Date(new Date().setDate(new Date().getDate() - 7)));
+  endDate = toSqlDate(new Date());
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  period = 'day';
 
-  // @Input() salesperiod;
 
   constructor(private readonly  report: ReportService,
               private readonly logger: LogService,
-              private datePipe: DatePipe) {
+              private datePipe: DatePipe,
+              private periodDateRangeService: PeriodDateRangeService) {
   }
 
   ngOnInit(): void {
     this.getSalesBySeller();
-    // this.salesperiod.subscribe(value => {
-    //   this.period = value;
-    //   this.getSalesBySeller();
-    // });
+    this.periodDateRangeService.castPeriod.subscribe((value) => {
+      if (value) {
+        this.period = value;
+        this.getSalesBySeller();
+      }
+    });
+    this.periodDateRangeService.castStartDate.subscribe((value) => {
+      if (value) {
+        this.startDate = value;
+        this.getSalesBySeller();
+      }
+    });
+    this.periodDateRangeService.castEndDate.subscribe((value) => {
+      if (value) {
+        this.endDate = value;
+        this.getSalesBySeller();
+      }
+    });
+
 
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.salesBySellerData.filter = filterValue.trim().toLowerCase();
     });
-  }
-
-  // tslint:disable-next-line:typedef
-  chosenYearHandler(normalizedYear: Moment, datepicker: MatDatepicker<Moment>) {
-    const ctrlValue = this.salesYearFormControl.value;
-    ctrlValue.year(normalizedYear.year());
-    this.salesYearFormControl.setValue(ctrlValue);
-    datepicker.close();
-    this.selectedYear = new Date(this.salesYearFormControl.value).getFullYear();
-    this.getSalesBySeller();
   }
 
   capitalizeFirstLetter(data): any {
@@ -217,13 +161,15 @@ export class SalesBySellerComponent implements OnInit {
   // tslint:disable-next-line:typedef
   private getSalesBySeller() {
     this.salesStatusProgress = true;
-    this.report.getSellerSales(this.selectedYear + '-01-01', this.selectedYear + '-12-31', this.period).then(data => {
+    this.report.getSellerSales(this.startDate, this.endDate, this.period).then(data => {
       this.salesStatusProgress = false;
       this.salesBySellerData = new MatTableDataSource<any>(data);
       setTimeout(() => {
         this.salesBySellerData.paginator = this.paginator;
         this.salesBySellerData.sort = this.sort;
       });
+
+      // @ts-ignore
       this.initiateGraph(data);
     }).catch(reason => {
       this.salesStatusProgress = false;
@@ -239,46 +185,180 @@ export class SalesBySellerComponent implements OnInit {
 
 
   // tslint:disable-next-line:typedef
-  private initiateGraph(data: any) {
+  private initiateGraph(data: [{ sellerFirstname: any, sellerLastname: any, sellerId: any, quantity: any, amount: any, date: any }]) {
+    const days = new Set();
+    const sellersIds = new Set();
     const sellersData = {};
-    const saleDays = [];
-    const totalSales = [];
-    Object.keys(data).forEach(key => {
-      const seller = data[key].sellerId;
-      let id;
 
-        if (this.period === 'day') {
-          if (!saleDays.includes(this.datePipe.transform(data[key].date, 'dd MMM YYYY'))) {
-            saleDays.push(this.datePipe.transform(data[key].date, 'dd MMM YYYY'));
-          }
-        } else if (this.period === 'month') {
-          if (!saleDays.includes(this.datePipe.transform(data[key].date, 'MMM YYYY'))) {
-            saleDays.push(this.datePipe.transform(data[key].date, 'MMM YYYY'));
-          }
-        } else {
-          if (!saleDays.push(data[key].date)) {
-            saleDays.push(data[key].date);
-          }
-        }
+    Object.keys(data).forEach(key => {
+      days.add(data[key].date);
+      let id;
+      // @ts-ignore
       if (data[key].sellerFirstname === null) {
-        id = seller;
+        id = data[key].sellerId;
       } else {
         id = this.capitalizeFirstLetter(data[key].sellerFirstname.toString()) + ' '
           + this.capitalizeFirstLetter(data[key].sellerLastname.toString());
       }
-      if (sellersData[id]) {
-        let tempData = [];
-        if (sellersData[id].length > 0) {
-          tempData = sellersData[id];
-        }
-        tempData.push(data[key].amount);
-        sellersData[id] = tempData;
-      } else {
-        const tempData = [];
-        tempData.push(data[key].amount);
-        sellersData[id] = tempData;
-      }
+      sellersIds.add({name: id, id: data[key].sellerId});
     });
+
+    sellersIds.forEach((seller: { name, id }) => {
+      const tempDataArray = [];
+      days.forEach(date => {
+        const filterdSales = Object.values(data).filter(value => value.date === date && value.sellerId === seller.id);
+        if (filterdSales && filterdSales.length === 1) {
+          // const tempData = new Map();
+          tempDataArray.push(filterdSales[0].amount);
+        } else {
+          // const tempData = new Map();
+          tempDataArray.push(0);
+        }
+        // Object.values(data).forEach(value => {
+        //   if (value.sellerFirstname === null) {
+        //     id = value.sellerId;
+        //   } else {
+        //     id = this.capitalizeFirstLetter(value.sellerFirstname.toString()) + ' '
+        //       + this.capitalizeFirstLetter(value.sellerLastname.toString());
+        //   }
+        //   if (value.date === date) {
+        //     if (sellersData[id]) {
+        //       const tempData = new Map();
+        //       let tempDataArray = [];
+        //       if (sellersData[id].length > 0) {
+        //         tempDataArray = sellersData[id];
+        //       }
+        //       tempData.set(date, value.amount);
+        //       tempDataArray.push(tempData);
+        //       sellersData[id] = tempDataArray;
+        //     } else {
+        //       const tempData = new Map();
+        //       const tempDataArray = [];
+        //       tempData.set(date, value.amount);
+        //       tempDataArray.push(tempData);
+        //       sellersData[id] = tempDataArray;
+        //     }
+        //   } else {
+        //     if (sellersData[id]) {
+        //       const tempData = new Map();
+        //       let tempDataArray = [];
+        //       if (sellersData[id].length > 0) {
+        //         tempDataArray = sellersData[id];
+        //       }
+        //       tempData.set(date, 0);
+        //       tempDataArray.push(tempData);
+        //       sellersData[id] = tempDataArray;
+        //     } else {
+        //       const tempData = new Map();
+        //       const tempDataArray = [];
+        //       tempData.set(date, 0);
+        //       tempDataArray.push(tempData);
+        //       sellersData[id] = tempDataArray;
+        //     }
+        //   }
+        // });
+        // sellersData[id] =
+      });
+      sellersData[seller.name as string] = tempDataArray;
+    });
+    let index = 0;
+    const saleDays = [];
+    days.forEach(date => {
+        if (this.period === 'day') {
+          days[index] = this.datePipe.transform(date.toString(), 'dd MMM YYYY');
+        } else if (this.period === 'month') {
+          days[index] = this.datePipe.transform(date + '/21', 'MMM YYYY');
+        } else {
+          days[index] = date;
+        }
+        index++;
+      }
+    );
+
+    console.log(days);
+    console.log(sellersData);
+    const totalSales = [];
+    //
+    // // console.log(data);
+    // let sellerDateAmountObj = {};
+    // Object.values(data).forEach(element => {
+    //   console.log(element);
+    //   let id;
+    //   // @ts-ignore
+    //   if (element.sellerFirstname === null) {
+    //     id = element.sellerId;
+    //   } else {
+    //     id = this.capitalizeFirstLetter(element.sellerFirstname.toString()) + ' '
+    //       + this.capitalizeFirstLetter(element.sellerLastname.toString());
+    //   }
+    //   if (this.period === 'day') {
+    //     if (!saleDays.includes(this.datePipe.transform(element.date, 'dd MMM YYYY'))) {
+    //       saleDays.push(this.datePipe.transform(element.date, 'dd MMM YYYY'));
+    //     }
+    //   } else if (this.period === 'month') {
+    //     if (!saleDays.includes(this.datePipe.transform(element.date, 'MMM YYYY'))) {
+    //       saleDays.push(this.datePipe.transform(element.date, 'MMM YYYY'));
+    //     }
+    //   } else {
+    //     if (!saleDays.push(element.date)) {
+    //       saleDays.push(element.date);
+    //     }
+    //   }
+    //
+    //   if (sellersData[id]) {
+    //     let tempData = [];
+    //     if (sellersData[id].length > 0) {
+    //       tempData = sellersData[id];
+    //     }
+    //     tempData.push(element.amount);
+    //     sellersData[id] = tempData;
+    //   } else {
+    //     const tempData = [];
+    //     tempData.push(element.amount);
+    //     sellersData[id] = tempData;
+    //   }
+    //
+    //
+    // });
+
+    // Object.keys(data).forEach(key => {
+    //   const seller = data[key].sellerId;
+    //   let id;
+    //
+    //   if (this.period === 'day') {
+    //     if (!saleDays.includes(this.datePipe.transform(data[key].date, 'dd MMM YYYY'))) {
+    //       saleDays.push(this.datePipe.transform(data[key].date, 'dd MMM YYYY'));
+    //     }
+    //   } else if (this.period === 'month') {
+    //     if (!saleDays.includes(this.datePipe.transform(data[key].date, 'MMM YYYY'))) {
+    //       saleDays.push(this.datePipe.transform(data[key].date, 'MMM YYYY'));
+    //     }
+    //   } else {
+    //     if (!saleDays.push(data[key].date)) {
+    //       saleDays.push(data[key].date);
+    //     }
+    //   }
+    //   if (data[key].sellerFirstname === null) {
+    //     id = seller;
+    //   } else {
+    //     id = this.capitalizeFirstLetter(data[key].sellerFirstname.toString()) + ' '
+    //       + this.capitalizeFirstLetter(data[key].sellerLastname.toString());
+    //   }
+    //
+    //
+    //   // if (sellersData[id]) {
+    //   //   let tempData = [];
+    //   //   if (sellersData[id].length > 0) {
+    //   //     tempData = sellersData[id];
+    //   //   }
+    //   //   tempData.push(data[key].amount);
+    //   //   sellersData[id] = tempData;
+    //   // } else {
+    //   //   const tempData = [];
+    //   //   tempData.push(data[key].amount);
+    //   //   sellersData[id] = tempData;
+    //   // }
+    // });
 
     data.forEach(val => {
         const seller = val.sellerId;
@@ -290,27 +370,6 @@ export class SalesBySellerComponent implements OnInit {
           id = this.capitalizeFirstLetter(val.sellerFirstname.toString()) + ' '
             + this.capitalizeFirstLetter(val.sellerLastname.toString());
         }
-        // sellersData[id] = [].push(val.amount);
-
-        // if (seller) {
-        //   if (sellersData[id]) {
-        //     sellersData[id] = [].push(val.amount);
-        //   } else {
-        //   }
-        // }
-        // const seller = val.seller;
-
-        // if (sellersData[id]) {
-        //   // const amount = parseFloat(val.amount) + sellersData[seller.firstname + ' ' +
-        //   // seller.lastname][Object.keys(sellerSalesData)[id]];
-        //   sellersData[id] = [].map(ser => {
-        //    ser = val.amount;
-        //   });
-        // } else {
-        //   const sellerInfo = {...sellersData};
-        //   sellerInfo[id] = parseFloat(val.amount);
-        //   sellersData[id] = sellerInfo;
-        // }
       }
     );
     console.log(totalSales);
@@ -328,7 +387,7 @@ export class SalesBySellerComponent implements OnInit {
         },
         // @ts-ignore
         xAxis: {
-          categories: saleDays,
+          categories: days,
           // title: {
           //   text: this.selectedYear
           // }
@@ -353,19 +412,6 @@ export class SalesBySellerComponent implements OnInit {
         },
 
         plotOptions: {
-          // area: {
-          //   // pointStart: saleDays[0],
-          //   marker: {
-          //     enabled: false,
-          //     symbol: 'circle',
-          //     radius: 4,
-          //     states: {
-          //       hover: {
-          //         enabled: true
-          //       }
-          //     }
-          //   }
-          // }
           series: {
             fillOpacity: 0
           }

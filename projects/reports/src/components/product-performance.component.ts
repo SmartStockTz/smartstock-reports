@@ -9,6 +9,7 @@ import {FormControl, Validators} from '@angular/forms';
 import {MatSort} from '@angular/material/sort';
 import {ReportService} from '../services/report.service';
 import {json2csv} from '../services/json2csv.service';
+import {PeriodDateRangeService} from '../services/period-date-range.service';
 
 
 export interface ProductPerformanceI {
@@ -25,7 +26,7 @@ export interface ProductPerformanceI {
 @Component({
   selector: 'smartstock-product-performance-report',
   template: `
-    <div class="col-lg-10 mx-auto py-4">
+    <div class="col-lg-11 mx-auto py-4">
       <div>
         <mat-card class="mat-elevation-z3">
           <div class="row pt-3 m-0 justify-content-center align-items-center">
@@ -162,6 +163,7 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
               private readonly snack: MatSnackBar,
               private readonly logger: LogService,
               private readonly reportService: ReportService,
+              private periodDateRangeService: PeriodDateRangeService
   ) {
     super();
   }
@@ -179,7 +181,17 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
     this.endDate = toSqlDate(new Date());
 
     this.getProductReport(this.channel, this.startDate, this.endDate);
-    this.dateRangeListener();
+    // this.dateRangeListener();
+
+    this.periodDateRangeService.castPeriod.subscribe((value) => {
+      this.getProductReport(this.channel, this.startDate, this.endDate);
+    });
+    this.periodDateRangeService.castStartDate.subscribe((value) => {
+      this.getProductReport(this.channel, value, this.endDate);
+    });
+    this.periodDateRangeService.castEndDate.subscribe((value) => {
+      this.getProductReport(this.channel, this.startDate, value);
+    });
 
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.productPerformanceDatasource.filter = filterValue.trim().toLowerCase();

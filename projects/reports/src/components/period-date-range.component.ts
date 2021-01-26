@@ -15,6 +15,10 @@ import * as _moment from 'moment';
 import {default as _rollupMoment, Moment} from 'moment';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import {PeriodDateRangeService} from '../services/period-date-range.service';
+
 
 const moment = _rollupMoment || _moment;
 export const MY_FORMATS = {
@@ -29,12 +33,15 @@ export const MY_FORMATS = {
   },
 };
 
+@Injectable({
+  providedIn: 'root'
+})
+
 @Component({
   selector: 'smartstock-period-date-range',
   template: `
-    <div class="col-12" style="margin-top: 1em">
-      <div class="row col-lg-11 mx-auto pt-3 justify-content-end ">
-        <mat-form-field appearance="outline">
+      <div class="row  justify-content-end ">
+        <mat-form-field class="col-11 col-sm-3" appearance="outline">
           <mat-label>Sales By</mat-label>
           <mat-select [formControl]="periodFormControl" value="retail">
             <mat-option value="day">Day</mat-option>
@@ -42,8 +49,8 @@ export const MY_FORMATS = {
             <mat-option value="year">Year</mat-option>
           </mat-select>
         </mat-form-field>
-        <div class="row m-0">
-        <mat-form-field class="px-3 mx-auto" appearance="outline">
+        <div class="row m-0 col-sm-9">
+        <mat-form-field class="px-3 mx-auto col-sm-6" appearance="outline">
           <mat-label>Start Date</mat-label>
           <input matInput [matDatepicker]="dp" [min]="minDate" [max]="maxDate" [formControl]="fromDateFormControl">
           <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
@@ -55,7 +62,7 @@ export const MY_FORMATS = {
           >
           </mat-datepicker>
         </mat-form-field>
-        <mat-form-field class="mx-auto" appearance="outline">
+        <mat-form-field class="px-3 mx-auto col-sm-6" appearance="outline">
           <mat-label>End Date</mat-label>
           <input matInput [matDatepicker]="dp2" [min]="minDate" [max]="maxDate" [formControl]="toDateFormControl">
           <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
@@ -70,7 +77,6 @@ export const MY_FORMATS = {
         </div>
       </div>
 
-    </div>
   `,
   // styleUrls: ['../styles/sales-trends.style.scss'],
   providers: [
@@ -92,8 +98,7 @@ export class PeriodDateRangeComponent implements OnInit {
   minDate = new Date(new Date().setFullYear(2015));
   from = new Date(new Date().setDate(new Date().getDate() - 7));
   to = new Date();
-
-  constructor() {
+  constructor(private periodDateRangeService: PeriodDateRangeService) {
     // this.dateRange = new FormGroup({
     //   from: new FormControl(new Date(new Date().setDate(new Date().getDate() - 7))),
     //   to: new FormControl(new Date())
@@ -105,6 +110,7 @@ export class PeriodDateRangeComponent implements OnInit {
     this.fromDateFormControl.setValue(this.from);
     this.toDateFormControl.setValue(this.to);
     this.periodFormControl.valueChanges.subscribe(value => {
+      this.periodDateRangeService.editPeriod(value);
     });
   }
 
@@ -118,6 +124,7 @@ export class PeriodDateRangeComponent implements OnInit {
         this.from = new Date(new Date(this.from).setMonth(0));
         this.from = new Date(new Date(this.from).setDate(1));
         this.fromDateFormControl.setValue(this.from);
+        this.periodDateRangeService.editStartDate(toSqlDate(this.from));
       }
     } else {
       this.to = new Date(new Date().setFullYear(normalizedYear.year()));
@@ -127,6 +134,7 @@ export class PeriodDateRangeComponent implements OnInit {
         this.to = new Date(new Date(this.to).setDate(1));
         this.to = new Date(new Date(this.to).setDate(new Date(this.to).getDate() - 1));
         this.toDateFormControl.setValue(this.to);
+        this.periodDateRangeService.editEndDate(toSqlDate(this.to));
       }
     }
   }
@@ -139,7 +147,8 @@ export class PeriodDateRangeComponent implements OnInit {
         datepicker.close();
         this.from = new Date(new Date(this.from).setDate(1));
         this.fromDateFormControl.setValue(this.from);
-         }
+        this.periodDateRangeService.editStartDate(toSqlDate(this.from));
+      }
     } else {
       this.to = new Date(new Date(this.to).setMonth(normalizedMonth.month() + 1));
       if (this.periodFormControl.value === 'month') {
@@ -147,6 +156,7 @@ export class PeriodDateRangeComponent implements OnInit {
         this.to = new Date(new Date(this.to).setDate(1));
         this.to = new Date(new Date(this.to).setDate(new Date(this.to).getDate() - 1));
         this.toDateFormControl.setValue(this.to);
+        this.periodDateRangeService.editEndDate(toSqlDate(this.to));
       }
     }
   }
@@ -157,10 +167,12 @@ export class PeriodDateRangeComponent implements OnInit {
       this.from = new Date(new Date(this.from).setDate(normalizedDate.date()));
       datepicker.close();
       this.fromDateFormControl.setValue(this.from);
+      this.periodDateRangeService.editStartDate(toSqlDate(this.from));
     } else {
       this.to = new Date(new Date(this.to).setDate(normalizedDate.date()));
       datepicker.close();
       this.toDateFormControl.setValue(this.to);
+      this.periodDateRangeService.editEndDate(toSqlDate(this.to));
     }
   }
 

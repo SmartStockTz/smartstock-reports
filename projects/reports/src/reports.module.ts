@@ -52,6 +52,7 @@ import {SalesOrderPageComponent} from './pages/sales-order.page';
 import {SalesPerformancePageComponent} from './pages/sales-performance.page';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 import {PeriodDateRangeComponent} from './components/period-date-range.component';
+import {PeriodDateRangeService} from './services/period-date-range.service';
 
 
 const routes: Routes = [
@@ -108,7 +109,8 @@ const routes: Routes = [
           provide: ROUTES,
           useValue: routes
         },
-        DatePipe
+        DatePipe,
+        PeriodDateRangeService
       ]
     },
     MatDatepickerModule,

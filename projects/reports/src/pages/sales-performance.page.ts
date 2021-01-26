@@ -2,6 +2,8 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
 import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 import {FormControl} from '@angular/forms';
+import {PeriodDateRangeComponent} from '../components/period-date-range.component';
+import {PeriodDateRangeService} from '../services/period-date-range.service';
 
 export interface PeriodicElement {
   name: string;
@@ -36,31 +38,32 @@ const ELEMENT_DATA: PeriodicElement[] = [
           <smartstock-toolbar [heading]="'Sales Reports'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
 
           <div style="min-height: 90vh;display: flex;flex-direction: column; justify-content: space-evenly">
-            <smartstock-period-date-range></smartstock-period-date-range>
-            <div class="row col-11 m-0 pt-5 justify-content-end">
-              <mat-form-field appearance="outline">
+            <div class="row col-lg-11 mx-auto pt-5 align-items-center justify-content-end">
+              <mat-form-field class="px-3 col-11 col-md-4 col-lg-3" appearance="outline">
                 <mat-label>Sales Type</mat-label>
-                <mat-select [formControl]="salesChannel" value="retail">
-                  <mat-option value="retail">Retail</mat-option>
-                  <mat-option value="whole">Wholesale</mat-option>
+                <mat-select [formControl]="performanceBy" value="seller">
+                  <mat-option value="product">Product</mat-option>
+                  <mat-option value="seller">Seller</mat-option>
+                  <mat-option value="category">Category</mat-option>
                 </mat-select>
               </mat-form-field>
+              <smartstock-period-date-range class="col-lg-7"></smartstock-period-date-range>
             </div>
+            <smartstock-period-date-range class="col-lg-8 mx-auto"></smartstock-period-date-range>
+
+            <!--            <div class="row col-11 m-0 pt-5 justify-content-end">-->
+<!--              <mat-form-field appearance="outline">-->
+<!--                <mat-label>Sales Type</mat-label>-->
+<!--                <mat-select [formControl]="salesChannel" value="retail">-->
+<!--                  <mat-option value="retail">Retail</mat-option>-->
+<!--                  <mat-option value="whole">Wholesale</mat-option>-->
+<!--                </mat-select>-->
+<!--              </mat-form-field>-->
+<!--            </div>-->
             <smartstock-product-performance-report [salesChannel]="salesChannel.valueChanges"></smartstock-product-performance-report>
             <smartstock-sales-by-category></smartstock-sales-by-category>
             <smartstock-sales-by-seller ></smartstock-sales-by-seller>
           </div>
-
-          <!--                  <div [ngStyle]="{padding: (isMobile || !enoughWidth())?'24px 0':'40px 16px'}"-->
-          <!--                       [ngClass]="(isMobile || !enoughWidth())?'container-fluid':'container'">-->
-          <!--                      <div class="col-12 col-lg-10 col-xl-10 offset-xl-1 offset-lg-1 offset-md-0 offset-sm-0">-->
-          <!--                          <div class="row">-->
-          <!--                              <div style="margin-bottom: 10px" class="col-12">-->
-          <!--                                  <smartstock-cart-report></smartstock-cart-report>-->
-          <!--                              </div>-->
-          <!--                          </div>-->
-          <!--                      </div>-->
-          <!--                  </div>-->
 
         </mat-sidenav-content>
       </mat-sidenav-container>
@@ -72,6 +75,7 @@ export class SalesPerformancePageComponent extends DeviceInfoUtil implements OnI
   isMobile = false;
   displayedColumns: string[] = ['position', 'name', 'weight'];
   dataSource = ELEMENT_DATA;
+  performanceBy = new FormControl('category');
   salesChannel = new FormControl('retail');
   @ViewChild('sidenav') sidenav: MatSidenav;
 
@@ -80,5 +84,6 @@ export class SalesPerformancePageComponent extends DeviceInfoUtil implements OnI
   }
 
   ngOnInit(): void {
+
   }
 }

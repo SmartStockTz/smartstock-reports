@@ -2,31 +2,15 @@ import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import * as Highcharts from 'highcharts';
 import {LogService, toSqlDate} from '@smartstocktz/core-libs';
 import {ReportService} from '../services/report.service';
-// @ts-ignore
-import {default as _rollupMoment, Moment} from 'moment';
-import * as _moment from 'moment';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatDatepicker} from '@angular/material/datepicker';
-import {MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS} from '@angular/material-moment-adapter';
 import {FormControl, Validators} from '@angular/forms';
 import {json2csv} from '../services/json2csv.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
+import {PeriodDateRangeService} from '../services/period-date-range.service';
 
-const moment = _rollupMoment || _moment;
 
-export const MY_FORMATS = {
-  parse: {
-    dateInput: 'MM/YYYY',
-  },
-  display: {
-    dateInput: 'MM/YYYY',
-    monthYearLabel: 'MMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
 
 @Component({
   selector: 'smartstock-sales-by-category',
@@ -37,23 +21,7 @@ export const MY_FORMATS = {
           <mat-card class="mat-elevation-z3" style="border-radius: 15px; border-left: 5px solid green;">
             <div class="row pt-3 m-0 justify-content-center align-items-center">
               <mat-icon color="primary" style="width: 40px;height:40px;font-size: 36px">category</mat-icon>
-              <p class="m-0 h6">Sales By Category in {{month}} {{selectedYear}}</p>
-              <div class="row">
-                <mat-form-field style="width: 50px;visibility: hidden">
-                  <!--            <mat-label>Year</mat-label>-->
-                  <input matInput hidden [matDatepicker]="dp" [formControl]="salesYearFormControl">
-                  <!--            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>-->
-                  <mat-datepicker #dp
-                                  startView="multi-year"
-                                  (yearSelected)="chosenYearHandler($event)"
-                                  (monthSelected)="chosenMonthHandler($event, dp)"
-                  >
-                  </mat-datepicker>
-                </mat-form-field>
-                <button mat-icon-button color="primary" class="mr-0 ml-auto" (click)="dp.open()" matTooltip="Select Year">
-                  <mat-icon>today</mat-icon>
-                </button>
-              </div>
+              <p class="m-0 h6">Sales By Category</p>
             </div>
             <hr class="w-75 mt-0 mx-auto" color="primary">
             <div class="d-flex justify-content-center align-items-center py-3" style="min-height: 200px">
@@ -75,47 +43,19 @@ export const MY_FORMATS = {
             </div>
             <hr class="w-75 mt-0 mx-auto" color="primary">
             <mat-card-header>
-<!--              <mat-form-field style="margin: 0 4px;">-->
-<!--                <mat-label>From date</mat-label>-->
-<!--                <input matInput (click)="startDatePicker.open()" [matDatepicker]="startDatePicker"-->
-<!--                       [formControl]="startDateFormControl">-->
-<!--                <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>-->
-<!--                <mat-datepicker #startDatePicker></mat-datepicker>-->
-<!--              </mat-form-field>-->
-<!--              <mat-form-field style="margin: 0 4px;">-->
-<!--                <mat-label>To date</mat-label>-->
-<!--                <input matInput (click)="endDatePicker.open()" [matDatepicker]="endDatePicker"-->
-<!--                       [formControl]="endDateFormControl">-->
-<!--                <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>-->
-<!--                <mat-datepicker #endDatePicker></mat-datepicker>-->
-<!--              </mat-form-field>-->
               <span style="flex-grow: 1;"></span>
               <mat-form-field>
                 <mat-label>Filter</mat-label>
                 <input matInput [formControl]="filterFormControl" placeholder="Eg. Piriton">
               </mat-form-field>
-              <!--<mat-form-field>-->
-              <!--<mat-label>Sales type</mat-label>-->
-              <!--<mat-select [formControl]="periodFormControl">-->
-              <!--<mat-option value="retail">Retail</mat-option>-->
-              <!--<mat-option value="whole">Whole sale</mat-option>-->
-              <!--</mat-select>-->
-              <!--</mat-form-field>-->
             </mat-card-header>
 
             <div style="display: flex; justify-content: center">
-<!--              <mat-spinner *ngIf="salesStatusProgress"></mat-spinner>-->
               <smartstock-data-not-ready [width]="100" height="100"
                                          [isLoading]="salesStatusProgress"
                                          *ngIf="salesStatusProgress  || (!salesByCategoryData)"></smartstock-data-not-ready>
             </div>
             <table *ngIf="!salesStatusProgress  && salesByCategoryData" mat-table [dataSource]="salesByCategoryData" matSort>
-
-              <!--          <ng-container matColumnDef="product">-->
-              <!--            <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>-->
-              <!--            <td mat-cell *matCellDef="let element">{{element._id}}</td>-->
-              <!--            <td mat-footer-cell *matFooterCellDef></td>-->
-              <!--          </ng-container>-->
 
               <ng-container matColumnDef="category">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
@@ -137,30 +77,12 @@ export const MY_FORMATS = {
 
               <ng-container matColumnDef="date">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-                <td mat-cell *matCellDef="let element">{{element.date | date}}</td>
+                <td mat-cell
+                    *matCellDef="let element">{{period === 'day' ? (element.date | date: 'dd MMM YYYY') : period === 'month' ? (element.date | date: 'MMM YYYY') : (element.date)}}
+                </td>
                 <td mat-footer-cell *matFooterCellDef>
                 </td>
               </ng-container>
-
-<!--              <ng-container matColumnDef="lastSold">-->
-<!--                <th mat-header-cell *matHeaderCellDef mat-sort-header>Last sold</th>-->
-<!--                <td matRipple mat-cell *matCellDef="let element">{{element.lastSold | date}}</td>-->
-<!--                <td mat-footer-cell *matFooterCellDef></td>-->
-<!--              </ng-container>-->
-
-              <!--          <ng-container matColumnDef="costOfGoodSold">-->
-              <!--            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost of goods sold</th>-->
-              <!--            <td mat-cell-->
-              <!--                *matCellDef="let element">{{element.costOfGoodsSold | currency: ' TZS'}}</td>-->
-              <!--            <td mat-footer-cell *matFooterCellDef></td>-->
-              <!--          </ng-container>-->
-
-              <!--          <ng-container matColumnDef="grossProfit">-->
-              <!--            <th mat-header-cell *matHeaderCellDef mat-sort-header>Gross profit</th>-->
-              <!--            <td mat-cell *matCellDef="let element">{{element.sales - element.costOfGoodsSold | currency: ' TZS'}}</td>-->
-              <!--            <td mat-footer-cell *matFooterCellDef></td>-->
-              <!--          </ng-container>-->
-
 
               <tr mat-header-row *matHeaderRowDef="salesByCategoryColumns"></tr>
               <tr matTooltip="{{row.product}}" class="table-data-row" mat-row
@@ -182,64 +104,50 @@ export const MY_FORMATS = {
     </div>
   `,
   styleUrls: ['../styles/sales-by-category.style.scss'],
-  providers: [
-    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
-    // application's root module. We provide it at the component level here, due to limitations of
-    // our example generation script.
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-    },
 
-    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
-  ],
 })
 export class SalesByCategoryComponent implements OnInit {
   salesStatusProgress = false;
   salesByCategoryData: MatTableDataSource<any>;
-  // salesByCategoryData: { x: string; y: number }[];
   salesByCategoryChart: Highcharts.Chart = undefined;
   // @Input() salesperiod;
   period = 'day';
-  salesYearFormControl = new FormControl(moment());
-  selectedYear = new Date().getFullYear();
-  selectedMonth = new Date().getMonth();
   totalSales = 0;
-  month;
+  startDate = toSqlDate(new Date(new Date().setDate(new Date().getDate() - 7)));
+  endDate = toSqlDate(new Date());
   salesByCategoryColumns = ['category', 'quantitySold', 'sales', 'date'];
   filterFormControl = new FormControl('', [Validators.nullValidator]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  sellerSalesData = {
-    Jan: 1,
-    Feb: 2,
-    Mar: 3,
-    Apr: 4,
-    May: 5,
-    Jun: 6,
-    Jul: 7,
-    Aug: 8,
-    Sep: 9,
-    Oct: 10,
-    Nov: 11,
-    Dec: 12,
-  };
 
   constructor(
     private readonly report: ReportService,
-    private readonly logger: LogService
+    private readonly logger: LogService,
+    private periodDateRangeService: PeriodDateRangeService
   ) {
   }
 
   ngOnInit(): void {
-    this.month = Object.keys(this.sellerSalesData)[this.selectedMonth];
     this.getSalesByCategory();
-    // this.salesperiod.subscribe((value) => {
-    //   this.period = value;
-    //   this.getSalesByCategory();
-    // });
+    this.periodDateRangeService.castPeriod.subscribe((value) => {
+      if (value) {
+        this.period = value;
+        this.getSalesByCategory();
+      }
+    });
+    this.periodDateRangeService.castStartDate.subscribe((value) => {
+      if (value) {
+        this.startDate = value;
+        this.getSalesByCategory();
+      }
+    });
+    this.periodDateRangeService.castEndDate.subscribe((value) => {
+      if (value) {
+        this.endDate = value;
+        this.getSalesByCategory();
+      }
+    });
 
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.salesByCategoryData.filter = filterValue.trim().toLowerCase();
@@ -247,37 +155,8 @@ export class SalesByCategoryComponent implements OnInit {
   }
 
   // tslint:disable-next-line:typedef
-  chosenYearHandler(normalizedYear: Moment) {
-    const ctrlValue = this.salesYearFormControl.value;
-    ctrlValue.year(normalizedYear.year());
-    this.salesYearFormControl.setValue(ctrlValue);
-    this.selectedYear = new Date(this.salesYearFormControl.value).getFullYear();
-  }
-
-  // tslint:disable-next-line:typedef
-  chosenMonthHandler(
-    normalizedMonth: Moment,
-    datepicker: MatDatepicker<Moment>
-  ) {
-    const ctrlValue = this.salesYearFormControl.value;
-    ctrlValue.month(normalizedMonth.month());
-    this.salesYearFormControl.setValue(ctrlValue);
-    this.selectedMonth = new Date(this.salesYearFormControl.value).getMonth();
-    this.month = Object.keys(this.sellerSalesData)[this.selectedMonth];
-    this.getSalesByCategory();
-    datepicker.close();
-  }
-
-  // tslint:disable-next-line:typedef
   private getSalesByCategory() {
-    let monthFormat;
-    this.salesStatusProgress = true;
-    this.selectedMonth += 1;
-    if (this.selectedMonth < 10) {
-      monthFormat = '0' + this.selectedMonth.toString();
-    }
-    this.report.getSalesByCategory(this.period, this.selectedYear + '-' + monthFormat + '-01',
-      this.selectedYear + '-' + monthFormat + '-31').then(data => {
+    this.report.getSalesByCategory(this.period, this.startDate, this.endDate).then(data => {
       this.salesStatusProgress = false;
       this.salesByCategoryData = new MatTableDataSource<any>(data);
       this.totalSales = data.map(t => t.amount).reduce((acc, value) => acc + value, 0);
@@ -289,7 +168,6 @@ export class SalesByCategoryComponent implements OnInit {
     }).catch(reason => {
       this.salesStatusProgress = false;
       this.logger.i(reason);
-      // this.logger.i(reason, 'StockStatusComponent:26');
     });
   }
 
@@ -329,11 +207,6 @@ export class SalesByCategoryComponent implements OnInit {
       title: {
         text: null,
       },
-      // legend: {
-      //   layout: 'horizontal',
-      //   align: 'center',
-      //   verticalAlign: 'top',
-      // },
       tooltip: {
         pointFormat:
           '{series.name}<br>: <b>{point.percentage:.1f}% </b><br><b>: {point.y}/=</b>',
@@ -358,21 +231,12 @@ export class SalesByCategoryComponent implements OnInit {
           name: '',
           colorByPoint: true,
           data: data.map((val) => {
-            // if (val.period === this.period) {
-              return {
-                name: val.category,
-                y: val.amount,
-                sliced: true,
-                selected: true,
-              };
-            // } else {
-            //   return {
-            //     name: val._id,
-            //     y: 0,
-            //     sliced: true,
-            //     selected: true,
-            //   };
-            // }
+            return {
+              name: val.category,
+              y: val.amount,
+              sliced: true,
+              selected: true,
+            };
           }),
         },
       ],
