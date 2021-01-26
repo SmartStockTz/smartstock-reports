@@ -7,10 +7,9 @@ import {MatSort} from '@angular/material/sort';
 import {CartModel} from '../models/cart.model';
 import {FormControl, Validators} from '@angular/forms';
 import {ReportService} from '../services/report.service';
-import {toSqlDate} from '@smartstocktz/core-libs';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {CartDetailsComponent} from './cart-details.component';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
+import {DeviceInfoUtil, toSqlDate} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'smartstock-cart-report',
@@ -62,7 +61,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 
 
           <div style="display: flex; justify-content: center">
-            <mat-spinner *ngIf="isLoading"></mat-spinner>
+            <mat-spinner diameter="30" *ngIf="isLoading"></mat-spinner>
           </div>
 
           <smartstock-data-not-ready *ngIf="noDataRetrieved  && !isLoading"></smartstock-data-not-ready>
@@ -154,9 +153,6 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
     </mat-menu>
   `,
   styleUrls: ['../styles/cart.component.scss'],
-  providers: [
-    ReportService
-  ]
 })
 export class CartComponent extends DeviceInfoUtil implements OnInit {
 
@@ -231,11 +227,11 @@ export class CartComponent extends DeviceInfoUtil implements OnInit {
 
   private dateRangeListener(): void {
     this.startDateFormControl.valueChanges.subscribe(value => {
-      this.startDate = toSqlDate(value);
+      this.startDate = toSqlDate(new Date(value));
       this.getSoldCarts(this.channel, this.startDate, this.endDate);
     });
     this.endDateFormControl.valueChanges.subscribe(value => {
-      this.endDate = toSqlDate(value);
+      this.endDate = toSqlDate(new Date(value));
       this.getSoldCarts(this.channel, this.startDate, this.endDate);
     });
     this.channelFormControl.valueChanges.subscribe(value => {

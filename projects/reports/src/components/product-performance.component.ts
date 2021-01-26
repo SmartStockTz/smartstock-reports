@@ -183,13 +183,13 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
     this.getProductReport(this.channel, this.startDate, this.endDate);
     // this.dateRangeListener();
 
-    this.periodDateRangeService.castPeriod.subscribe((value) => {
+    this.periodDateRangeService.period.subscribe((value) => {
       this.getProductReport(this.channel, this.startDate, this.endDate);
     });
-    this.periodDateRangeService.castStartDate.subscribe((value) => {
+    this.periodDateRangeService.startDate.subscribe((value) => {
       this.getProductReport(this.channel, value, this.endDate);
     });
-    this.periodDateRangeService.castEndDate.subscribe((value) => {
+    this.periodDateRangeService.endDate.subscribe((value) => {
       this.getProductReport(this.channel, this.startDate, value);
     });
 

@@ -37,8 +37,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
         <mat-sidenav-content>
           <smartstock-toolbar [heading]="'Sales Reports'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
 
-          <div style="min-height: 90vh;display: flex;flex-direction: column; justify-content: space-evenly">
-            <div class="row col-lg-11 mx-auto pt-5 align-items-center justify-content-end">
+          <div class="container" style="min-height: 90vh;">
+            <div class="row mx-auto pt-5 align-items-center justify-content-end">
               <mat-form-field class="px-3 col-11 col-md-4 col-lg-3" appearance="outline">
                 <mat-label>Sales Type</mat-label>
                 <mat-select [formControl]="performanceBy" value="seller">
@@ -47,7 +47,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
                   <mat-option value="category">Category</mat-option>
                 </mat-select>
               </mat-form-field>
-              <smartstock-period-date-range class="col-lg-7"></smartstock-period-date-range>
+              <smartstock-period-date-range class="col-lg-9"></smartstock-period-date-range>
             </div>
 
             <!--            <div class="row col-11 m-0 pt-5 justify-content-end">-->
@@ -59,9 +59,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
 <!--                </mat-select>-->
 <!--              </mat-form-field>-->
 <!--            </div>-->
-            <smartstock-product-performance-report [salesChannel]="salesChannel.valueChanges"></smartstock-product-performance-report>
+<!--            <smartstock-product-performance-report [salesChannel]="salesChannel.valueChanges"></smartstock-product-performance-report>-->
 <!--            <smartstock-sales-by-category></smartstock-sales-by-category>-->
-            <smartstock-sales-by-seller [performanceByForm]="performanceBy.valueChanges" ></smartstock-sales-by-seller>
+            <smartstock-sales-performance-component [performanceByForm]="performanceBy.valueChanges" ></smartstock-sales-performance-component>
           </div>
 
         </mat-sidenav-content>
@@ -74,7 +74,7 @@ export class SalesPerformancePageComponent extends DeviceInfoUtil implements OnI
   isMobile = false;
   displayedColumns: string[] = ['position', 'name', 'weight'];
   dataSource = ELEMENT_DATA;
-  performanceBy = new FormControl('category');
+  performanceBy = new FormControl('product');
   salesChannel = new FormControl('retail');
   @ViewChild('sidenav') sidenav: MatSidenav;
 

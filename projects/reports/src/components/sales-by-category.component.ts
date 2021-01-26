@@ -130,19 +130,19 @@ export class SalesByCategoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSalesByCategory();
-    this.periodDateRangeService.castPeriod.subscribe((value) => {
+    this.periodDateRangeService.period.subscribe((value) => {
       if (value) {
         this.period = value;
         this.getSalesByCategory();
       }
     });
-    this.periodDateRangeService.castStartDate.subscribe((value) => {
+    this.periodDateRangeService.startDate.subscribe((value) => {
       if (value) {
         this.startDate = value;
         this.getSalesByCategory();
       }
     });
-    this.periodDateRangeService.castEndDate.subscribe((value) => {
+    this.periodDateRangeService.endDate.subscribe((value) => {
       if (value) {
         this.endDate = value;
         this.getSalesByCategory();

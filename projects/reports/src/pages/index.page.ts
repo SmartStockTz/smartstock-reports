@@ -27,20 +27,20 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
               </div>
             </div>
           </div>
-          <div>
-            <h2>Purchase Reports</h2>
-          <div class="row">
-            <div *ngFor="let page of purchasePages" routerLink="{{page.path}}" style="margin: 8px; cursor: pointer">
-              <mat-card matRipple
-                        style="width: 150px; height: 150px; display: flex; justify-content: center; align-items: center; flex-direction: column">
-                <mat-icon color="primary" style="font-size: 60px; height: 60px; width: 60px">
-                  {{page.icon}}
-                </mat-icon>
-              </mat-card>
-              <p class="py-2 ">{{page.name}}</p>
-            </div>
-          </div>
-          </div>
+<!--          <div>-->
+<!--            <h2>Purchase Reports</h2>-->
+<!--          <div class="row">-->
+<!--            <div *ngFor="let page of purchasePages" routerLink="{{page.path}}" style="margin: 8px; cursor: pointer">-->
+<!--              <mat-card matRipple-->
+<!--                        style="width: 150px; height: 150px; display: flex; justify-content: center; align-items: center; flex-direction: column">-->
+<!--                <mat-icon color="primary" style="font-size: 60px; height: 60px; width: 60px">-->
+<!--                  {{page.icon}}-->
+<!--                </mat-icon>-->
+<!--              </mat-card>-->
+<!--              <p class="py-2 ">{{page.name}}</p>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          </div>-->
           <div>
             <h2>Stock Reports</h2>
           <div class="row">
@@ -64,12 +64,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 export class IndexPage extends DeviceInfoUtil implements OnInit {
   stockPages = [
     {
-      name: 'Sales Report',
-      path: '/report/sales-report',
-      icon: 'trending_up'
-    },
-    {
-      name: 'Stock Report',
+      name: 'Stock',
       path: '/report/stock-report',
       icon: 'description'
     }
@@ -97,11 +92,11 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
       path: '/report/sales-order',
       icon: 'description'
     },
-    {
-      name: 'Sales Growth',
-      path: '/report/sales-growth',
-      icon: 'description'
-    },
+    // {
+    //   name: 'Sales Growth',
+    //   path: '/report/sales-growth',
+    //   icon: 'description'
+    // },
     {
       name: 'Sales Performance',
       path: '/report/sales-performance',

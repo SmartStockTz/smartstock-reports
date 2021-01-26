@@ -35,7 +35,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         <mat-sidenav-content>
           <smartstock-toolbar [heading]="'Sales Reports'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
 
-          <div style="min-height: 90vh;display: flex;flex-direction: column; justify-content: space-evenly">
+          <div class="container" style="min-height: 90vh;">
             <div class="row col-11 m-0 pt-5 justify-content-end">
               <mat-form-field appearance="outline">
                 <mat-label>Sales Type</mat-label>
@@ -45,13 +45,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="row m-0 py-2">
-              <div class="col-lg-6 py-3">
-                <smartstock-report-sale-trends></smartstock-report-sale-trends>
-              </div>
-              <div class="col-lg-6 py-3">
+              <div class="col-lg-11 py-3">
                 <smartstock-cart-report [salesChannel]="salesChannel.valueChanges"></smartstock-cart-report>
-              </div>
             </div>
           </div>
 

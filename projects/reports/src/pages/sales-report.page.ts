@@ -20,7 +20,7 @@ import {FormControl} from '@angular/forms';
               <mat-sidenav-content>
                   <smartstock-toolbar [heading]="'Sales Report'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
 
-                <div class="pt-5" style="min-height: 90vh;display: flex;flex-direction: column; justify-content: space-evenly">
+                <div class="pt-5 container" style="min-height: 90vh;">
 <!--                  <div class="row col-11 m-0 pt-5 justify-content-end">-->
 <!--                    <mat-form-field appearance="outline">-->
 <!--                      <mat-label>Sales Type</mat-label>-->
@@ -30,7 +30,7 @@ import {FormControl} from '@angular/forms';
 <!--                      </mat-select>-->
 <!--                    </mat-form-field>-->
 <!--                  </div>-->
-                  <smartstock-total-sales ></smartstock-total-sales>
+<!--                  <smartstock-total-sales ></smartstock-total-sales>-->
                   <smartstock-report-sale-trends></smartstock-report-sale-trends>
                 </div>
 

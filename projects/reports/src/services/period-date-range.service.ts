@@ -9,27 +9,29 @@ import {SalesModel} from '../models/sale.model';
 import * as moment from 'moment';
 import {BehaviorSubject} from 'rxjs';
 
-@Injectable()
+@Injectable({
+  providedIn: 'any'
+})
 export class PeriodDateRangeService {
 
   constructor(){}
 
-  private period = new BehaviorSubject<any>('');
-  castPeriod = this.period.asObservable();
-  private startDate = new BehaviorSubject<any>('');
-  castStartDate = this.startDate.asObservable();
-  private endDate = new BehaviorSubject<any>('');
-  castEndDate = this.endDate.asObservable();
+   period = new BehaviorSubject<any>('');
+ // castPeriod = this.period.asObservable();
+   startDate = new BehaviorSubject<any>('');
+  // castStartDate = this.startDate.asObservable();
+   endDate = new BehaviorSubject<any>('');
+  // castEndDate = this.endDate.asObservable();
 
-  editPeriod(period) {
+  editPeriod(period): any {
     this.period.next(period);
   }
 
-  editStartDate(startDate) {
+  editStartDate(startDate): any {
     this.startDate.next(startDate);
   }
 
-  editEndDate(endDate) {
+  editEndDate(endDate): any {
     this.endDate.next(endDate);
   }
 }

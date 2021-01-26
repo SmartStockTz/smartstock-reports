@@ -7,6 +7,7 @@ import {CartModel} from '../models/cart.model';
 import {toSqlDate} from '@smartstocktz/core-libs';
 import {SalesModel} from '../models/sale.model';
 import * as moment from 'moment';
+import {FaasUtil} from '../utils/faas.util';
 
 @Injectable({
   providedIn: 'root'
@@ -54,13 +55,11 @@ export class ReportService {
     });
   }
 
-  getSalesOverview(beginDate: string, endDate: string, period: string): Promise<any> {
+  getSalesOverview(from: string, to: string, period: string): Promise<any> {
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
-        // this.httpClient.get(this.settings.ssmFunctionsURL +
-        this.httpClient.get( 'http://localhost:3000' +
-          `/reports/sales/overview/${beginDate}/${endDate}/${period}`, {
+        this.httpClient.get( FaasUtil.functionsUrl(`/reports/sales/performance/category/${from}/${to}/${period}`, activeShop.projectId), {
           headers: this.settings.ssmFunctionsHeader
         }).subscribe(value => {
           resolve(value);
@@ -122,12 +121,11 @@ export class ReportService {
     return sales.map(value => value.amount).reduce((a, b) => a + b, 0);
   }
 
-  getProductPerformanceReport(channel: string, from: string, to: string): Promise<any> {
+  getProductPerformanceReport(period: string, from: string, to: string): Promise<any> {
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
-        this.httpClient.get(this.settings.ssmFunctionsURL +
-          `/dashboard/sales-reports/productPerformanceReport/${activeShop.projectId}/${from}/${to}`, {
+        this.httpClient.get(FaasUtil.functionsUrl(`/reports/sales/performance/products/${from}/${to}`, activeShop.projectId), {
           headers: this.settings.ssmFunctionsHeader
         }).subscribe(value => {
           resolve(value);
@@ -144,8 +142,8 @@ export class ReportService {
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
-        BFast.functions()
-          .request(`http://localhost:3000/reports/sales/performance/category/${from}/${to}/${period}`).get({
+        BFast.functions(activeShop.projectId)
+          .request(FaasUtil.functionsUrl(`/reports/sales/performance/category/${from}/${to}/${period}`, activeShop.projectId)).get({
           headers: this.settings.ssmFunctionsHeader
         }).then(value => {
           resolve(value);
@@ -232,13 +230,12 @@ export class ReportService {
 
 
   async getSellerSales(from: string, to: string, period: string): Promise<CartModel[]> {
-    // const activeShop = await this.storage.getActiveShop();
+    const activeShop = await this.storage.getActiveShop();
 
     return new Promise<any>(async (resolve, reject) => {
       try {
         // this.httpClient.get(this.settings.ssmFunctionsURL +
-        this.httpClient.get('http://localhost:3000' +
-          `/reports/sales/performance/sellers/${from}/${to}/${period}`, {
+        this.httpClient.get(FaasUtil.functionsUrl(`/reports/sales/performance/sellers/${from}/${to}/${period}`, activeShop.projectId), {
           // `/dashboard/sales-reports/sellers/${activeShop.projectId}/${channel}/${from}/${to}`, {
           headers: this.settings.ssmFunctionsHeader
         }).subscribe(value => {

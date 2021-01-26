@@ -54,9 +54,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
               <div class="col-md-8 col-lg-4 py-3">
                 <smartstock-sales-by-category ></smartstock-sales-by-category>
               </div>
-              <div class=" col-md-11 col-lg-4 py-3">
-                <smartstock-sales-by-seller></smartstock-sales-by-seller>
-              </div>
             </div>
             <div class="row m-0 py-2">
               <div class="col-lg-6 py-3">

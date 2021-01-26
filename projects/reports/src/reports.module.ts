@@ -41,7 +41,7 @@ import {StockTrackingPage} from './pages/stock-tracking.page';
 import {SalesByCategoryComponent} from './components/sales-by-category.component';
 import {TotalSalesComponent} from './components/total-sales.component';
 import {SalesGrowthComponent} from './components/sales-growth.component';
-import {SalesBySellerComponent} from './components/sales-by-seller.component';
+import {SalesPerformanceComponent} from './components/sales-performance.component';
 import {StockTrackingComponent} from './components/stock-tracking.component';
 import {ProfitComponent} from './components/profit.component';
 import {CartDetailsComponent} from './components/cart-details.component';
@@ -90,7 +90,7 @@ const routes: Routes = [
     SalesByCategoryComponent,
     TotalSalesComponent,
     SalesGrowthComponent,
-    SalesBySellerComponent,
+    SalesPerformanceComponent,
     ProfitComponent,
     CartDetailsComponent,
     SalesOrderPageComponent,
@@ -109,8 +109,7 @@ const routes: Routes = [
           provide: ROUTES,
           useValue: routes
         },
-        DatePipe,
-        PeriodDateRangeService
+        DatePipe
       ]
     },
     MatDatepickerModule,
