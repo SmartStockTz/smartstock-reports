@@ -11,6 +11,13 @@ import {ReportService} from '../services/report.service';
   selector: 'smartstock-products-about-to-expire',
   template: `
     <div>
+      <div style="display: flex; flex-wrap: wrap; flex-flow: row; align-items: center;">
+        <span class="flex-grow-1"></span>
+        <mat-form-field appearance="outline">
+          <mat-label>Filter</mat-label>
+          <input matInput [formControl]="filterFormControl" placeholder="type here...">
+        </mat-form-field>
+      </div>
       <mat-card class="mat-elevation-z3">
         <div class="row pt-3 m-0 justify-content-center align-items-center">
           <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">auto_delete</mat-icon>
@@ -20,13 +27,6 @@ import {ReportService} from '../services/report.service';
           </button>
         </div>
         <hr class="w-75 mt-0 mx-auto" color="primary">
-        <div style="display: flex; flex-wrap: wrap; flex-flow: row; align-items: center; margin-right: 100px;">
-          <span class="flex-grow-1"></span>
-          <mat-form-field>
-            <mat-label>Filter</mat-label>
-            <input matInput [formControl]="filterFormControl" placeholder="Eg. Piriton">
-          </mat-form-field>
-        </div>
 
         <smartstock-data-not-ready [isLoading]="isLoading" *ngIf="noDataRetrieved  || isLoading"></smartstock-data-not-ready>
 

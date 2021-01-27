@@ -1,22 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Injectable, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import * as Highcharts from 'highcharts';
 import {toSqlDate} from '@smartstocktz/core-libs';
-import {ReportService} from '../services/report.service';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {CartModel} from '../models/cart.model';
-import {json2csv} from '../services/json2csv.service';
-import {DatePipe} from '@angular/common';
 import {MatDatepicker} from '@angular/material/datepicker';
 import * as _moment from 'moment';
 // @ts-ignore
 import {default as _rollupMoment, Moment} from 'moment';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
 import {PeriodDateRangeService} from '../services/period-date-range.service';
 
 
@@ -40,40 +30,40 @@ export const MY_FORMATS = {
 @Component({
   selector: 'smartstock-period-date-range',
   template: `
-      <div class="row  justify-content-end ">
-        <mat-form-field class="col-11 col-sm-3 col-lg-4" appearance="outline">
-          <mat-label>Sales By</mat-label>
-          <mat-select [formControl]="periodFormControl" value="retail">
-            <mat-option value="day">Day</mat-option>
-            <mat-option value="month">Month</mat-option>
-            <mat-option value="year">Year</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <div class="row col-sm-8">
-        <mat-form-field class="px-3 ml-auto col-sm-6" appearance="outline">
-          <mat-label>Start Date</mat-label>
-          <input matInput [matDatepicker]="dp" [min]="minDate" [max]="maxDate" [formControl]="fromDateFormControl"  (dateChange)="chosenDayHandler($event, dp, 'startDate')">
-          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
-          <mat-datepicker #dp
-                          startView="multi-year"
-                          (yearSelected)="chosenYearHandler($event, dp, 'startDate')"
-                          (monthSelected)="chosenMonthHandler($event, dp, 'startDate')"
-          >
-          </mat-datepicker>
-        </mat-form-field>
-        <mat-form-field class="px-3 ml-auto col-sm-6" appearance="outline">
-          <mat-label>End Date</mat-label>
-          <input matInput [matDatepicker]="dp2" [min]="minDate" [max]="maxDate" [formControl]="toDateFormControl" (dateChange)="chosenDayHandler($event, dp, 'endDate')">
-          <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
-          <mat-datepicker #dp2
-                          startView="multi-year"
-                          (yearSelected)="chosenYearHandler($event, dp2, 'endDate')"
-                          (monthSelected)="chosenMonthHandler($event, dp2, 'endDate')"
-          >
-          </mat-datepicker>
-        </mat-form-field>
-        </div>
-      </div>
+    <div class="d-flex flex-row justify-content-end ">
+      <mat-form-field class="px-3" appearance="outline">
+        <mat-label>Sales By</mat-label>
+        <mat-select [formControl]="periodFormControl" value="retail">
+          <mat-option value="day">Day</mat-option>
+          <mat-option value="month">Month</mat-option>
+          <mat-option value="year">Year</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="px-3" appearance="outline">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="dp" [min]="minDate" [max]="maxDate" [formControl]="fromDateFormControl"
+               (dateChange)="chosenDayHandler($event, dp, 'startDate')">
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp
+                        startView="multi-year"
+                        (yearSelected)="chosenYearHandler($event, dp, 'startDate')"
+                        (monthSelected)="chosenMonthHandler($event, dp, 'startDate')"
+        >
+        </mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="px-3" appearance="outline">
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="dp2" [min]="minDate" [max]="maxDate" [formControl]="toDateFormControl"
+               (dateChange)="chosenDayHandler($event, dp, 'endDate')">
+        <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+        <mat-datepicker #dp2
+                        startView="multi-year"
+                        (yearSelected)="chosenYearHandler($event, dp2, 'endDate')"
+                        (monthSelected)="chosenMonthHandler($event, dp2, 'endDate')"
+        >
+        </mat-datepicker>
+      </mat-form-field>
+    </div>
 
   `,
   // styleUrls: ['../styles/sales-trends.style.scss'],
@@ -96,6 +86,7 @@ export class PeriodDateRangeComponent implements OnInit {
   minDate = new Date(new Date().setFullYear(2015));
   from = new Date(new Date().setDate(new Date().getDate() - 7));
   to = new Date();
+
   constructor(private periodDateRangeService: PeriodDateRangeService) {
     // this.dateRange = new FormGroup({
     //   from: new FormControl(new Date(new Date().setDate(new Date().getDate() - 7))),
@@ -112,8 +103,7 @@ export class PeriodDateRangeComponent implements OnInit {
     });
   }
 
-  // tslint:disable-next-line:typedef
-  chosenYearHandler(normalizedYear: Moment, datepicker: MatDatepicker<Moment>, selectedInput: string) {
+  chosenYearHandler(normalizedYear: Moment, datepicker: MatDatepicker<any>, selectedInput: string): any {
     if (selectedInput === 'startDate') {
       this.from = new Date(new Date().setFullYear(normalizedYear.year()));
 
@@ -137,7 +127,7 @@ export class PeriodDateRangeComponent implements OnInit {
     }
   }
 
-  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<Moment>, selectedInput: string): any {
+  chosenMonthHandler(normalizedMonth: Moment, datepicker: MatDatepicker<any>, selectedInput: string): any {
     if (selectedInput === 'startDate') {
       this.from = new Date(new Date(this.from).setMonth(normalizedMonth.month()));
       if (this.periodFormControl.value === 'month') {
@@ -158,7 +148,7 @@ export class PeriodDateRangeComponent implements OnInit {
     }
   }
 
-  chosenDayHandler(normalizedDate: any, datepicker: MatDatepicker<Moment>, selectedInput: string): any {
+  chosenDayHandler(normalizedDate: any, datepicker: MatDatepicker<any>, selectedInput: string): any {
     normalizedDate = normalizedDate.target.value;
 
     if (selectedInput === 'startDate') {

@@ -9,22 +9,21 @@ import {CartModel} from '../models/cart.model';
 import {json2csv} from '../services/json2csv.service';
 import {DatePipe} from '@angular/common';
 import {PeriodDateRangeService} from '../services/period-date-range.service';
+import {connectableObservableDescriptor} from 'rxjs/internal/observable/ConnectableObservable';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'smartstock-report-sale-trends',
+  selector: 'smartstock-report-sale-overview',
   template: `
     <div class=" mx-auto" style="margin-top: 1em">
-      <div class="col-lg-7 ml-auto">
-        <smartstock-period-date-range></smartstock-period-date-range>
-      </div>
       <div class="m-0 py-2">
         <div class="py-3">
-          <mat-card class="mat-elevation-z3" style="border-radius: 15px; border-left: 5px solid green;">
+          <mat-card class="mat-elevation-z3">
             <div class="row pt-3 m-0 justify-content-center align-items-center">
               <mat-icon color="primary" style="width: 40px;height:40px;font-size: 36px">trending_up</mat-icon>
-              <p class="m-0 h6">Daily Sales</p>
+              <p class="m-0 h6">{{period}} sales</p>
             </div>
-            <hr class="w-75 mt-0 mx-auto" color="primary">
+            <hr class="w-75 mt-0 mx-auto">
 
             <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
               <div id="salesTrendByDay" class="w-100"></div>
@@ -38,18 +37,18 @@ import {PeriodDateRangeService} from '../services/period-date-range.service';
           <mat-card class="mat-elevation-z3">
             <div class="row pt-3 m-0 justify-content-center align-items-center">
               <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">trending_up</mat-icon>
-              <p class="mr-auto my-0 h6">Daily Sales</p>
+              <p class="mr-auto my-0 h6">{{period}} sales</p>
               <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
                 <mat-icon>get_app</mat-icon>
               </button>
             </div>
-            <hr class="w-75 mt-0 mx-auto" color="primary">
+            <hr class="w-75 mt-0 mx-auto">
 
             <div style="display: flex; flex-flow: row; align-items: center">
               <!--            <h6 class="col-8">Cart Report</h6>-->
               <span style="flex-grow: 1"></span>
             </div>
-            <div style="display: flex; justify-content: center">
+            <div class="d-flex justify-content-center">
               <smartstock-data-not-ready [width]="100" height="100" [isLoading]="isLoading"
                                          *ngIf="noDataRetrieved  && !isLoading"></smartstock-data-not-ready>
             </div>
@@ -77,7 +76,7 @@ import {PeriodDateRangeService} from '../services/period-date-range.service';
 
 
             </table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 20, 100]" showFirstLastButtons></mat-paginator>
+            <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
           </mat-card>
         </div>
       </div>
@@ -91,7 +90,7 @@ import {PeriodDateRangeService} from '../services/period-date-range.service';
   `,
   // styleUrls: ['../styles/sales-trends.style.scss'],
 })
-export class SalesTrendsComponent implements OnInit {
+export class SalesOverviewComponent implements OnInit {
   salesByDayTrendProgress = false;
   trendChart: Highcharts.Chart = undefined;
   isLoading = false;
@@ -109,9 +108,11 @@ export class SalesTrendsComponent implements OnInit {
 
   constructor(
     private readonly reportService: ReportService,
-    private datePipe: DatePipe,
-    private periodDateRangeService: PeriodDateRangeService
-  ) {}
+    private readonly datePipe: DatePipe,
+    private readonly snack: MatSnackBar,
+    private readonly periodDateRangeService: PeriodDateRangeService
+  ) {
+  }
 
 
   ngOnInit(): void {
@@ -153,7 +154,8 @@ export class SalesTrendsComponent implements OnInit {
         this.salesData.sort = this.sort;
       });
       this.salesByDayTrendProgress = false;
-    }).catch(reason => {
+    }).catch(_ => {
+      console.log(_);
       this.isLoading = false;
       this.noDataRetrieved = true;
       this.salesByDayTrendProgress = false;
@@ -162,13 +164,15 @@ export class SalesTrendsComponent implements OnInit {
 
 
   exportReport(): void {
-    const exportedDataCartColumns = ['_id', 'amount', 'quantity', 'seller', 'date'];
-    json2csv('cart_report.csv', exportedDataCartColumns, this.salesData.filteredData).catch(reason => {
+    const exportedDataCartColumns = ['id', 'amount'];
+    json2csv(`${this.period}_sales_report.csv`, exportedDataCartColumns, this.salesData.filteredData).catch(_ => {
+      this.snack.open('Fails to export reports', 'Ok', {
+        duration: 2000
+      });
     });
   }
 
-  // tslint:disable-next-line:typedef
-  private initiateGraph(data: any) {
+  private initiateGraph(data: any): any {
     const saleDays = [];
     const totalSales = [];
     Object.keys(data).forEach(key => {
@@ -227,10 +231,4 @@ export class SalesTrendsComponent implements OnInit {
       }]
     });
   }
-
-  // // tslint:disable-next-line:typedef
-  // refreshTrendReport() {
-  //   this._getSalesTrend(toSqlDate(new Date(this.dateRange.value.from)),
-  //     toSqlDate(new Date(this.dateRange.value.to)), this.period.value);
-  // }
 }

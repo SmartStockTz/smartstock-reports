@@ -15,55 +15,63 @@ import {PeriodDateRangeService} from '../services/period-date-range.service';
   template: `
     <div>
       <div class="m-0">
+
         <div class=" py-3 mx-auto">
-          <mat-card class="mat-elevation-z3" style="border-radius: 15px; border-left: 5px solid green;">
-            <div class="row pt-3 m-0 justify-content-center align-items-center">
-              <mat-icon color="primary"
-                        style="width: 40px;height:40px;font-size: 36px">{{performanceBy === 'seller' ? 'people' : 'category'}}</mat-icon>
+          <mat-card class="mat-elevation-z3">
+            <div class="d-flex pt-3 m-0 justify-content-center align-items-center">
+              <mat-icon color="primary" style="width: 40px;height:40px;font-size: 36px">
+                {{performanceBy === 'seller' ? 'people' : 'category'}}
+              </mat-icon>
               <p class="m-0 h6">Performance By {{performanceBy | titlecase}}</p>
             </div>
 
-            <hr class="w-75 mt-0 mx-auto" color="primary">
+            <hr class="w-75 mt-0 mx-auto">
             <div class="d-flex justify-content-center align-items-center py-3" style="min-height: 200px">
               <div style="width: 100%; height: 100%" id="salesBySeller"></div>
               <smartstock-data-not-ready style="position: absolute" [width]="100" height="100"
                                          [isLoading]="salesStatusProgress"
-                                         *ngIf="salesStatusProgress  || (!salesPerformanceData)"></smartstock-data-not-ready>
+                                         *ngIf="salesStatusProgress  || (!salesPerformanceData)">
+              </smartstock-data-not-ready>
             </div>
           </mat-card>
         </div>
-        <div class="  py-3 mx-auto">
+
+        <div class="py-3 mx-auto">
+          <mat-card-header>
+            <span style="flex-grow: 1;"></span>
+            <mat-form-field appearance="outline">
+              <mat-label>Filter</mat-label>
+              <input matInput [formControl]="filterFormControl" placeholder="Type here...">
+            </mat-form-field>
+          </mat-card-header>
           <mat-card class="mat-elevation-z3">
-            <div class="row pt-3 m-0 justify-content-center align-items-center">
-              <mat-icon color="primary" class="ml-auto"
-                        style="width: 40px;height:40px;font-size: 36px">{{performanceBy === 'seller' ? 'people' : 'category'}}</mat-icon>
+
+            <div class="d-flex pt-3 m-0 justify-content-center align-items-center">
+              <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">
+                {{performanceBy === 'seller' ? 'people' : 'category'}}
+              </mat-icon>
               <p class=" mr-auto m-0 h6">Performance By {{performanceBy | titlecase}} </p>
               <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
                 <mat-icon>get_app</mat-icon>
               </button>
             </div>
-            <hr class="w-75 mt-0 mx-auto" color="primary">
-            <mat-card-header>
-              <span style="flex-grow: 1;"></span>
-              <mat-form-field>
-                <mat-label>Filter</mat-label>
-                <input matInput [formControl]="filterFormControl" placeholder="Eg. Piriton">
-              </mat-form-field>
-            </mat-card-header>
+            <hr class="w-75 mt-0 mx-auto">
 
-            <div style="display: flex; justify-content: center">
+            <div class="d-flex justify-content-center">
               <smartstock-data-not-ready [width]="100" height="100" [isLoading]="salesStatusProgress"
-                                         *ngIf="salesStatusProgress  || (!salesPerformanceData)"></smartstock-data-not-ready>
+                                         *ngIf="salesStatusProgress  || (!salesPerformanceData)">
+              </smartstock-data-not-ready>
             </div>
             <table *ngIf="!salesStatusProgress  && salesPerformanceData" mat-table [dataSource]="salesPerformanceData" matSort>
 
               <ng-container *ngIf="performanceBy === 'product'" matColumnDef="product">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
-                <td mat-cell *matCellDef="let element">{{element._id}}</td>
+                <td mat-cell *matCellDef="let element">{{element.id}}</td>
               </ng-container>
 
               <ng-container matColumnDef="seller/category">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{performanceBy === 'product' ? 'Category' : performanceBy | titlecase}}</th>
+                <th mat-header-cell *matHeaderCellDef
+                    mat-sort-header>{{performanceBy === 'product' ? 'Category' : performanceBy | titlecase}}</th>
                 <div *ngIf="performanceBy === 'seller'">
                   <td mat-cell
                       *matCellDef="let element">{{element.sellerFirstname === null ? element.sellerId : element.sellerFirstname | titlecase}} {{element.sellerLastname | titlecase}}</td>
@@ -200,8 +208,7 @@ export class SalesPerformanceComponent implements OnInit {
     return data[0].toUpperCase() + data.slice(1);
   }
 
-  // tslint:disable-next-line:typedef
-  private getSalesPerformance() {
+  private getSalesPerformance(): any {
     this.salesStatusProgress = true;
     if (this.performanceBy === 'seller') {
       this.report.getSellerSales(this.startDate, this.endDate, this.period).then(sellerData => {
@@ -217,8 +224,7 @@ export class SalesPerformanceComponent implements OnInit {
         this.salesStatusProgress = false;
         this.logger.i(reason);
       });
-    }
-    else if (this.performanceBy === 'category') {
+    } else if (this.performanceBy === 'category') {
       this.report.getSalesByCategory(this.period, this.startDate, this.endDate).then(categoryData => {
         this.salesStatusProgress = false;
         this.salesPerformanceData = new MatTableDataSource<any>(categoryData);
@@ -232,10 +238,9 @@ export class SalesPerformanceComponent implements OnInit {
         this.logger.i(reason);
       });
     } else if (this.performanceBy === 'product') {
-        this.report.getProductPerformanceReport(this.period, this.startDate, this.endDate).then(productData => {
+      this.report.getProductPerformanceReport(this.period, this.startDate, this.endDate).then(productData => {
         this.salesStatusProgress = false;
         this.salesPerformanceData = new MatTableDataSource<any>(productData);
-        console.log(productData);
         setTimeout(() => {
           this.salesPerformanceData.paginator = this.paginator;
           this.salesPerformanceData.sort = this.sort;
@@ -253,11 +258,9 @@ export class SalesPerformanceComponent implements OnInit {
     json2csv('profit_by_category.csv', exportedDataColumns, this.salesPerformanceData.filteredData).catch();
   }
 
-
-  // tslint:disable-next-line:typedef
   private initiateGraph(sellerData: [{ sellerFirstname: any, sellerLastname: any, sellerId: any, quantity: any, amount: any, date: any }],
                         categoryData: [{ category: any, quantity: any, amount: any, date: any }],
-                        productData: [{ _id: any, sales: any, date: any }]) {
+                        productData: [{ id: any, sales: any, date: any }]): any {
     const days = new Set();
     const sellersIds = new Set();
     const sellersCategoryData = {};
@@ -289,10 +292,10 @@ export class SalesPerformanceComponent implements OnInit {
       } else if (this.performanceBy === 'category') {
         sellersIds.add({name: data[key].category, id: data[key].category});
       } else if (this.performanceBy === 'product') {
-        sellersIds.add({name: data[key]._id, id: data[key]._id});
+        sellersIds.add({name: data[key].id, id: data[key].id});
       }
 
-      });
+    });
 
     sellersIds.forEach((seller: { name, id }) => {
       const tempDataArray = [];
@@ -306,7 +309,7 @@ export class SalesPerformanceComponent implements OnInit {
           filterdSales = Object.values(data).filter(value => value.date === date && value.category === seller.id);
         } else if (this.performanceBy === 'product') {
           // @ts-ignore
-          filterdSales = Object.values(data).filter(value => value.firstSold === date && value._id === seller.id);
+          filterdSales = Object.values(data).filter(value => value.firstSold === date && value.id === seller.id);
         }
         if (filterdSales && filterdSales.length === 1) {
           if (this.performanceBy === 'product') {
@@ -502,8 +505,8 @@ export class SalesPerformanceComponent implements OnInit {
         tooltip: {
           // pointFormat: '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
           pointFormat: '{series.name}:<b> {point.y:.1f}/=</b><br>',
-            shared: true,
-            crosshairs: true,
+          shared: true,
+          crosshairs: true,
         },
 
         plotOptions: {

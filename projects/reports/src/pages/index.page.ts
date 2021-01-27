@@ -65,31 +65,31 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
   stockPages = [
     {
       name: 'Stock',
-      path: '/report/stock-report',
+      path: '/report//stock/overview',
       icon: 'description'
     }
   ];
   purchasePages = [
     {
       name: 'Sales Report',
-      path: '/report/sales-report',
+      path: '/report/sales/overview',
       icon: 'trending_up'
     },
     {
       name: 'Stock Report',
-      path: '/report/stock-report',
+      path: '/report//stock/overview',
       icon: 'description'
     }
   ];
   salesPages = [
     {
-      name: 'Sales Report',
-      path: '/report/sales-report',
+      name: 'Sales Overview',
+      path: '/report/sales/overview',
       icon: 'trending_up'
     },
     {
       name: 'Order Report',
-      path: '/report/sales-order',
+      path: '/report/sales/order',
       icon: 'description'
     },
     // {
@@ -99,7 +99,7 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
     // },
     {
       name: 'Sales Performance',
-      path: '/report/sales-performance',
+      path: '/report/sales/performance',
       icon: 'description'
     }
   ];

@@ -4,7 +4,7 @@ export const json2csv = async (name: string, columns: string[], data: object[]) 
     csv = csv.concat(columns.join(',')).concat(',\n');
     data.forEach(element => {
       columns.forEach(column => {
-        csv = csv.concat(element[column]).concat(', ');
+        csv = csv.concat(JSON.stringify(element[column]).trim()).concat(',');
       });
       csv = csv.concat('\n');
     });

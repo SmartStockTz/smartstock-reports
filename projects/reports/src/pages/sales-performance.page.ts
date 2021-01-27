@@ -12,14 +12,6 @@ export interface PeriodicElement {
   symbol: string;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-];
-
 @Component({
   selector: 'smartstock-sales-performance',
   template: `
@@ -35,10 +27,10 @@ const ELEMENT_DATA: PeriodicElement[] = [
         </mat-sidenav>
 
         <mat-sidenav-content>
-          <smartstock-toolbar [heading]="'Sales Reports'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
+          <smartstock-toolbar [heading]="'Sales Performance'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
 
-          <div class="container" style="min-height: 90vh;">
-            <div class="row mx-auto pt-5 align-items-center justify-content-end">
+          <div class="container col-xl-9 col-lg-9 col-sm-12 col-md-10">
+            <div class="d-flex flex-row flex-wrap mx-auto pt-5">
               <mat-form-field class="px-3 col-11 col-md-4 col-lg-3" appearance="outline">
                 <mat-label>Sales Type</mat-label>
                 <mat-select [formControl]="performanceBy" value="seller">
@@ -47,21 +39,10 @@ const ELEMENT_DATA: PeriodicElement[] = [
                   <mat-option value="category">Category</mat-option>
                 </mat-select>
               </mat-form-field>
-              <smartstock-period-date-range class="col-lg-9"></smartstock-period-date-range>
+              <smartstock-period-date-range class=""></smartstock-period-date-range>
             </div>
-
-            <!--            <div class="row col-11 m-0 pt-5 justify-content-end">-->
-<!--              <mat-form-field appearance="outline">-->
-<!--                <mat-label>Sales Type</mat-label>-->
-<!--                <mat-select [formControl]="salesChannel" value="retail">-->
-<!--                  <mat-option value="retail">Retail</mat-option>-->
-<!--                  <mat-option value="whole">Wholesale</mat-option>-->
-<!--                </mat-select>-->
-<!--              </mat-form-field>-->
-<!--            </div>-->
-<!--            <smartstock-product-performance-report [salesChannel]="salesChannel.valueChanges"></smartstock-product-performance-report>-->
-<!--            <smartstock-sales-by-category></smartstock-sales-by-category>-->
-            <smartstock-sales-performance-component [performanceByForm]="performanceBy.valueChanges" ></smartstock-sales-performance-component>
+            <smartstock-sales-performance-component
+              [performanceByForm]="performanceBy.valueChanges"></smartstock-sales-performance-component>
           </div>
 
         </mat-sidenav-content>
@@ -73,7 +54,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class SalesPerformancePageComponent extends DeviceInfoUtil implements OnInit {
   isMobile = false;
   displayedColumns: string[] = ['position', 'name', 'weight'];
-  dataSource = ELEMENT_DATA;
   performanceBy = new FormControl('product');
   salesChannel = new FormControl('retail');
   @ViewChild('sidenav') sidenav: MatSidenav;

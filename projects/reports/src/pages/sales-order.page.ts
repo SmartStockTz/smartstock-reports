@@ -33,21 +33,19 @@ const ELEMENT_DATA: PeriodicElement[] = [
         </mat-sidenav>
 
         <mat-sidenav-content>
-          <smartstock-toolbar [heading]="'Sales Reports'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
+          <smartstock-toolbar [heading]="'Sales Orders'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
 
-          <div class="container" style="min-height: 90vh;">
-            <div class="row col-11 m-0 pt-5 justify-content-end">
-              <mat-form-field appearance="outline">
-                <mat-label>Sales Type</mat-label>
-                <mat-select [formControl]="salesChannel" value="retail">
-                  <mat-option value="retail">Retail</mat-option>
-                  <mat-option value="whole">Wholesale</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-              <div class="col-lg-11 py-3">
-                <smartstock-cart-report [salesChannel]="salesChannel.valueChanges"></smartstock-cart-report>
-            </div>
+          <div class="container pt-5 col-xl-9 col-lg-9 col-sm-12 col-md-10">
+<!--            <div class="d-flex col-12 m-0 pt-5 justify-content-end">-->
+<!--              <mat-form-field appearance="outline">-->
+<!--                <mat-label>Sales Type</mat-label>-->
+<!--                <mat-select [formControl]="salesChannel" value="retail">-->
+<!--                  <mat-option value="retail">Retail</mat-option>-->
+<!--                  <mat-option value="whole">Wholesale</mat-option>-->
+<!--                </mat-select>-->
+<!--              </mat-form-field>-->
+<!--            </div>-->
+            <smartstock-cart-report [salesChannel]="salesChannel.valueChanges"></smartstock-cart-report>
           </div>
 
         </mat-sidenav-content>

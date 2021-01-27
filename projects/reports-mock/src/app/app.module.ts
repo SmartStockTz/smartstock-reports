@@ -65,13 +65,23 @@ export class AppModule {
         icon: 'table_chart',
         pages: [
           {
-            link: '/report/sales',
-            name: 'sales',
+            link: '/report/sales/overview',
+            name: 'sales overviews',
             roles: ['*']
           },
           {
-            link: '/report/stocks',
-            name: 'stocks',
+            link: '/report/sales/order',
+            name: 'sales orders',
+            roles: ['*']
+          },
+          {
+            link: '/report/sales/performance',
+            name: 'sales performance',
+            roles: ['*']
+          },
+          {
+            link: '/report/stock/overview',
+            name: 'stocks overviews',
             roles: ['*']
           }
         ]

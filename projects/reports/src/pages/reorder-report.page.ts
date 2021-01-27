@@ -37,15 +37,6 @@ import { DeviceInfoUtil } from '@smartstocktz/core-libs';
             </div>
             <div class="col-lg-6 py-3"></div>
           </div>
-          <!--                  <div [ngStyle]="{padding: (isMobile || !enoughWidth())?'24px 0':'24px 16px'}"-->
-          <!--                       [ngClass]="(isMobile || !enoughWidth())?'container-fluid':'container'">-->
-          <!--                      <div class="col-12 col-lg-10 col-xl-10 offset-xl-1 offset-lg-1 offset-md-0 offset-sm-0">-->
-          <!--                          <div class="row">-->
-          <!--                              <div style="margin-bottom: 10px" class="col-12">-->
-          <!--                              </div>-->
-          <!--                          </div>-->
-          <!--                      </div>-->
-          <!--                  </div>-->
         </mat-sidenav-content>
       </mat-sidenav-container>
     </div>

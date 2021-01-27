@@ -30,13 +30,13 @@ import {LibModule} from '@smartstocktz/core-libs';
 import {ProductPerformanceComponent} from './components/product-performance.component';
 import {IndexPage} from './pages/index.page';
 import {ReorderReportPageComponent} from './pages/reorder-report.page';
-import {SalesReportPageComponent} from './pages/sales-report.page';
+import {SalesOverviewPage} from './pages/sales-overview.page';
 import {PerformanceReportPageComponent} from './pages/performance-report.page';
 import {ProfitCategoryPageComponent} from './pages/profit-category.page';
 import {ExpiredReportPageComponent} from './pages/expired-report.page';
 import {CartReportPageComponent} from './pages/cart-report.page';
 import {NearToExpireReportPageComponent} from './pages/near-to-expire-report.page';
-import {SalesTrendsComponent} from './components/sales-trends.component';
+import {SalesOverviewComponent} from './components/sales-overview.component';
 import {StockTrackingPage} from './pages/stock-tracking.page';
 import {SalesByCategoryComponent} from './components/sales-by-category.component';
 import {TotalSalesComponent} from './components/total-sales.component';
@@ -52,18 +52,17 @@ import {SalesOrderPageComponent} from './pages/sales-order.page';
 import {SalesPerformancePageComponent} from './pages/sales-performance.page';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 import {PeriodDateRangeComponent} from './components/period-date-range.component';
-import {PeriodDateRangeService} from './services/period-date-range.service';
 
 
 const routes: Routes = [
-  {path: 'sales', component: SalesPageComponent},
-  {path: 'stock', component: StockPageComponent},
+  // {path: 'sales', component: SalesPageComponent},
+  // {path: 'stock', component: StockPageComponent},
   {path: '', component: IndexPage},
-  {path: 'stock-report', component: ReorderReportPageComponent},
-  {path: 'sales-report', component: SalesReportPageComponent},
-  {path: 'sales-order', component: SalesOrderPageComponent},
-  {path: 'sales-growth', component: SalesGrowthPageComponent},
-  {path: 'sales-performance', component: SalesPerformancePageComponent},
+  {path: 'stock/overview', component: StockPageComponent},
+  {path: 'sales/overview', component: SalesOverviewPage},
+  {path: 'sales/order', component: SalesOrderPageComponent},
+  // {path: 'sales-growth', component: SalesGrowthPageComponent},
+  {path: 'sales/performance', component: SalesPerformancePageComponent},
 ];
 
 @NgModule({
@@ -75,7 +74,7 @@ const routes: Routes = [
     ExpireNearComponent,
     CartComponent,
     ProfitByCategoryComponent,
-    SalesTrendsComponent,
+    SalesOverviewComponent,
     ProductPerformanceComponent,
     CartReportPageComponent,
     ExpiredReportPageComponent,
@@ -85,7 +84,7 @@ const routes: Routes = [
     ProfitCategoryPageComponent,
     ReorderReportPageComponent,
     SalesPageComponent,
-    SalesReportPageComponent,
+    SalesOverviewPage,
     StockPageComponent,
     SalesByCategoryComponent,
     TotalSalesComponent,

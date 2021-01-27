@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {SettingsService} from '@smartstocktz/core-libs';
-import {BFast} from 'bfastjs';
-import {StorageService} from '@smartstocktz/core-libs';
+import {SettingsService, StorageService, toSqlDate} from '@smartstocktz/core-libs';
+import {bfast, BFast} from 'bfastjs';
 import {CartModel} from '../models/cart.model';
-import {toSqlDate} from '@smartstocktz/core-libs';
 import {SalesModel} from '../models/sale.model';
 import * as moment from 'moment';
 import {FaasUtil} from '../utils/faas.util';
@@ -55,21 +53,11 @@ export class ReportService {
     });
   }
 
-  getSalesOverview(from: string, to: string, period: string): Promise<any> {
-    return new Promise<any>(async (resolve, reject) => {
-      try {
-        const activeShop = await this.storage.getActiveShop();
-        this.httpClient.get( FaasUtil.functionsUrl(`/reports/sales/performance/category/${from}/${to}/${period}`, activeShop.projectId), {
-          headers: this.settings.ssmFunctionsHeader
-        }).subscribe(value => {
-          resolve(value);
-        }, error => {
-          reject(error);
-        });
-      } catch (e) {
-        reject(e);
-      }
-    });
+  async getSalesOverview(from: string, to: string, period: string): Promise<any> {
+    const activeShop = await this.storage.getActiveShop();
+    return bfast.functions(activeShop.projectId)
+      .request(FaasUtil.functionsUrl(`/reports/sales/overview/${from}/${to}/${period}`, activeShop.projectId))
+      .get();
   }
 
   getTotalCostOfGoodSold(beginDate: Date, endDate: Date): Promise<{ total: number }[]> {
@@ -121,39 +109,19 @@ export class ReportService {
     return sales.map(value => value.amount).reduce((a, b) => a + b, 0);
   }
 
-  getProductPerformanceReport(period: string, from: string, to: string): Promise<any> {
-    return new Promise<any>(async (resolve, reject) => {
-      try {
-        const activeShop = await this.storage.getActiveShop();
-        this.httpClient.get(FaasUtil.functionsUrl(`/reports/sales/performance/products/${from}/${to}`, activeShop.projectId), {
-          headers: this.settings.ssmFunctionsHeader
-        }).subscribe(value => {
-          resolve(value);
-        }, error => {
-          reject(error);
-        });
-      } catch (e) {
-        reject(e);
-      }
-    });
+  async getProductPerformanceReport(period: string, from: string, to: string): Promise<any> {
+    const activeShop = await this.storage.getActiveShop();
+    return bfast.functions(activeShop.projectId).request(
+      FaasUtil.functionsUrl(`/reports/sales/performance/${from}/${to}/product/${period}`, activeShop.projectId)
+    ).get();
   }
 
-  getSalesByCategory(period: string, from: string, to: string): Promise<any> {
-    return new Promise<any>(async (resolve, reject) => {
-      try {
-        const activeShop = await this.storage.getActiveShop();
-        BFast.functions(activeShop.projectId)
-          .request(FaasUtil.functionsUrl(`/reports/sales/performance/category/${from}/${to}/${period}`, activeShop.projectId)).get({
-          headers: this.settings.ssmFunctionsHeader
-        }).then(value => {
-          resolve(value);
-        }).catch(error => {
-          reject(error);
-        });
-      } catch (e) {
-        reject(e);
-      }
-    });
+  async getSalesByCategory(period: string, from: string, to: string): Promise<any> {
+    const activeShop = await this.storage.getActiveShop();
+    return bfast.functions(activeShop.projectId)
+      .request(
+        FaasUtil.functionsUrl(`/reports/sales/performance/${from}/${to}/category/${period}`, activeShop.projectId)
+      ).get();
   }
 
   async getStockReorderReportReport(skip = 0, size = 100): Promise<any> {
@@ -208,45 +176,19 @@ export class ReportService {
     return stocks.filter(stock => (stock.expire > toSqlDate(today) && (stock.expire <= toSqlDate(moment(today).add(3, 'M').toDate()))));
   }
 
-  async getSoldCarts(from: string, to: string, channel: string, skip = 0, size = 100): Promise<CartModel[]> {
-    // const activeShop = await this.storage.getActiveShop();
-
-    return new Promise<any>(async (resolve, reject) => {
-      try {
-        const activeShop = await this.storage.getActiveShop();
-        this.httpClient.get(this.settings.ssmFunctionsURL +
-          `/dashboard/sales-reports/cartOrderReport/${activeShop.projectId}/${channel}/${from}/${to}`, {
-          headers: this.settings.ssmFunctionsHeader
-        }).subscribe(value => {
-          resolve(value);
-        }, error => {
-          reject(error);
-        });
-      } catch (e) {
-        reject(e);
-      }
-    });
+  async getSoldCarts(from: string, to: string, channel: string): Promise<CartModel[]> {
+    const activeShop = await this.storage.getActiveShop();
+    const url = `/reports/sales/order/${from}/${to}/cart/day`;
+    return bfast.functions(activeShop.projectId)
+      .request(FaasUtil.functionsUrl(url, activeShop.projectId))
+      .get();
   }
-
 
   async getSellerSales(from: string, to: string, period: string): Promise<CartModel[]> {
     const activeShop = await this.storage.getActiveShop();
-
-    return new Promise<any>(async (resolve, reject) => {
-      try {
-        // this.httpClient.get(this.settings.ssmFunctionsURL +
-        this.httpClient.get(FaasUtil.functionsUrl(`/reports/sales/performance/sellers/${from}/${to}/${period}`, activeShop.projectId), {
-          // `/dashboard/sales-reports/sellers/${activeShop.projectId}/${channel}/${from}/${to}`, {
-          headers: this.settings.ssmFunctionsHeader
-        }).subscribe(value => {
-          resolve(value);
-        }, error => {
-          reject(error);
-        });
-      } catch (e) {
-        reject(e);
-      }
-    });
+    return bfast.functions(activeShop.projectId).request(
+      FaasUtil.functionsUrl(`/reports/sales/performance/${from}/${to}/seller/${period}`, activeShop.projectId)
+    ).get();
   }
 
   async getTotalGrossSale(beginDate: Date, endDate: Date): Promise<number> {
@@ -324,7 +266,6 @@ export class ReportService {
     }
     return status;
   }
-
 
   async getStockTracking(from: string, to: string, channel: string, skip = 0, size = 100): Promise<CartModel[]> {
     // const activeShop = await this.storage.getActiveShop();
