@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as Highcharts from 'highcharts';
 import {toSqlDate} from '@smartstocktz/core-libs';
 import {ReportService} from '../services/report.service';
@@ -11,6 +11,8 @@ import {DatePipe} from '@angular/common';
 import {PeriodDateRangeService} from '../services/period-date-range.service';
 import {connectableObservableDescriptor} from 'rxjs/internal/observable/ConnectableObservable';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'smartstock-report-sale-overview',
@@ -90,7 +92,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   `,
   // styleUrls: ['../styles/sales-trends.style.scss'],
 })
-export class SalesOverviewComponent implements OnInit {
+export class SalesOverviewComponent implements OnInit, OnDestroy {
   salesByDayTrendProgress = false;
   trendChart: Highcharts.Chart = undefined;
   isLoading = false;
@@ -105,6 +107,7 @@ export class SalesOverviewComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  destroyer = new Subject();
 
   constructor(
     private readonly reportService: ReportService,
@@ -115,22 +118,29 @@ export class SalesOverviewComponent implements OnInit {
   }
 
 
+
   ngOnInit(): void {
     this._getSalesTrend();
 
-    this.periodDateRangeService.period.subscribe((value) => {
+    this.periodDateRangeService.period.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
       if (value) {
         this.period = value;
         this._getSalesTrend();
       }
     });
-    this.periodDateRangeService.startDate.subscribe((value) => {
+    this.periodDateRangeService.startDate.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
       if (value) {
         this.startDate = value;
         this._getSalesTrend();
       }
     });
-    this.periodDateRangeService.endDate.subscribe((value) => {
+    this.periodDateRangeService.endDate.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
       if (value) {
         this.endDate = value;
         this._getSalesTrend();
@@ -230,5 +240,9 @@ export class SalesOverviewComponent implements OnInit {
         data: totalSales
       }]
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyer.next('done');
   }
 }

@@ -1,15 +1,16 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {DeviceInfoUtil, LogService, StorageService, toSqlDate} from '@smartstocktz/core-libs';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
-import {Observable, of} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {FormControl, Validators} from '@angular/forms';
 import {MatSort} from '@angular/material/sort';
 import {ReportService} from '../services/report.service';
 import {json2csv} from '../services/json2csv.service';
 import {PeriodDateRangeService} from '../services/period-date-range.service';
+import {takeUntil} from 'rxjs/operators';
 
 
 export interface ProductPerformanceI {
@@ -140,7 +141,7 @@ export interface ProductPerformanceI {
     ReportService
   ]
 })
-export class ProductPerformanceComponent extends DeviceInfoUtil implements OnInit {
+export class ProductPerformanceComponent extends DeviceInfoUtil implements OnInit, OnDestroy {
   private productPerformanceFetchProgress = false;
   startDateFormControl = new FormControl(new Date(), [Validators.nullValidator]);
   endDateFormControl = new FormControl('', [Validators.nullValidator]);
@@ -157,6 +158,7 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  destroyer = new Subject();
 
   constructor(private readonly router: Router,
               private readonly indexDb: StorageService,
@@ -183,13 +185,19 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
     this.getProductReport(this.channel, this.startDate, this.endDate);
     // this.dateRangeListener();
 
-    this.periodDateRangeService.period.subscribe((value) => {
+    this.periodDateRangeService.period.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
       this.getProductReport(this.channel, this.startDate, this.endDate);
     });
-    this.periodDateRangeService.startDate.subscribe((value) => {
+    this.periodDateRangeService.startDate.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
       this.getProductReport(this.channel, value, this.endDate);
     });
-    this.periodDateRangeService.endDate.subscribe((value) => {
+    this.periodDateRangeService.endDate.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
       this.getProductReport(this.channel, this.startDate, value);
     });
 
@@ -241,5 +249,9 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
   exportReport(): void {
     const exportedDataColumns = ['_id', 'category', 'quantitySold', 'firstSold', 'lastSold', 'costOfGoodsSold', 'grossProfit'];
     json2csv('product_performance.csv', exportedDataColumns, this.productPerformanceDatasource.filteredData).catch();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyer.next('done');
   }
 }

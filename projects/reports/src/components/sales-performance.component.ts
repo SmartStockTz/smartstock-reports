@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as Highcharts from 'highcharts';
 import {LogService, toSqlDate} from '@smartstocktz/core-libs';
 import {ReportService} from '../services/report.service';
@@ -9,6 +9,8 @@ import {MatSort} from '@angular/material/sort';
 import {json2csv} from '../services/json2csv.service';
 import {DatePipe} from '@angular/common';
 import {PeriodDateRangeService} from '../services/period-date-range.service';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'smartstock-sales-performance-component',
@@ -150,7 +152,7 @@ import {PeriodDateRangeService} from '../services/period-date-range.service';
   styleUrls: ['../styles/sales-by-category.style.scss'],
 
 })
-export class SalesPerformanceComponent implements OnInit {
+export class SalesPerformanceComponent implements OnInit, OnDestroy {
   salesStatusProgress = false;
   salesPerformanceData: MatTableDataSource<any>;
   salesBySellerChart: Highcharts.Chart = undefined;
@@ -165,6 +167,7 @@ export class SalesPerformanceComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  destroyer = new Subject();
 
 
   constructor(private readonly  report: ReportService,
@@ -179,19 +182,25 @@ export class SalesPerformanceComponent implements OnInit {
       this.performanceBy = value;
       this.getSalesPerformance();
     });
-    this.periodDateRangeService.period.subscribe((value) => {
+    this.periodDateRangeService.period.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
       if (value) {
         this.period = value;
         this.getSalesPerformance();
       }
     });
-    this.periodDateRangeService.startDate.subscribe((value) => {
+    this.periodDateRangeService.startDate.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
       if (value) {
         this.startDate = value;
         this.getSalesPerformance();
       }
     });
-    this.periodDateRangeService.endDate.subscribe((value) => {
+    this.periodDateRangeService.endDate.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
       if (value) {
         this.endDate = value;
         this.getSalesPerformance();
@@ -320,50 +329,6 @@ export class SalesPerformanceComponent implements OnInit {
         } else {
           tempDataArray.push(0);
         }
-        // Object.values(data).forEach(value => {
-        //   if (value.sellerFirstname === null) {
-        //     id = value.sellerId;
-        //   } else {
-        //     id = this.capitalizeFirstLetter(value.sellerFirstname.toString()) + ' '
-        //       + this.capitalizeFirstLetter(value.sellerLastname.toString());
-        //   }
-        //   if (value.date === date) {
-        //     if (sellersCategoryData[id]) {
-        //       const tempData = new Map();
-        //       let tempDataArray = [];
-        //       if (sellersCategoryData[id].length > 0) {
-        //         tempDataArray = sellersCategoryData[id];
-        //       }
-        //       tempData.set(date, value.amount);
-        //       tempDataArray.push(tempData);
-        //       sellersCategoryData[id] = tempDataArray;
-        //     } else {
-        //       const tempData = new Map();
-        //       const tempDataArray = [];
-        //       tempData.set(date, value.amount);
-        //       tempDataArray.push(tempData);
-        //       sellersCategoryData[id] = tempDataArray;
-        //     }
-        //   } else {
-        //     if (sellersCategoryData[id]) {
-        //       const tempData = new Map();
-        //       let tempDataArray = [];
-        //       if (sellersCategoryData[id].length > 0) {
-        //         tempDataArray = sellersCategoryData[id];
-        //       }
-        //       tempData.set(date, 0);
-        //       tempDataArray.push(tempData);
-        //       sellersCategoryData[id] = tempDataArray;
-        //     } else {
-        //       const tempData = new Map();
-        //       const tempDataArray = [];
-        //       tempData.set(date, 0);
-        //       tempDataArray.push(tempData);
-        //       sellersCategoryData[id] = tempDataArray;
-        //     }
-        //   }
-        // });
-        // sellersCategoryData[id] =
       });
       sellersCategoryData[seller.name as string] = tempDataArray;
     });
@@ -380,102 +345,6 @@ export class SalesPerformanceComponent implements OnInit {
         index++;
       }
     );
-
-    //
-    // // console.log(data);
-    // let sellerDateAmountObj = {};
-    // Object.values(data).forEach(element => {
-    //   console.log(element);
-    //   let id;
-    //   // @ts-ignore
-    //   if (element.sellerFirstname === null) {
-    //     id = element.sellerId;
-    //   } else {
-    //     id = this.capitalizeFirstLetter(element.sellerFirstname.toString()) + ' '
-    //       + this.capitalizeFirstLetter(element.sellerLastname.toString());
-    //   }
-    //   if (this.period === 'day') {
-    //     if (!saleDays.includes(this.datePipe.transform(element.date, 'dd MMM YYYY'))) {
-    //       saleDays.push(this.datePipe.transform(element.date, 'dd MMM YYYY'));
-    //     }
-    //   } else if (this.period === 'month') {
-    //     if (!saleDays.includes(this.datePipe.transform(element.date, 'MMM YYYY'))) {
-    //       saleDays.push(this.datePipe.transform(element.date, 'MMM YYYY'));
-    //     }
-    //   } else {
-    //     if (!saleDays.push(element.date)) {
-    //       saleDays.push(element.date);
-    //     }
-    //   }
-    //
-    //   if (sellersCategoryData[id]) {
-    //     let tempData = [];
-    //     if (sellersCategoryData[id].length > 0) {
-    //       tempData = sellersCategoryData[id];
-    //     }
-    //     tempData.push(element.amount);
-    //     sellersCategoryData[id] = tempData;
-    //   } else {
-    //     const tempData = [];
-    //     tempData.push(element.amount);
-    //     sellersCategoryData[id] = tempData;
-    //   }
-    //
-    //
-    // });
-
-    // Object.keys(data).forEach(key => {
-    //   const seller = data[key].sellerId;
-    //   let id;
-    //
-    //   if (this.period === 'day') {
-    //     if (!saleDays.includes(this.datePipe.transform(data[key].date, 'dd MMM YYYY'))) {
-    //       saleDays.push(this.datePipe.transform(data[key].date, 'dd MMM YYYY'));
-    //     }
-    //   } else if (this.period === 'month') {
-    //     if (!saleDays.includes(this.datePipe.transform(data[key].date, 'MMM YYYY'))) {
-    //       saleDays.push(this.datePipe.transform(data[key].date, 'MMM YYYY'));
-    //     }
-    //   } else {
-    //     if (!saleDays.push(data[key].date)) {
-    //       saleDays.push(data[key].date);
-    //     }
-    //   }
-    //   if (data[key].sellerFirstname === null) {
-    //     id = seller;
-    //   } else {
-    //     id = this.capitalizeFirstLetter(data[key].sellerFirstname.toString()) + ' '
-    //       + this.capitalizeFirstLetter(data[key].sellerLastname.toString());
-    //   }
-    //
-    //
-    //   // if (sellersCategoryData[id]) {
-    //   //   let tempData = [];
-    //   //   if (sellersCategoryData[id].length > 0) {
-    //   //     tempData = sellersCategoryData[id];
-    //   //   }
-    //   //   tempData.push(data[key].amount);
-    //   //   sellersCategoryData[id] = tempData;
-    //   // } else {
-    //   //   const tempData = [];
-    //   //   tempData.push(data[key].amount);
-    //   //   sellersCategoryData[id] = tempData;
-    //   // }
-    // });
-
-    // data.forEach(val => {
-    //     const seller = val.sellerId;
-    //     let id;
-    //
-    //     if (val.sellerFirstname === null) {
-    //       id = seller;
-    //     } else {
-    //       id = this.capitalizeFirstLetter(val.sellerFirstname.toString()) + ' '
-    //         + this.capitalizeFirstLetter(val.sellerLastname.toString());
-    //     }
-    //   }
-    // );
-
 
     // @ts-ignore
     this.salesBySellerChart = Highcharts.chart('salesBySeller', {
@@ -523,6 +392,10 @@ export class SalesPerformanceComponent implements OnInit {
         }),
       }
     );
+  }
+
+  ngOnDestroy(): void {
+    this.destroyer.next('done');
   }
 
 }

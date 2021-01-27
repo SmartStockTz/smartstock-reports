@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as Highcharts from 'highcharts';
 import {LogService, toSqlDate} from '@smartstocktz/core-libs';
 import {ReportService} from '../services/report.service';
@@ -9,6 +9,8 @@ import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {PeriodDateRangeService} from '../services/period-date-range.service';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 
 
 
@@ -106,7 +108,7 @@ import {PeriodDateRangeService} from '../services/period-date-range.service';
   styleUrls: ['../styles/sales-by-category.style.scss'],
 
 })
-export class SalesByCategoryComponent implements OnInit {
+export class SalesByCategoryComponent implements OnInit, OnDestroy {
   salesStatusProgress = false;
   salesByCategoryData: MatTableDataSource<any>;
   salesByCategoryChart: Highcharts.Chart = undefined;
@@ -120,6 +122,7 @@ export class SalesByCategoryComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  destroyer = new Subject();
 
   constructor(
     private readonly report: ReportService,
@@ -130,19 +133,25 @@ export class SalesByCategoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSalesByCategory();
-    this.periodDateRangeService.period.subscribe((value) => {
+    this.periodDateRangeService.period.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
       if (value) {
         this.period = value;
         this.getSalesByCategory();
       }
     });
-    this.periodDateRangeService.startDate.subscribe((value) => {
+    this.periodDateRangeService.startDate.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
       if (value) {
         this.startDate = value;
         this.getSalesByCategory();
       }
     });
-    this.periodDateRangeService.endDate.subscribe((value) => {
+    this.periodDateRangeService.endDate.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
       if (value) {
         this.endDate = value;
         this.getSalesByCategory();
@@ -193,7 +202,7 @@ export class SalesByCategoryComponent implements OnInit {
         plotShadow: false,
         type: 'pie',
         events: {
-          load(event) {
+          load(event): any {
             const total = this.series[0].data[0].total;
             const text = this.renderer
               .text('Total: ' + total, this.plotLeft, this.plotHeight)
@@ -241,5 +250,8 @@ export class SalesByCategoryComponent implements OnInit {
         },
       ],
     });
+  }
+  ngOnDestroy(): void {
+    this.destroyer.next('done');
   }
 }
