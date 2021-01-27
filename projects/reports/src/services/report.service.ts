@@ -180,7 +180,8 @@ export class ReportService {
     const activeShop = await this.storage.getActiveShop();
     const url = `/reports/sales/order/${from}/${to}/cart/day`;
     return bfast.functions(activeShop.projectId)
-      .request(FaasUtil.functionsUrl(url, activeShop.projectId))
+      .request('http://localhost:3000' + url)
+      // .request(FaasUtil.functionsUrl(url, activeShop.projectId))
       .get();
   }
 

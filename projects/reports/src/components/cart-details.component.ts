@@ -37,7 +37,7 @@ import {MatSort} from '@angular/material/sort';
 
           <ng-container matColumnDef="product">
             <th mat-header-cell *matHeaderCellDef>Product</th>
-            <td mat-cell *matCellDef="let element">{{element.product.product}}</td>
+            <td mat-cell *matCellDef="let element">{{element.product}}</td>
           </ng-container>
 
           <ng-container matColumnDef="quantity">
@@ -48,7 +48,7 @@ import {MatSort} from '@angular/material/sort';
           <ng-container matColumnDef="price">
             <th mat-header-cell *matHeaderCellDef>Price</th>
             <td mat-cell
-                *matCellDef="let element">{{data.channel === 'retail' ? element.product.retailPrice : element.product.wholesalePrice}} </td>
+                *matCellDef="let element">{{data.channel === 'retail' ? element.retailPrice : element.wholesalePrice}} </td>
           </ng-container>
 
           <ng-container matColumnDef="amount">
@@ -79,7 +79,7 @@ export class CartDetailsComponent implements OnInit {
   cartData: MatTableDataSource<any>;
   cartDataColumns = ['product', 'quantity', 'price', 'amount'];
 
-  constructor(private _cartDetailsSheetRef: MatBottomSheetRef<CartDetailsComponent>,
+  constructor(private cartDetailsSheetRef: MatBottomSheetRef<CartDetailsComponent>,
               @Inject(MAT_BOTTOM_SHEET_DATA) public data) {
   }
 
@@ -87,12 +87,13 @@ export class CartDetailsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
+    console.log(this.data.items);
     this.cartData = new MatTableDataSource(this.data.items);
     this.cartData.paginator = this.paginator;
     this.cartData.sort = this.sort;
   }
 
   close(): void {
-    this._cartDetailsSheetRef.dismiss();
+    this.cartDetailsSheetRef.dismiss();
   }
 }

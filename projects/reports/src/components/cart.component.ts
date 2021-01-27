@@ -157,6 +157,7 @@ export class CartComponent extends DeviceInfoUtil implements OnInit {
     this.isLoading = true;
     this.report.getSoldCarts(from, to, channel).then(data => {
       this.isLoading = false;
+      console.log(data);
       if (data && Array.isArray(data) && data.length > 0) {
         this.carts = new MatTableDataSource(data);
         setTimeout(() => {
@@ -200,7 +201,7 @@ export class CartComponent extends DeviceInfoUtil implements OnInit {
   openCartDetails(cartDetailsData): any {
     this.cartDetails.open(CartDetailsComponent, {
       data: {
-        id: cartDetailsData._id,
+        id: cartDetailsData.id,
         channel: cartDetailsData.channel,
         date: cartDetailsData.date,
         amount: cartDetailsData.amount,
