@@ -21,10 +21,9 @@ export class ReportService {
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
-        this.httpClient.get(this.settings.ssmFunctionsURL +
+        this.httpClient.get(
           `/dashboard/admin/dailySales/${activeShop.projectId}/${beginDate}`, {
-          headers: this.settings.ssmFunctionsHeader
-        }).subscribe(value => {
+          }).subscribe(value => {
           resolve(value);
         }, error => {
           reject(error);
@@ -39,10 +38,9 @@ export class ReportService {
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
-        this.httpClient.get(this.settings.ssmFunctionsURL +
+        this.httpClient.get(
           `/dashboard/admin/salesGraphData/day/${activeShop.projectId}/${channel}/${beginDate}/${endDate}`, {
-          headers: this.settings.ssmFunctionsHeader
-        }).subscribe(value => {
+          }).subscribe(value => {
           resolve(value);
         }, error => {
           reject(error);
@@ -64,10 +62,9 @@ export class ReportService {
     return new Promise<{ total: number }[]>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
-        this.httpClient.get<{ total: number }[]>(this.settings.ssmFunctionsURL +
+        this.httpClient.get<{ total: number }[]>(
           `/dashboard/admin/stock/${activeShop.projectId}/${beginDate}`, {
-          headers: this.settings.ssmFunctionsHeader
-        }).subscribe(value => {
+          }).subscribe(value => {
           resolve(value);
         }, error => {
           reject(error);
@@ -273,10 +270,9 @@ export class ReportService {
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
-        this.httpClient.get(this.settings.ssmFunctionsURL +
+        this.httpClient.get(
           `/report/${activeShop.projectId}/${channel}/${from}/${to}`, {
-          headers: this.settings.ssmFunctionsHeader
-        }).subscribe(value => {
+          }).subscribe(value => {
           resolve(value);
         }, error => {
           reject(error);

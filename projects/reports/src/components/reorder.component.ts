@@ -138,7 +138,6 @@ export class ReorderComponent implements OnInit {
     }).catch(reason => {
       this.isLoading = false;
       this.stockReport = 0;
-      console.log(reason);
       this.snack.open('Fails to get total sales', 'Ok', {
         duration: 3000
       });

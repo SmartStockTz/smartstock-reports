@@ -27,7 +27,7 @@ import {MatSort} from '@angular/material/sort';
         </div>
         <div>
           <p class="mb-0">Seller</p>
-          <p>{{data.sellerFirstName | titlecase }} {{data.sellerLastName | titlecase}}</p>
+          <p>{{data.seller | titlecase }}</p>
         </div>
       </div>
       <hr class="my-0">
@@ -64,8 +64,9 @@ import {MatSort} from '@angular/material/sort';
         <mat-paginator *ngIf="cartData.data.length > 5" [pageSizeOptions]="[5, 10, 20, 100]" showFirstLastButtons></mat-paginator>
         <div class="d-flex pt-4 align-items-center justify-content-between">
           <h3 class="text-center col-4 ">Total</h3>
-          <h2 class="text-white py-3 col-7 col-md-5 col-lg-6 text-center" style="background: #1b5e20;">{{data.amount | currency: ' '}}
-            /=</h2>
+          <h2 class="text-white py-3 col-7 col-md-5 col-lg-6 text-center" style="background: #1b5e20;">
+            {{data.amount | currency: ' '}}/=
+          </h2>
         </div>
       </div>
       <p class="text-center" style="color: #1b5e20">smartstock.co.tz</p>
@@ -87,7 +88,6 @@ export class CartDetailsComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
-    console.log(this.data.items);
     this.cartData = new MatTableDataSource(this.data.items);
     this.cartData.paginator = this.paginator;
     this.cartData.sort = this.sort;

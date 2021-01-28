@@ -157,7 +157,6 @@ export class CartComponent extends DeviceInfoUtil implements OnInit {
     this.isLoading = true;
     this.report.getSoldCarts(from, to, channel).then(data => {
       this.isLoading = false;
-      console.log(data);
       if (data && Array.isArray(data) && data.length > 0) {
         this.carts = new MatTableDataSource(data);
         setTimeout(() => {
@@ -205,10 +204,11 @@ export class CartComponent extends DeviceInfoUtil implements OnInit {
         channel: cartDetailsData.channel,
         date: cartDetailsData.date,
         amount: cartDetailsData.amount,
-        businessName: cartDetailsData.sellerObject.businessName,
-        sellerFirstName: cartDetailsData.sellerObject.firstname,
-        sellerLastName: cartDetailsData.sellerObject.lastname,
-        region: cartDetailsData.sellerObject.region,
+        businessName: '', // cartDetailsData.sellerObject.businessName,
+        // sellerFirstName: cartDetailsData.sellerObject.firstname,
+        // sellerLastName: cartDetailsData.sellerObject.lastname,
+        seller: cartDetailsData.seller,
+        region: '', // cartDetailsData.sellerObject.region,
         items: cartDetailsData.items
       }
     });

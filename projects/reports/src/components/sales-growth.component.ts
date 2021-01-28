@@ -89,7 +89,6 @@ export class SalesGrowthComponent implements OnInit {
     this.salesChannel.subscribe(value => {
       this.channel = value;
       this.getSalesStatus(value, this.selectedYear);
-      console.log(value);
     });
   }
 

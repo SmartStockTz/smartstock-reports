@@ -204,7 +204,6 @@ export class TotalSalesComponent implements OnInit {
     this.startDate = new Date(new Date().setDate(new Date().getDate() - (new Date().getDate() - 1)));
     this.report.getSalesOverview(toSqlDate(this.startDate), toSqlDate(this.endDate), 'month').then(data => {
       this.monthlySales = data[0].amount;
-      console.log(data.amount);
       this.monthlySalesProgress = false;
     }).catch(reason => {
       this.monthlySalesProgress = false;

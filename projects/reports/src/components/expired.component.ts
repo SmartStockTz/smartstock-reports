@@ -95,7 +95,6 @@ export class ExpiredComponent implements OnInit, AfterViewInit {
       }
     }).catch(reason => {
       this.isLoading = false;
-      console.log(reason);
       this.snack.open('Fails to get total expired products', 'Ok', {
         duration: 3000
       });

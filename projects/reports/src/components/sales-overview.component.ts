@@ -165,7 +165,6 @@ export class SalesOverviewComponent implements OnInit, OnDestroy {
       });
       this.salesByDayTrendProgress = false;
     }).catch(_ => {
-      console.log(_);
       this.isLoading = false;
       this.noDataRetrieved = true;
       this.salesByDayTrendProgress = false;
