@@ -30,7 +30,7 @@ import {FormControl} from '@angular/forms';
             <!--                      </mat-select>-->
             <!--                    </mat-form-field>-->
             <!--                  </div>-->
-            <!--                  <smartstock-total-sales ></smartstock-total-sales>-->
+<!--                              <smartstock-total-sales ></smartstock-total-sales>-->
             <smartstock-period-date-range></smartstock-period-date-range>
             <smartstock-report-sale-overview></smartstock-report-sale-overview>
           </div>

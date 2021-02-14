@@ -18,28 +18,26 @@ import {Subject} from 'rxjs';
   selector: 'smartstock-report-sale-overview',
   template: `
     <div class=" mx-auto" style="margin-top: 1em">
-      <div class="m-0 py-2">
-        <div class="py-3">
+      <div class="py-3">
           <mat-card class="mat-elevation-z3">
             <div class="row pt-3 m-0 justify-content-center align-items-center">
               <mat-icon color="primary" style="width: 40px;height:40px;font-size: 36px">trending_up</mat-icon>
-              <p class="m-0 h6">{{period}} sales</p>
+              <p class="m-0 h6">{{period | titlecase}} sales</p>
             </div>
             <hr class="w-75 mt-0 mx-auto">
 
-            <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
+            <div class="d-flex justify-content-center align-items-center m-0 p-0" style="min-height: 200px">
               <div id="salesTrendByDay" class="w-100"></div>
               <smartstock-data-not-ready style="position: absolute" [width]="100" height="100" [isLoading]="isLoading"
                                          *ngIf="noDataRetrieved || isLoading"></smartstock-data-not-ready>
             </div>
           </mat-card>
-
-        </div>
+      </div>
         <div class="py-3">
           <mat-card class="mat-elevation-z3">
             <div class="row pt-3 m-0 justify-content-center align-items-center">
               <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">trending_up</mat-icon>
-              <p class="mr-auto my-0 h6">{{period}} sales</p>
+              <p class="mr-auto my-0 h6">{{period | titlecase}} sales</p>
               <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
                 <mat-icon>get_app</mat-icon>
               </button>
@@ -81,8 +79,6 @@ import {Subject} from 'rxjs';
             <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
           </mat-card>
         </div>
-      </div>
-
     </div>
     <mat-menu #exportMenu>
       <button mat-menu-item (click)="exportReport()">
@@ -231,7 +227,8 @@ export class SalesOverviewComponent implements OnInit, OnDestroy {
         }
       },
       tooltip: {
-        // pointFormat: '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
+          valueDecimals: 2,
+    pointFormat: '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
       },
       // @ts-ignore
       series: [{

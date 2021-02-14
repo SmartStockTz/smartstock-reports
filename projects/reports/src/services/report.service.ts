@@ -60,6 +60,13 @@ export class ReportService {
       .get();
   }
 
+  async getSalesGrowth(from: string, to: string, period: string): Promise<any> {
+    const activeShop = await this.storage.getActiveShop();
+    return bfast.functions(activeShop.projectId)
+      .request(FaasUtil.functionsUrl(`/reports/sales/growth/${from}/${to}/${period}`, activeShop.projectId))
+      .get();
+  }
+
   getTotalCostOfGoodSold(beginDate: Date, endDate: Date): Promise<{ total: number }[]> {
     return new Promise<{ total: number }[]>(async (resolve, reject) => {
       try {
