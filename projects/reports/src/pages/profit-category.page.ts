@@ -4,7 +4,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 
 
 @Component({
-  selector: 'smartstock-sales-reports',
+  selector: 'app-sales-reports',
   template: `
       <div>
           <mat-sidenav-container class="my-drawer-container">
@@ -14,11 +14,11 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
                       class="match-parent-side"
                       #sidenav [mode]="enoughWidth()?'side':'over'"
                       [opened]="enoughWidth()">
-                  <smartstock-drawer></smartstock-drawer>
+                  <app-drawer></app-drawer>
               </mat-sidenav>
 
               <mat-sidenav-content>
-                  <smartstock-toolbar [heading]="'Profit By Category'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
+                  <app-toolbar [heading]="'Profit By Category'" [sidenav]="sidenav" [showProgress]="false"></app-toolbar>
 
 
                   <div [ngStyle]="{padding: (isMobile || !enoughWidth())?'24px 0':'40px 16px'}"
@@ -26,7 +26,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
                       <div class="col-12 col-lg-10 col-xl-10 offset-xl-1 offset-lg-1 offset-md-0 offset-sm-0">
                           <div class="row">
                               <div style="margin-bottom: 10px" class="col-12">
-                                  <smartstock-profit-by-category style="margin-bottom: 1em"></smartstock-profit-by-category>
+                                  <app-profit-by-category style="margin-bottom: 1em"></app-profit-by-category>
                               </div>
                           </div>
                       </div>

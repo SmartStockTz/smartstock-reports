@@ -12,7 +12,7 @@ import {ReportService} from '../services/report.service';
 
 
 @Component({
-  selector: 'smartstock-stock-reorder-report',
+  selector: 'app-stock-reorder-report',
   template: `
     <div>
       <div style="display: flex; flex-flow: row; align-items: center">
@@ -36,7 +36,7 @@ import {ReportService} from '../services/report.service';
         <!--        <mat-spinner *ngIf="isLoading"></mat-spinner>-->
         <!--      </div>-->
 
-        <smartstock-data-not-ready [isLoading]="isLoading" *ngIf="noDataRetrieved || isLoading"></smartstock-data-not-ready>
+        <app-data-not-ready [isLoading]="isLoading" *ngIf="noDataRetrieved || isLoading"></app-data-not-ready>
 
         <div *ngIf="!noDataRetrieved  && !isLoading">
           <table mat-table [dataSource]="stockReorderDatasource" matSort>

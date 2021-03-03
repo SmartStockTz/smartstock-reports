@@ -4,7 +4,7 @@ import {ReportService} from '../services/report.service';
 import {toSqlDate} from '@smartstocktz/core-libs';
 
 @Component({
-  selector: 'smartstock-total-sales',
+  selector: 'app-total-sales',
   template: `
     <div style="height: 100%" class="justify-content-center align-items-center">
 
@@ -45,8 +45,8 @@ import {toSqlDate} from '@smartstocktz/core-libs';
               <div class="">
                 <p class=" mb-0 text-center">Today Sales so far</p>
                 <p *ngIf="!todaySalesProgress" class="mb-0 h6">{{todaySales | currency: 'TZS '}}/=</p>
-                <smartstock-data-not-ready [width]="100" height="100" [isLoading]="todaySalesProgress"
-                                           *ngIf="todaySalesProgress  || (!todaySales && todaySales==null)"></smartstock-data-not-ready>
+                <app-data-not-ready [width]="100" height="100" [isLoading]="todaySalesProgress"
+                                           *ngIf="todaySalesProgress  || (!todaySales && todaySales==null)"></app-data-not-ready>
               </div>
               <!--                        <hr class="ml-2 w-75">-->
             </mat-card>
@@ -88,8 +88,8 @@ import {toSqlDate} from '@smartstocktz/core-libs';
               <div class="">
                 <p class=" mb-0 text-center">This Week Sales so far</p>
                 <p *ngIf="!weekSalesProgress" class="mb-0 h6">{{weekSales | currency: 'TZS '}}/=</p>
-                <smartstock-data-not-ready [width]="100" height="100" [isLoading]="weekSalesProgress"
-                                           *ngIf="weekSalesProgress  || (!weekSales && weekSales!==0)"></smartstock-data-not-ready>
+                <app-data-not-ready [width]="100" height="100" [isLoading]="weekSalesProgress"
+                                           *ngIf="weekSalesProgress  || (!weekSales && weekSales!==0)"></app-data-not-ready>
               </div>
               <!--                        <hr class="ml-2 w-75">-->
             </mat-card>
@@ -130,8 +130,8 @@ import {toSqlDate} from '@smartstocktz/core-libs';
               <div class="">
                 <p class=" mb-0 text-center">This Month Sales so far</p>
                 <p *ngIf="!monthlySalesProgress" class="mb-0 h6">{{monthlySales | currency: 'TZS '}}/=</p>
-                <smartstock-data-not-ready [width]="100" height="100" [isLoading]="monthlySalesProgress"
-                                           *ngIf="monthlySalesProgress  || (!monthlySales && monthlySales!==0)"></smartstock-data-not-ready>
+                <app-data-not-ready [width]="100" height="100" [isLoading]="monthlySalesProgress"
+                                           *ngIf="monthlySalesProgress  || (!monthlySales && monthlySales!==0)"></app-data-not-ready>
               </div>
               <!--                        <hr class="ml-2 w-75">-->
             </mat-card>

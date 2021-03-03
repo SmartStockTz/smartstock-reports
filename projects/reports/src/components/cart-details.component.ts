@@ -1,12 +1,13 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA} from '@angular/material/bottom-sheet';
+import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import {MatTableDataSource} from '@angular/material/table';
-import {CartModel} from '../models/cart.model';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
+import {MatDialog} from '@angular/material/dialog';
+import {SalesReceiptOverviewComponent} from './sales-receipt-overview.component';
 
 @Component({
-  selector: 'smartstock-cart-details',
+  selector: 'app-cart-details',
   template: `
     <div class="w-100 m-0 p-0">
       <div class="row header text-white align-items-center p-3">
@@ -29,6 +30,12 @@ import {MatSort} from '@angular/material/sort';
           <p class="mb-0">Seller</p>
           <p>{{data.seller | titlecase }}</p>
         </div>
+      </div>
+      <!--      <hr class="my-0">-->
+      <div class="d-flex justify-content-end" style="margin-bottom: 24px">
+        <!--        <button class="btn-success btn" mat-flat-button (click)="printReceipt(data)">Print Receipt</button>-->
+        <!--        <div style="width: 20px; height: 20px"></div>-->
+        <button class="btn-success btn" mat-flat-button (click)="printReceiptOverview(data)">Print Receipt Overview</button>
       </div>
       <hr class="my-0">
 
@@ -77,15 +84,15 @@ import {MatSort} from '@angular/material/sort';
 })
 export class CartDetailsComponent implements OnInit {
 
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   cartData: MatTableDataSource<any>;
   cartDataColumns = ['product', 'quantity', 'price', 'amount'];
 
   constructor(private cartDetailsSheetRef: MatBottomSheetRef<CartDetailsComponent>,
+              private readonly matDialog: MatDialog,
               @Inject(MAT_BOTTOM_SHEET_DATA) public data) {
   }
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
     this.cartData = new MatTableDataSource(this.data.items);
@@ -95,5 +102,17 @@ export class CartDetailsComponent implements OnInit {
 
   close(): void {
     this.cartDetailsSheetRef.dismiss();
+  }
+
+  printReceipt(data): void {
+    console.log(data);
+  }
+
+  printReceiptOverview(data): void {
+    this.cartDetailsSheetRef.dismiss();
+    this.matDialog.open(SalesReceiptOverviewComponent, {
+      data,
+      closeOnNavigation: true
+    });
   }
 }

@@ -25,7 +25,7 @@ export interface ProductPerformanceI {
 }
 
 @Component({
-  selector: 'smartstock-product-performance-report',
+  selector: 'app-product-performance-report',
   template: `
     <div class="col-lg-11 mx-auto py-4">
       <div>
@@ -67,7 +67,7 @@ export interface ProductPerformanceI {
             <!--</mat-form-field>-->
           </mat-card-header>
 
-          <smartstock-data-not-ready [isLoading]="isLoading" *ngIf="noDataRetrieved || isLoading"></smartstock-data-not-ready>
+          <app-data-not-ready [isLoading]="isLoading" *ngIf="noDataRetrieved || isLoading"></app-data-not-ready>
 
           <div *ngIf="!noDataRetrieved  && !isLoading">
             <table mat-table [dataSource]="productPerformanceDatasource" matSort>

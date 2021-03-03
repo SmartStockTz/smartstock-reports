@@ -10,7 +10,7 @@ import {ReportService} from '../services/report.service';
 import {toSqlDate} from '@smartstocktz/core-libs';
 
 @Component({
-  selector: 'smartstock-stock-tracking',
+  selector: 'app-stock-tracking',
   template: `
     <div class="col-12" style="margin-top: 1em">
       <div>
@@ -57,7 +57,7 @@ import {toSqlDate} from '@smartstocktz/core-libs';
             <mat-spinner *ngIf="isLoading"></mat-spinner>
           </div>
 
-          <smartstock-data-not-ready *ngIf="noDataRetrieved  && !isLoading"></smartstock-data-not-ready>
+          <app-data-not-ready *ngIf="noDataRetrieved  && !isLoading"></app-data-not-ready>
           <table mat-table *ngIf="!noDataRetrieved  && !isLoading" [dataSource]="stockTrackingData" matSort>
 
             <ng-container matColumnDef="name">

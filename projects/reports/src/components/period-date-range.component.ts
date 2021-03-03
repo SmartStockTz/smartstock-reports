@@ -28,7 +28,7 @@ export const MY_FORMATS = {
 })
 
 @Component({
-  selector: 'smartstock-period-date-range',
+  selector: 'app-period-date-range',
   template: `
     <div class="d-flex flex-row justify-content-end ">
       <mat-form-field class="px-3" appearance="outline">

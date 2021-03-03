@@ -15,7 +15,7 @@ import {Subject} from 'rxjs';
 
 
 @Component({
-  selector: 'smartstock-sales-by-category',
+  selector: 'app-sales-by-category',
   template: `
     <div>
       <div class="row m-0 py-2" style="justify-content: space-evenly">
@@ -28,9 +28,9 @@ import {Subject} from 'rxjs';
             <hr class="w-75 mt-0 mx-auto" color="primary">
             <div class="d-flex justify-content-center align-items-center py-3" style="min-height: 200px">
               <div style="width: 100%; height: 100%" id="salesByCategory"></div>
-              <smartstock-data-not-ready style="position: absolute" [width]="100" height="100"
+              <app-data-not-ready style="position: absolute" [width]="100" height="100"
                                          [isLoading]="salesStatusProgress"
-                                         *ngIf="salesStatusProgress  || (!salesByCategoryData)"></smartstock-data-not-ready>
+                                         *ngIf="salesStatusProgress  || (!salesByCategoryData)"></app-data-not-ready>
             </div>
           </mat-card>
         </div>
@@ -53,9 +53,9 @@ import {Subject} from 'rxjs';
             </mat-card-header>
 
             <div style="display: flex; justify-content: center">
-              <smartstock-data-not-ready [width]="100" height="100"
+              <app-data-not-ready [width]="100" height="100"
                                          [isLoading]="salesStatusProgress"
-                                         *ngIf="salesStatusProgress  || (!salesByCategoryData)"></smartstock-data-not-ready>
+                                         *ngIf="salesStatusProgress  || (!salesByCategoryData)"></app-data-not-ready>
             </div>
             <table *ngIf="!salesStatusProgress  && salesByCategoryData" mat-table [dataSource]="salesByCategoryData" matSort>
 

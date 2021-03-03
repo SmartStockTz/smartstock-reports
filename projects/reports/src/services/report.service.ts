@@ -22,8 +22,7 @@ export class ReportService {
       try {
         const activeShop = await this.storage.getActiveShop();
         this.httpClient.get(
-          `/dashboard/admin/dailySales/${activeShop.projectId}/${beginDate}`, {
-          }).subscribe(value => {
+          `/dashboard/admin/dailySales/${activeShop.projectId}/${beginDate}`, {}).subscribe(value => {
           resolve(value);
         }, error => {
           reject(error);
@@ -39,8 +38,7 @@ export class ReportService {
       try {
         const activeShop = await this.storage.getActiveShop();
         this.httpClient.get(
-          `/dashboard/admin/salesGraphData/day/${activeShop.projectId}/${channel}/${beginDate}/${endDate}`, {
-          }).subscribe(value => {
+          `/dashboard/admin/salesGraphData/day/${activeShop.projectId}/${channel}/${beginDate}/${endDate}`, {}).subscribe(value => {
           resolve(value);
         }, error => {
           reject(error);
@@ -63,8 +61,7 @@ export class ReportService {
       try {
         const activeShop = await this.storage.getActiveShop();
         this.httpClient.get<{ total: number }[]>(
-          `/dashboard/admin/stock/${activeShop.projectId}/${beginDate}`, {
-          }).subscribe(value => {
+          `/dashboard/admin/stock/${activeShop.projectId}/${beginDate}`, {}).subscribe(value => {
           resolve(value);
         }, error => {
           reject(error);
@@ -176,9 +173,13 @@ export class ReportService {
   async getSoldCarts(from: string, to: string, channel: string): Promise<CartModel[]> {
     const activeShop = await this.storage.getActiveShop();
     const url = `/reports/sales/order/${from}/${to}/cart/day`;
-    return bfast.functions(activeShop.projectId)
+    const salesTracking: any[] = await bfast.functions(activeShop.projectId)
       .request(FaasUtil.functionsUrl(url, activeShop.projectId))
       .get();
+    return salesTracking.map(x => {
+      x.businessName = activeShop.businessName;
+      return x;
+    });
   }
 
   async getSellerSales(from: string, to: string, period: string): Promise<CartModel[]> {
@@ -271,8 +272,7 @@ export class ReportService {
       try {
         const activeShop = await this.storage.getActiveShop();
         this.httpClient.get(
-          `/report/${activeShop.projectId}/${channel}/${from}/${to}`, {
-          }).subscribe(value => {
+          `/report/${activeShop.projectId}/${channel}/${from}/${to}`, {}).subscribe(value => {
           resolve(value);
         }, error => {
           reject(error);

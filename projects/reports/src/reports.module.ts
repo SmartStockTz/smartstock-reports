@@ -52,6 +52,8 @@ import {SalesOrderPageComponent} from './pages/sales-order.page';
 import {SalesPerformancePageComponent} from './pages/sales-performance.page';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 import {PeriodDateRangeComponent} from './components/period-date-range.component';
+import { SalesReceiptOverviewComponent } from './components/sales-receipt-overview.component';
+import {MatDialogModule} from '@angular/material/dialog';
 
 
 const routes: Routes = [
@@ -95,7 +97,8 @@ const routes: Routes = [
     SalesOrderPageComponent,
     SalesPerformancePageComponent,
     SalesGrowthPageComponent,
-    PeriodDateRangeComponent
+    PeriodDateRangeComponent,
+    SalesReceiptOverviewComponent
   ],
   exports: [],
   imports: [
@@ -135,7 +138,8 @@ const routes: Routes = [
     LibModule,
     MatBottomSheetModule,
     MatListModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    MatDialogModule
   ],
   entryComponents: [CartDetailsComponent],
 })

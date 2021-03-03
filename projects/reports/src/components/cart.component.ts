@@ -12,7 +12,7 @@ import {DeviceInfoUtil, toSqlDate} from '@smartstocktz/core-libs';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'smartstock-cart-report',
+  selector: 'app-cart-report',
   template: `
     <div class="col-12" style="margin-top: 1em">
 
@@ -58,7 +58,7 @@ import * as moment from 'moment';
             <mat-spinner diameter="30" *ngIf="isLoading"></mat-spinner>
           </div>
 
-          <smartstock-data-not-ready *ngIf="noDataRetrieved  && !isLoading"></smartstock-data-not-ready>
+          <app-data-not-ready *ngIf="noDataRetrieved  && !isLoading"></app-data-not-ready>
           <table mat-table *ngIf="!noDataRetrieved  && !isLoading && enoughWidth()" [dataSource]="carts" matSort>
 
             <ng-container matColumnDef="channel">
@@ -79,6 +79,13 @@ import * as moment from 'moment';
               <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
+            <ng-container matColumnDef="customer">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer</th>
+              <td mat-cell
+                  *matCellDef="let element">{{element.customer !== null ? element.customer : 'N/A'}} </td>
+              <td mat-footer-cell *matFooterCellDef></td>
+            </ng-container>
+
             <ng-container matColumnDef="seller">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Seller</th>
               <td mat-cell
@@ -88,7 +95,7 @@ import * as moment from 'moment';
 
             <ng-container matColumnDef="date">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-              <td mat-cell *matCellDef="let element">{{toLocalTime(element.date)}}</td>
+              <td mat-cell *matCellDef="let element">{{element.date}} {{element.time !== null ? element.time : ''}}</td>
               <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 
@@ -124,9 +131,9 @@ export class CartComponent extends DeviceInfoUtil implements OnInit {
   channel = 'retail';
   isLoading = false;
   noDataRetrieved = true;
-  stocks = [];
+  // stocks = [];
   carts: MatTableDataSource<any>;
-  cartColumns = ['date', 'channel', 'total_amount', 'total_items', 'seller'];
+  cartColumns = ['date', 'channel', 'total_amount', 'total_items', 'seller', 'customer'];
   cartColumnsMobile = ['date', 'total_amount', 'total_items'];
 
   startDateFormControl = new FormControl(new Date(), [Validators.nullValidator]);
@@ -163,7 +170,7 @@ export class CartComponent extends DeviceInfoUtil implements OnInit {
           this.carts.paginator = this.paginator;
           this.carts.sort = this.sort;
         });
-        this.stocks = data;
+        // this.stocks = data;
         this.noDataRetrieved = false;
       } else {
         this.noDataRetrieved = true;
@@ -204,17 +211,20 @@ export class CartComponent extends DeviceInfoUtil implements OnInit {
         channel: cartDetailsData.channel,
         date: cartDetailsData.date,
         amount: cartDetailsData.amount,
-        businessName: '', // cartDetailsData.sellerObject.businessName,
+        businessName: cartDetailsData.businessName, // cartDetailsData.sellerObject.businessName,
         // sellerFirstName: cartDetailsData.sellerObject.firstname,
         // sellerLastName: cartDetailsData.sellerObject.lastname,
         seller: cartDetailsData.seller,
+        customer: cartDetailsData.customer,
+        time: cartDetailsData.time,
         region: '', // cartDetailsData.sellerObject.region,
         items: cartDetailsData.items
       }
     });
   }
 
-  toLocalTime(date: any): string {
-    return moment(date).local().format('YYYY-MM-DD HH:MM');
-  }
+  // toLocalTime(date: any, time): string {
+  //   // return moment(date).local().format('YYYY-MM-DD');
+  //   return `${date} ${time}`
+  // }
 }

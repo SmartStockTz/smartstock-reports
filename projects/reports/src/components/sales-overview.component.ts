@@ -15,7 +15,7 @@ import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'smartstock-report-sale-overview',
+  selector: 'app-report-sale-overview',
   template: `
     <div class=" mx-auto" style="margin-top: 1em">
       <div class="m-0 py-2">
@@ -29,8 +29,8 @@ import {Subject} from 'rxjs';
 
             <div class="d-flex justify-content-center align-items-center" style="min-height: 200px">
               <div id="salesTrendByDay" class="w-100"></div>
-              <smartstock-data-not-ready style="position: absolute" [width]="100" height="100" [isLoading]="isLoading"
-                                         *ngIf="noDataRetrieved || isLoading"></smartstock-data-not-ready>
+              <app-data-not-ready style="position: absolute" [width]="100" height="100" [isLoading]="isLoading"
+                                         *ngIf="noDataRetrieved || isLoading"></app-data-not-ready>
             </div>
           </mat-card>
 
@@ -51,8 +51,8 @@ import {Subject} from 'rxjs';
               <span style="flex-grow: 1"></span>
             </div>
             <div class="d-flex justify-content-center">
-              <smartstock-data-not-ready [width]="100" height="100" [isLoading]="isLoading"
-                                         *ngIf="noDataRetrieved  && !isLoading"></smartstock-data-not-ready>
+              <app-data-not-ready [width]="100" height="100" [isLoading]="isLoading"
+                                         *ngIf="noDataRetrieved  && !isLoading"></app-data-not-ready>
             </div>
 
 

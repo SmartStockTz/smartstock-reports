@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 
 @Component({
-  selector: 'smartstock-stock-reports',
+  selector: 'app-stock-reports',
   template: `
       <div>
           <mat-sidenav-container class="my-drawer-container">
@@ -12,11 +12,11 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
                       class="match-parent-side"
                       #sidenav [mode]="enoughWidth()?'side':'over'"
                       [opened]="enoughWidth()">
-                  <smartstock-drawer></smartstock-drawer>
+                  <app-drawer></app-drawer>
               </mat-sidenav>
 
               <mat-sidenav-content>
-                  <smartstock-toolbar [heading]="'Near to Expire'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
+                  <app-toolbar [heading]="'Near to Expire'" [sidenav]="sidenav" [showProgress]="false"></app-toolbar>
 
 
                   <div [ngStyle]="{padding: (isMobile || !enoughWidth())?'24px 0':'24px 16px'}"
@@ -25,7 +25,7 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
                           <div class="row">
 <!--                              <div style="margin-bottom: 10px" class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">-->
                               <div style="margin-bottom: 10px" class="col-12">
-                                  <smartstock-products-about-to-expire></smartstock-products-about-to-expire>
+                                  <app-products-about-to-expire></app-products-about-to-expire>
                               </div>
                           </div>
                       </div>

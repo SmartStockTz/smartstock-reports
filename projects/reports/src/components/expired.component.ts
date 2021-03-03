@@ -8,7 +8,7 @@ import {FormControl, Validators} from '@angular/forms';
 import {ReportService} from '../services/report.service';
 
 @Component({
-  selector: 'smartstock-expired-products-report',
+  selector: 'app-expired-products-report',
   template: `
     <div>
       <div style="display: flex; flex-flow: row; align-items: center;">
@@ -28,7 +28,7 @@ import {ReportService} from '../services/report.service';
           </button>
         </div>
         <hr class="w-75 mt-0 mx-auto" color="primary">
-        <smartstock-data-not-ready [isLoading]="isLoading" *ngIf="noDataRetrieved  || isLoading"></smartstock-data-not-ready>
+        <app-data-not-ready [isLoading]="isLoading" *ngIf="noDataRetrieved  || isLoading"></app-data-not-ready>
 
         <table mat-table *ngIf="!noDataRetrieved  && !isLoading" [dataSource]="expiredProducts" matSort>
 

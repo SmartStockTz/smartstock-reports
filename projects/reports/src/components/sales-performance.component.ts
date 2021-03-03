@@ -13,7 +13,7 @@ import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
 @Component({
-  selector: 'smartstock-sales-performance-component',
+  selector: 'app-sales-performance-component',
   template: `
     <div>
       <div class="m-0">
@@ -30,10 +30,10 @@ import {Subject} from 'rxjs';
             <hr class="w-75 mt-0 mx-auto">
             <div class="d-flex justify-content-center align-items-center py-3" style="min-height: 200px">
               <div style="width: 100%; height: 100%" id="salesBySeller"></div>
-              <smartstock-data-not-ready style="position: absolute" [width]="100" height="100"
+              <app-data-not-ready style="position: absolute" [width]="100" height="100"
                                          [isLoading]="salesStatusProgress"
                                          *ngIf="salesStatusProgress  || (!salesPerformanceData)">
-              </smartstock-data-not-ready>
+              </app-data-not-ready>
             </div>
           </mat-card>
         </div>
@@ -60,9 +60,9 @@ import {Subject} from 'rxjs';
             <hr class="w-75 mt-0 mx-auto">
 
             <div class="d-flex justify-content-center">
-              <smartstock-data-not-ready [width]="100" height="100" [isLoading]="salesStatusProgress"
+              <app-data-not-ready [width]="100" height="100" [isLoading]="salesStatusProgress"
                                          *ngIf="salesStatusProgress  || (!salesPerformanceData)">
-              </smartstock-data-not-ready>
+              </app-data-not-ready>
             </div>
             <table *ngIf="!salesStatusProgress  && salesPerformanceData" mat-table [dataSource]="salesPerformanceData" matSort>
 

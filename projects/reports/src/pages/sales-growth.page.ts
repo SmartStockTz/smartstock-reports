@@ -19,7 +19,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 @Component({
-  selector: 'smartstock-sales-growth-page',
+  selector: 'app-sales-growth-page',
   template: `
     <div>
       <mat-sidenav-container class="my-drawer-container">
@@ -29,11 +29,11 @@ const ELEMENT_DATA: PeriodicElement[] = [
           class="match-parent-side"
           #sidenav [mode]="enoughWidth()?'side':'over'"
           [opened]="enoughWidth()">
-          <smartstock-drawer></smartstock-drawer>
+          <app-drawer></app-drawer>
         </mat-sidenav>
 
         <mat-sidenav-content>
-          <smartstock-toolbar [heading]="'Sales Reports'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
+          <app-toolbar [heading]="'Sales Reports'" [sidenav]="sidenav" [showProgress]="false"></app-toolbar>
 
           <div style="min-height: 90vh;display: flex;flex-direction: column; justify-content: space-evenly">
             <div class="row col-11 m-0 pt-5 justify-content-end">
@@ -45,7 +45,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
                 </mat-select>
               </mat-form-field>
             </div>
-            <smartstock-profit [salesChannel]="salesChannel.valueChanges"></smartstock-profit>
+            <app-profit [salesChannel]="salesChannel.valueChanges"></app-profit>
           </div>
         </mat-sidenav-content>
       </mat-sidenav-container>

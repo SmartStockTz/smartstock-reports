@@ -5,7 +5,7 @@ import {toSqlDate} from '@smartstocktz/core-libs';
 import * as Highcharts from 'highcharts';
 
 @Component({
-  selector: 'smartstock-profit',
+  selector: 'app-profit',
   template: `
     <div style="height: 100%" class="justify-content-center align-items-center">
       <div class="pb-3">
@@ -46,8 +46,8 @@ import * as Highcharts from 'highcharts';
               <div class="">
                 <p class=" mb-0 text-center">Gross Profit Vs Prior Year</p>
                 <p *ngIf="!todaySalesProgress" class="mb-0 h6">{{todaySales | currency: 'TZS '}}/=</p>
-                <smartstock-data-not-ready [width]="100" height="100" [isLoading]="todaySalesProgress"
-                                           *ngIf="todaySalesProgress  || (!todaySales && todaySales==null)"></smartstock-data-not-ready>
+                <app-data-not-ready [width]="100" height="100" [isLoading]="todaySalesProgress"
+                                           *ngIf="todaySalesProgress  || (!todaySales && todaySales==null)"></app-data-not-ready>
               </div>
             </mat-card>
               <mat-card class="mat-elevation-z3 my-3 py-4 profit">
@@ -87,9 +87,9 @@ import * as Highcharts from 'highcharts';
 
                 <div class="d-flex justify-content-center align-items-center py-3" style="height: 350px">
                   <div class="w-100 h-100" id="grossProfit"></div>
-<!--                  <smartstock-data-not-ready style="position: absolute" [width]="100" height="100"-->
+<!--                  <app-data-not-ready style="position: absolute" [width]="100" height="100"-->
 <!--                                             [isLoading]="salesStatusProgress"-->
-<!--                                             *ngIf="salesStatusProgress  || (!salesGrowthStatus)"></smartstock-data-not-ready>-->
+<!--                                             *ngIf="salesStatusProgress  || (!salesGrowthStatus)"></app-data-not-ready>-->
                 </div>
             </mat-card>
           </div>
@@ -129,8 +129,8 @@ import * as Highcharts from 'highcharts';
               <div class="">
                 <p class=" mb-0 text-center">Net Profit Vs Prior Year</p>
                 <p *ngIf="!todaySalesProgress" class="mb-0 h6">{{todaySales | currency: 'TZS '}}/=</p>
-                <smartstock-data-not-ready [width]="100" height="100" [isLoading]="todaySalesProgress"
-                                           *ngIf="todaySalesProgress  || (!todaySales && todaySales==null)"></smartstock-data-not-ready>
+                <app-data-not-ready [width]="100" height="100" [isLoading]="todaySalesProgress"
+                                           *ngIf="todaySalesProgress  || (!todaySales && todaySales==null)"></app-data-not-ready>
               </div>
               <!--                        <hr class="ml-2 w-75">-->
             </mat-card>
@@ -171,9 +171,9 @@ import * as Highcharts from 'highcharts';
 
               <div class="d-flex justify-content-center align-items-center py-3" style="height: 350px">
                 <div style="width: 100%; height: 100%" id="netProfit"></div>
-<!--                <smartstock-data-not-ready style="position: absolute" [width]="100" height="100"-->
+<!--                <app-data-not-ready style="position: absolute" [width]="100" height="100"-->
 <!--                                           [isLoading]="salesStatusProgress"-->
-<!--                                           *ngIf="salesStatusProgress  || (!salesGrowthStatus)"></smartstock-data-not-ready>-->
+<!--                                           *ngIf="salesStatusProgress  || (!salesGrowthStatus)"></app-data-not-ready>-->
               </div>
             </mat-card>
           </div>

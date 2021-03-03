@@ -12,7 +12,7 @@ import {ReportService} from '../services/report.service';
 import {json2csv} from '../services/json2csv.service';
 
 @Component({
-  selector: 'smartstock-profit-by-category',
+  selector: 'app-profit-by-category',
   template: `
     <div class="col-12">
       <div>
@@ -54,7 +54,7 @@ import {json2csv} from '../services/json2csv.service';
             <!--</mat-form-field>-->
           </mat-card-header>
 
-          <smartstock-data-not-ready [isLoading]="isLoading" *ngIf="noDataRetrieved || isLoading"></smartstock-data-not-ready>
+          <app-data-not-ready [isLoading]="isLoading" *ngIf="noDataRetrieved || isLoading"></app-data-not-ready>
 
           <div *ngIf="!noDataRetrieved  && !isLoading">
             <table mat-table [dataSource]="productPerformanceDatasource" matSort>

@@ -24,7 +24,7 @@ export const MY_FORMATS = {
 };
 
 @Component({
-  selector: 'smartstock-sales-growth',
+  selector: 'app-sales-growth',
   template: `
     <mat-card class="mat-elevation-z3" style="border-radius: 15px; border-left: 5px solid green;">
       <div class="row pt-3 m-0 justify-content-center align-items-center">
@@ -50,9 +50,9 @@ export const MY_FORMATS = {
       <hr class="w-75 mt-0 mx-auto" color="primary">
       <div class="d-flex justify-content-center align-items-center py-3" style="min-height: 200px">
         <div style="width: 100%; height: 100%" id="salesGrowth"></div>
-        <smartstock-data-not-ready style="position: absolute" [width]="100" height="100"
+        <app-data-not-ready style="position: absolute" [width]="100" height="100"
                                    [isLoading]="salesStatusProgress"
-                                   *ngIf="salesStatusProgress  || (!salesGrowthStatus)"></smartstock-data-not-ready>
+                                   *ngIf="salesStatusProgress  || (!salesGrowthStatus)"></app-data-not-ready>
       </div>
     </mat-card>
   `,
