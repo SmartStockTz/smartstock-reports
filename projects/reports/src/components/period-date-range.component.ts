@@ -1,4 +1,4 @@
-import {Component, Injectable, OnInit} from '@angular/core';
+import {Component, Injectable, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {toSqlDate} from '@smartstocktz/core-libs';
 import {MatDatepicker} from '@angular/material/datepicker';
@@ -31,9 +31,9 @@ export const MY_FORMATS = {
   selector: 'app-period-date-range',
   template: `
     <div class="d-flex flex-row justify-content-end ">
-      <mat-form-field class="px-3" appearance="outline">
+      <mat-form-field class="px-3" [hidden]="hidePeriod" appearance="outline">
         <mat-label>Sales By</mat-label>
-        <mat-select [formControl]="periodFormControl" value="retail">
+        <mat-select [formControl]="periodFormControl">
           <mat-option value="day">Day</mat-option>
           <mat-option value="month">Month</mat-option>
           <mat-option value="year">Year</mat-option>
@@ -78,15 +78,17 @@ export const MY_FORMATS = {
   ],
 })
 export class PeriodDateRangeComponent implements OnInit {
-  fromDateFormControl = new FormControl(moment());
-  toDateFormControl = new FormControl(moment());
-  periodFormControl = new FormControl('day');
   dateRange: FormGroup;
   maxDate = new Date();
   minDate = new Date(new Date().setFullYear(2015));
   from = new Date(new Date().setDate(new Date().getDate() - 7));
   to = new Date();
+ @ Input() hidePeriod = false;
+ @ Input() setPeriod = 'day';
 
+  fromDateFormControl = new FormControl(moment());
+  toDateFormControl = new FormControl(moment());
+  periodFormControl = new FormControl();
   constructor(private periodDateRangeService: PeriodDateRangeService) {
     // this.dateRange = new FormGroup({
     //   from: new FormControl(new Date(new Date().setDate(new Date().getDate() - 7))),
@@ -96,8 +98,11 @@ export class PeriodDateRangeComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.fromDateFormControl.setValue(this.from);
+    this.fromDateFormControl.setValue(this.hidePeriod ? (this.from.getFullYear() - 1).toString() : this.from);
+    // this.fromDateFormControl.setValue(this.hidePeriod ? this.from.getFullYear() : this.from);
     this.toDateFormControl.setValue(this.to);
+    console.log(this.from.getFullYear());
+    this.periodFormControl.setValue(this.setPeriod);
     this.periodFormControl.valueChanges.subscribe(value => {
       this.periodDateRangeService.editPeriod(value);
     });
@@ -111,7 +116,7 @@ export class PeriodDateRangeComponent implements OnInit {
         datepicker.close();
         this.from = new Date(new Date(this.from).setMonth(0));
         this.from = new Date(new Date(this.from).setDate(1));
-        this.fromDateFormControl.setValue(this.from);
+        this.fromDateFormControl.setValue(this.hidePeriod === true ? normalizedYear.year() : this.from);
         this.periodDateRangeService.editStartDate(toSqlDate(this.from));
       }
     } else {
@@ -121,7 +126,7 @@ export class PeriodDateRangeComponent implements OnInit {
         this.to = new Date(new Date(this.to).setMonth(12));
         this.to = new Date(new Date(this.to).setDate(1));
         this.to = new Date(new Date(this.to).setDate(new Date(this.to).getDate() - 1));
-        this.toDateFormControl.setValue(this.to);
+        this.toDateFormControl.setValue(this.hidePeriod === true ? this.to.getFullYear().toString() : this.to);
         this.periodDateRangeService.editEndDate(toSqlDate(this.to));
       }
     }
