@@ -12,7 +12,7 @@ import {PeriodDateRangeService} from '../services/period-date-range.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {Form, FormControl} from '@angular/forms';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'smartstock-report-sales-growth',
@@ -99,18 +99,18 @@ import {Form, FormControl} from '@angular/forms';
           <table mat-table *ngIf="!noDataRetrieved  && !isLoading" [dataSource]="salesData" matSort>
 
             <ng-container matColumnDef="date">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{period | titlecase}}</th>
               <td mat-cell
                   *matCellDef="let element">{{element.date}}</td>
             </ng-container>
 
             <ng-container matColumnDef="originAmount">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Origin Amount</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{startDate | date: 'YYYY'}}</th>
               <td mat-cell *matCellDef="let element">{{element.origin | currency: ' '}}</td>
             </ng-container>
 
             <ng-container matColumnDef="comparedAmount">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Compared Amount</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>{{endDate | date: 'YYYY'}}</th>
               <td mat-cell *matCellDef="let element">{{element.compared | currency: ' '}}</td>
             </ng-container>
 
@@ -155,7 +155,7 @@ export class SalesGrowthComponent implements OnInit, OnDestroy {
   salesColumns = ['date', 'originAmount', 'comparedAmount', 'growth'];
   totalSales = 0;
   period = 'week';
-  startDate = new Date().setDate(1);
+  startDate = (new Date().getFullYear() - 1).toString() + '-01-01';
   endDate = toSqlDate(new Date());
   days = new Set();
 
@@ -174,10 +174,9 @@ export class SalesGrowthComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.startDate = new Date(this.startDate).setMonth(0);
-    this.startDate = toSqlDate(new Date(new Date(this.startDate).setFullYear(new Date().getFullYear() - 1)));
+    // this.startDate = new Date(new Date(this.startDate).setMonth(0));
+    // this.startDate = toSqlDate(new Date(new Date(this.startDate).setFullYear(new Date().getFullYear() - 1)));
     this._getSalesTrend();
-console.log(this.startDate);
     this.periodFormControl.valueChanges.subscribe((value) => {
       if (value) {
         this.period = value;
@@ -207,60 +206,89 @@ console.log(this.startDate);
   private _getSalesTrend(): void {
     this.isLoading = true;
     this.salesByDayTrendProgress = true;
-    this.reportService.getSalesGrowth(this.startDate, this.endDate, this.period).then(data => {
-      this.isLoading = false;
-      this.noDataRetrieved = false;
-      const salesGrowthData = {};
-      const salesGrowthTableData = [];
-      Object.values(data).forEach(key => {
-        key.values.forEach(value => {
-          this.days.add(value.date);
+    this.reportService.getSalesGrowth(this.startDate, new Date(this.startDate).getFullYear() + '-12-30', this.period).then(dataOrigin => {
+      const data = [];
+      data.push(dataOrigin[0]);
+
+      this.reportService.getSalesGrowth(new Date(this.endDate).getFullYear() + '-01-01', this.endDate, this.period).then(dataCompared => {
+        this.isLoading = false;
+        this.noDataRetrieved = false;
+        const salesGrowthData = {origin: [], compared: []};
+        const salesGrowthTableData = [];
+        this.days = new Set();
+        data.push(dataCompared[0]);
+        Object.values(data).forEach(key => {
+          key.values.forEach(value => {
+            this.days.add(value.date);
+          });
         });
-      });
-      Object.values(data).forEach(value => {
-        const tempDataArray = [];
-        this.days.forEach(date => {
-          let filterdSales;
-          // @ts-ignore
-          filterdSales = value.values.filter(filter => filter.date === date);
-          if (filterdSales && filterdSales.length === 1) {
-            tempDataArray.push(filterdSales[0].amount);
-          } else {
-            tempDataArray.push(0);
+
+        // Calculate Weeks
+        const oneJan =  new Date(new Date(this.endDate).getFullYear(), 0, 1);
+        // @ts-ignore
+        const numberOfDays =  Math.floor((new Date(this.endDate) - oneJan) / (24 * 60 * 60 * 1000));
+        const lastWeek = Math.ceil(( new Date(this.endDate).getDay() + 1 + numberOfDays) / 7);
+
+        // @ts-ignore
+        this.days = Array.from(this.days).sort((a, b) => a - b);
+        Object.values(data).forEach(value => {
+          const tempDataArray = [];
+          this.days.forEach(date => {
+            let filterdSales;
+
+            // @ts-ignore
+            filterdSales = value.values.filter(filter => filter.date === date);
+            if (filterdSales && filterdSales.length === 1) {
+              tempDataArray.push(filterdSales[0].amount);
+            } else {
+              // if (date <= lastWeek && this.period === 'week'){
+              //   tempDataArray.push(0);
+              // } else if (date <= new Date(this.endDate).getMonth()) {
+              //   tempDataArray.push(0);
+              // }
+              tempDataArray.push(0);
+            }
+          });
+
+          let objectId = 'origin';
+          if (value.id === '2021') {
+            objectId = 'compared';
           }
+          salesGrowthData[objectId] = tempDataArray;
         });
-        let objectId = 'origin';
-        if (value.id === '2021') {
-          objectId = 'compared';
-        }
-        salesGrowthData[objectId] = tempDataArray;
-      });
-      let i = 0;
-      const growthDays = [];
-      this.days.forEach(value => {
-        let increase = salesGrowthData.compared[i] - salesGrowthData.origin[i];
-        if (salesGrowthData.origin[i] === 0){
-          increase = increase / salesGrowthData.compared[i] * 100;
-        } else {
-          increase = increase / salesGrowthData.origin[i] * 100;
-        }
-        salesGrowthTableData.push({
-          date: value,
-          origin: salesGrowthData.origin[i],
-          compared: salesGrowthData.compared[i],
-          growth: increase.toFixed(1)
+        let i = 0;
+        const growthDays = [];
+        this.days.forEach(value => {
+          let increase = salesGrowthData.compared[i] - salesGrowthData.origin[i];
+          if (salesGrowthData.origin[i] === 0) {
+            increase = increase / salesGrowthData.compared[i] * 100;
+          } else {
+            increase = increase / salesGrowthData.origin[i] * 100;
+          }
+          salesGrowthTableData.push({
+            date: value,
+            origin: salesGrowthData.origin[i],
+            compared: salesGrowthData.compared[i],
+            growth: increase.toFixed(1)
+          });
+          growthDays.push(value);
+          i++;
         });
-        growthDays.push(value);
-        i++;
+
+        this.initiateGraph(growthDays, salesGrowthData);
+        this.salesData = new MatTableDataSource(salesGrowthTableData);
+        // this.totalSales = data.map(t => t.amount).reduce((acc, value) => acc + value, 0);
+        setTimeout(() => {
+          this.salesData.paginator = this.paginator;
+          this.salesData.sort = this.sort;
+        });
+        this.salesByDayTrendProgress = false;
+      }).catch(_ => {
+        console.log(_);
+        this.isLoading = false;
+        this.noDataRetrieved = true;
+        this.salesByDayTrendProgress = false;
       });
-      this.initiateGraph(growthDays, salesGrowthData);
-      this.salesData = new MatTableDataSource(salesGrowthTableData);
-      // this.totalSales = data.map(t => t.amount).reduce((acc, value) => acc + value, 0);
-      setTimeout(() => {
-        this.salesData.paginator = this.paginator;
-        this.salesData.sort = this.sort;
-      });
-      this.salesByDayTrendProgress = false;
     }).catch(_ => {
       console.log(_);
       this.isLoading = false;
@@ -280,7 +308,6 @@ console.log(this.startDate);
   }
 
   private initiateGraph(date: any, data: any): any {
-    console.log(date);
     // @ts-ignore
     this.trendChart = Highcharts.chart('salesGrowth', {
       chart: {
@@ -315,12 +342,12 @@ console.log(this.startDate);
         valueDecimals: 2,
         pointFormat: '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x} ▲',
         formatter(): any {
-          const pointsLabel = ' <span style="color: rgba(27, 94, 32,.7)"> \u25CF</span>  ' + this.points[0].series.name + '<b>: ' +
+          const pointsLabel = ' <span style="color: rgba(124, 181, 236, 1)"> \u25CF</span>  ' + this.points[0].series.name + '<b>: ' +
             this.points[0].y.toFixed(2) + '</b> <br>' + ' <span style="color: rgba(27, 94, 32,.7)"> \u25CF</span>  ' +
             this.points[1].series.name + '<b>: ' + this.points[1].y.toFixed(2) + '</b>';
           let percentLabel;
           let increase = this.points[1].y - this.points[0].y;
-          if (this.points[0].y === 0){
+          if (this.points[0].y === 0) {
             increase = increase / this.points[1].y * 100;
           } else {
             increase = increase / this.points[0].y * 100;
@@ -339,19 +366,19 @@ console.log(this.startDate);
       },
       // @ts-ignore
       series: [
-      {
-        name: '2020',
-        // color: 'rgba(27, 94, 32,.5)',
-        data: data.origin,
-        pointPadding: 0.2,
-        // pointPlacement: -0.3
-      }, {
-        name: '2021',
-        color: 'rgba(27, 94, 32,1)',
-        data: data.compared,
-        pointPadding: 0.2,
-        pointPlacement: 0
-      }
+        {
+          name: new Date(this.startDate).getFullYear() ,
+          color: 'rgba(124, 181, 236, 1)',
+          data: data.origin,
+          pointPadding: 0,
+          // pointPlacement: -0.3
+        }, {
+          name: new Date(this.endDate).getFullYear(),
+          color: 'rgba(27, 94, 32,1)',
+          data: data.compared,
+          pointPadding: 0,
+          pointPlacement: 0
+        }
       ]
     });
   }

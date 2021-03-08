@@ -62,6 +62,7 @@ export class ReportService {
 
   async getSalesGrowth(from: string, to: string, period: string): Promise<any> {
     const activeShop = await this.storage.getActiveShop();
+    // console.log(`http://localhost:3000/reports/sales/growth/${from}/${to}/${period}`);
     return bfast.functions(activeShop.projectId)
       .request(FaasUtil.functionsUrl(`/reports/sales/growth/${from}/${to}/${period}`, activeShop.projectId))
       .get();

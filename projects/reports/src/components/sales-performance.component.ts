@@ -18,7 +18,7 @@ import {Subject} from 'rxjs';
     <div>
       <div class="m-0">
 
-        <div class=" py-3 mx-auto">
+        <div *ngIf="performanceBy !== 'product'" class=" py-3 mx-auto">
           <mat-card class="mat-elevation-z3">
             <div class="d-flex pt-3 m-0 justify-content-center align-items-center">
               <mat-icon color="primary" style="width: 40px;height:40px;font-size: 36px">
@@ -254,7 +254,6 @@ export class SalesPerformanceComponent implements OnInit, OnDestroy {
           this.salesPerformanceData.paginator = this.paginator;
           this.salesPerformanceData.sort = this.sort;
         });
-        this.initiateGraph(null, null, productData);
       }).catch(reason => {
         this.salesStatusProgress = false;
         this.logger.i(reason);
