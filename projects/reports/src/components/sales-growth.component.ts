@@ -15,7 +15,7 @@ import {Subject} from 'rxjs';
 import {FormControl} from '@angular/forms';
 
 @Component({
-  selector: 'smartstock-report-sales-growth',
+  selector: 'app-report-sales-growth',
   template: `
     <div class="row mt-5 justify-content-end">
       <mat-form-field class="px-3" appearance="outline">
@@ -25,7 +25,7 @@ import {FormControl} from '@angular/forms';
           <mat-option value="month">Month</mat-option>
         </mat-select>
       </mat-form-field>
-      <smartstock-period-date-range hidePeriod="true" setPeriod="year"></smartstock-period-date-range>
+      <app-period-date-range hidePeriod="true" setPeriod="year"></app-period-date-range>
     </div>
     <div class=" mx-auto" style="margin-top: 1em">
       <div class="py-3">
@@ -54,8 +54,8 @@ import {FormControl} from '@angular/forms';
 
           <div class="d-flex justify-content-center align-items-center m-0 p-0" style="min-height: 200px">
             <div id="salesGrowth" class="w-100"></div>
-            <smartstock-data-not-ready style="position: absolute" [width]="100" height="100" [isLoading]="isLoading"
-                                       *ngIf="noDataRetrieved || isLoading"></smartstock-data-not-ready>
+            <app-data-not-ready style="position: absolute" [width]="100" height="100" [isLoading]="isLoading"
+                                       *ngIf="noDataRetrieved || isLoading"></app-data-not-ready>
           </div>
         </mat-card>
       </div>
@@ -91,8 +91,8 @@ import {FormControl} from '@angular/forms';
             <span style="flex-grow: 1"></span>
           </div>
           <div class="d-flex justify-content-center">
-            <smartstock-data-not-ready [width]="100" height="100" [isLoading]="isLoading"
-                                       *ngIf="noDataRetrieved  && !isLoading"></smartstock-data-not-ready>
+            <app-data-not-ready [width]="100" height="100" [isLoading]="isLoading"
+                                       *ngIf="noDataRetrieved  && !isLoading"></app-data-not-ready>
           </div>
 
 

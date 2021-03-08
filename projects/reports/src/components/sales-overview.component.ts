@@ -27,7 +27,7 @@ import {Subject} from 'rxjs';
             <hr class="w-75 mt-0 mx-auto">
 
             <div class="d-flex justify-content-center align-items-center m-0 p-0" style="min-height: 200px">
-              <div id="salesTrendByDay" class="w-100"></div>
+              <div id="salesGrowth" class="w-100"></div>
               <app-data-not-ready style="position: absolute" [width]="100" height="100" [isLoading]="isLoading"
                                          *ngIf="noDataRetrieved || isLoading"></app-data-not-ready>
             </div>
@@ -191,7 +191,7 @@ export class SalesOverviewComponent implements OnInit, OnDestroy {
       totalSales.push(data[key].amount);
     });
     // @ts-ignore
-    this.trendChart = Highcharts.chart('salesTrendByDay', {
+    this.trendChart = Highcharts.chart('salesGrowth', {
       chart: {
         type: 'column'
       },

@@ -19,7 +19,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 @Component({
-  selector: 'smartstock-sales-reports',
+  selector: 'app-sales-reports',
   template: `
       <div>
           <mat-sidenav-container class="my-drawer-container">
@@ -29,11 +29,11 @@ const ELEMENT_DATA: PeriodicElement[] = [
                       class="match-parent-side"
                       #sidenav [mode]="enoughWidth()?'side':'over'"
                       [opened]="enoughWidth()">
-                  <smartstock-drawer></smartstock-drawer>
+                  <app-drawer></app-drawer>
               </mat-sidenav>
 
               <mat-sidenav-content>
-                  <smartstock-toolbar [heading]="'Sales Reports'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
+                  <app-toolbar [heading]="'Sales Reports'" [sidenav]="sidenav" [showProgress]="false"></app-toolbar>
 
                   <div style="min-height: 90vh;display: flex;flex-direction: column; justify-content: space-evenly">
                       <div class="row col-11 m-0 pt-5 justify-content-end">
@@ -45,30 +45,30 @@ const ELEMENT_DATA: PeriodicElement[] = [
                               </mat-select>
                           </mat-form-field>
                       </div>
-                      <smartstock-total-sales></smartstock-total-sales>
-                      <smartstock-profit [salesChannel]="salesChannel.valueChanges"></smartstock-profit>
+                      <app-total-sales></app-total-sales>
+                      <app-profit [salesChannel]="salesChannel.valueChanges"></app-profit>
                       <div class="row m-0 py-2" style="justify-content: space-evenly">
                           <div class="col-md-11 col-lg-4 py-3">
                           </div>
                           <div class="col-md-8 col-lg-4 py-3">
-                              <smartstock-sales-by-category></smartstock-sales-by-category>
+                              <app-sales-by-category></app-sales-by-category>
                           </div>
                       </div>
                       <div class="row m-0 py-2">
                           <div class="col-lg-6 py-3">
                           </div>
                           <div class="col-lg-6 py-3">
-                              <smartstock-cart-report [salesChannel]="salesChannel.valueChanges"></smartstock-cart-report>
+                              <app-cart-report [salesChannel]="salesChannel.valueChanges"></app-cart-report>
                           </div>
                       </div>
                       <div class="row m-0 py-2">
                           <div class="col-lg-6 py-3">
-                              <smartstock-profit-by-category
-                                      [salesChannel]="salesChannel.valueChanges"></smartstock-profit-by-category>
+                              <app-profit-by-category
+                                      [salesChannel]="salesChannel.valueChanges"></app-profit-by-category>
                           </div>
                           <div class="col-lg-6 py-3">
-                              <smartstock-product-performance-report
-                                      [salesChannel]="salesChannel.valueChanges"></smartstock-product-performance-report>
+                              <app-product-performance-report
+                                      [salesChannel]="salesChannel.valueChanges"></app-product-performance-report>
                           </div>
                       </div>
                   </div>
@@ -77,7 +77,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
                   <!--                      <div class="col-12 col-lg-10 col-xl-10 offset-xl-1 offset-lg-1 offset-md-0 offset-sm-0">-->
                   <!--                          <div class="row">-->
                   <!--                              <div style="margin-bottom: 10px" class="col-12">-->
-                  <!--                                  <smartstock-cart-report></smartstock-cart-report>-->
+                  <!--                                  <app-cart-report></app-cart-report>-->
                   <!--                              </div>-->
                   <!--                          </div>-->
                   <!--                      </div>-->
