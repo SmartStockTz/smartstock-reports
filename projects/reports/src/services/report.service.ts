@@ -184,6 +184,7 @@ export class ReportService {
     const salesTracking: any[] = await bfast.functions(activeShop.projectId)
       .request(FaasUtil.functionsUrl(url, activeShop.projectId))
       .get();
+    // console.log(salesTracking);
     return salesTracking.map(x => {
       x.businessName = activeShop.businessName;
       return x;

@@ -62,8 +62,8 @@ const routes: Routes = [
   {path: '', component: IndexPage},
   {path: 'stock/overview', component: StockPageComponent},
   {path: 'sales/overview', component: SalesOverviewPage},
-  {path: 'sales/order', component: SalesOrderPageComponent},
-  {path: 'sales-growth', component: SalesGrowthPageComponent},
+  {path: 'sales/tracking', component: SalesOrderPageComponent},
+  {path: 'sales/growth', component: SalesGrowthPageComponent},
   {path: 'sales/performance', component: SalesPerformancePageComponent},
 ];
 

@@ -72,7 +72,7 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
   stockPages = [
     {
       name: 'Stock',
-      path: '/report//stock/overview',
+      path: '/report/stock/overview',
       icon: 'description'
     }
   ];
@@ -84,7 +84,7 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
     },
     {
       name: 'Stock Report',
-      path: '/report//stock/overview',
+      path: '/report/stock/overview',
       icon: 'description'
     }
   ];
@@ -95,13 +95,13 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
       icon: 'trending_up'
     },
     {
-      name: 'Order Report',
-      path: '/report/sales/order',
+      name: 'Sales Tracking',
+      path: '/report/sales/tracking',
       icon: 'description'
     },
     {
       name: 'Sales Growth',
-      path: '/report/sales-growth',
+      path: '/report/sales/growth',
       icon: 'description'
     },
     {

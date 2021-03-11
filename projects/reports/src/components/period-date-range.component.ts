@@ -101,7 +101,7 @@ export class PeriodDateRangeComponent implements OnInit {
     this.fromDateFormControl.setValue(this.hidePeriod ? (this.from.getFullYear() - 1).toString() : this.from);
     // this.fromDateFormControl.setValue(this.hidePeriod ? this.from.getFullYear() : this.from);
     this.toDateFormControl.setValue(this.to);
-    console.log(this.from.getFullYear());
+    // console.log(this.from.getFullYear());
     this.periodFormControl.setValue(this.setPeriod);
     this.periodFormControl.valueChanges.subscribe(value => {
       this.periodDateRangeService.editPeriod(value);

@@ -95,7 +95,7 @@ import * as moment from 'moment';
 
             <ng-container matColumnDef="date">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-              <td mat-cell *matCellDef="let element">{{element.date}} {{element.time !== null ? element.time : ''}}</td>
+              <td mat-cell *matCellDef="let element">{{element.date}} {{element.timer !== null ? element.timer.split('T')[1] : ''}}</td>
               <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
 

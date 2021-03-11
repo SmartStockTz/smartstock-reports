@@ -70,8 +70,13 @@ export class AppModule {
             roles: ['*']
           },
           {
-            link: '/report/sales/order',
-            name: 'sales orders',
+            link: '/report/sales/tracking',
+            name: 'sales tracking',
+            roles: ['*']
+          },
+          {
+            link: '/report/sales/growth',
+            name: 'sales growth',
             roles: ['*']
           },
           {
