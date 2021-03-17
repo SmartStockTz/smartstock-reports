@@ -182,31 +182,16 @@ export class SalesPerformanceComponent implements OnInit, OnDestroy {
       this.performanceBy = value;
       this.getSalesPerformance();
     });
-    this.periodDateRangeService.period.pipe(
+    this.periodDateRangeService.dateRange.pipe(
       takeUntil(this.destroyer)
     ).subscribe((value) => {
       if (value) {
-        this.period = value;
+        this.period = value.period;
+        this.startDate = value.startDate;
+        this.endDate = value.endDate;
         this.getSalesPerformance();
       }
     });
-    this.periodDateRangeService.startDate.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
-      if (value) {
-        this.startDate = value;
-        this.getSalesPerformance();
-      }
-    });
-    this.periodDateRangeService.endDate.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
-      if (value) {
-        this.endDate = value;
-        this.getSalesPerformance();
-      }
-    });
-
 
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.salesPerformanceData.filter = filterValue.trim().toLowerCase();
@@ -323,7 +308,8 @@ export class SalesPerformanceComponent implements OnInit, OnDestroy {
           if (this.performanceBy === 'product') {
             tempDataArray.push(filterdSales[0].sales);
           } else {
-            tempDataArray.push(filterdSales[0].amount);
+            const fixedValue = Math.round((filterdSales[0].amount + Number.EPSILON) * 100) / 100;
+            tempDataArray.push(fixedValue);
           }
         } else {
           tempDataArray.push(0);
@@ -372,7 +358,7 @@ export class SalesPerformanceComponent implements OnInit, OnDestroy {
         },
         tooltip: {
           // pointFormat: '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
-          pointFormat: '{series.name}:<b> {point.y:.1f}/=</b><br>',
+          // pointFormat: '{series.name}:<b> {point.y:.1f}/=</b><br>',
           shared: true,
           crosshairs: true,
         },
@@ -386,7 +372,10 @@ export class SalesPerformanceComponent implements OnInit, OnDestroy {
         series: Object.keys(sellersCategoryData).map(key => {
           return {
             name: key,
-            data: sellersCategoryData[key]
+            data: sellersCategoryData[key],
+            tooltip: {
+              valueSuffix: ' /='
+            }
           };
         }),
       }

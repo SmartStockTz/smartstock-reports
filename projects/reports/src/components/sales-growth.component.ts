@@ -176,34 +176,25 @@ export class SalesGrowthComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // this.startDate = new Date(new Date(this.startDate).setMonth(0));
     // this.startDate = toSqlDate(new Date(new Date(this.startDate).setFullYear(new Date().getFullYear() - 1)));
-    this._getSalesTrend();
+    this._getSalesGrowth();
     this.periodFormControl.valueChanges.subscribe((value) => {
       if (value) {
         this.period = value;
-        this._getSalesTrend();
       }
     });
-    this.periodDateRangeService.startDate.pipe(
+    this.periodDateRangeService.dateRange.pipe(
       takeUntil(this.destroyer)
     ).subscribe((value) => {
       if (value) {
-        this.startDate = value;
-        this._getSalesTrend();
+        this.startDate = value.startDate;
+        this.endDate = value.endDate;
+        this._getSalesGrowth();
       }
     });
-    this.periodDateRangeService.endDate.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
-      if (value) {
-        this.endDate = value;
-        this._getSalesTrend();
-      }
-    });
-
 
   }
 
-  private _getSalesTrend(): void {
+  private _getSalesGrowth(): void {
     this.isLoading = true;
     this.salesByDayTrendProgress = true;
     this.reportService.getSalesGrowth(this.startDate, new Date(this.startDate).getFullYear() + '-12-30', this.period).then(dataOrigin => {

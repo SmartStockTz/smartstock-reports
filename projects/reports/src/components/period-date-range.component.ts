@@ -30,7 +30,7 @@ export const MY_FORMATS = {
 @Component({
   selector: 'app-period-date-range',
   template: `
-    <div class="d-flex flex-row justify-content-end ">
+    <div class="d-flex flex-row justify-content-end align-items-center">
       <mat-form-field class="px-3" [hidden]="hidePeriod" appearance="outline">
         <mat-label>Sales By</mat-label>
         <mat-select [formControl]="periodFormControl">
@@ -45,7 +45,7 @@ export const MY_FORMATS = {
                (dateChange)="chosenDayHandler($event, dp, 'startDate')">
         <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
         <mat-datepicker #dp
-                        startView="multi-year"
+                        [startView]="periodFormControl.value === 'day' ? 'month' : periodFormControl.value === 'month' ? 'year' : 'multi-year'"
                         (yearSelected)="chosenYearHandler($event, dp, 'startDate')"
                         (monthSelected)="chosenMonthHandler($event, dp, 'startDate')"
         >
@@ -56,13 +56,14 @@ export const MY_FORMATS = {
         <input matInput [matDatepicker]="dp2" [min]="minDate" [max]="maxDate" [formControl]="toDateFormControl"
                (dateChange)="chosenDayHandler($event, dp, 'endDate')">
         <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
-        <mat-datepicker #dp2
-                        startView="multi-year"
+        <mat-datepicker dataformatas="DD-MMM-YYYY" #dp2
+                        [startView]="periodFormControl.value === 'day' ? 'month' : periodFormControl.value === 'month' ? 'year' : 'multi-year'"
                         (yearSelected)="chosenYearHandler($event, dp2, 'endDate')"
                         (monthSelected)="chosenMonthHandler($event, dp2, 'endDate')"
         >
         </mat-datepicker>
       </mat-form-field>
+      <button mat-raised-button class="mb-auto mt-1 p-1" color="primary" (click)="applyDateRange()">Apply</button>
     </div>
 
   `,
@@ -104,7 +105,7 @@ export class PeriodDateRangeComponent implements OnInit {
     // console.log(this.from.getFullYear());
     this.periodFormControl.setValue(this.setPeriod);
     this.periodFormControl.valueChanges.subscribe(value => {
-      this.periodDateRangeService.editPeriod(value);
+      // this.periodDateRangeService.editPeriod(value);
     });
   }
 
@@ -117,7 +118,7 @@ export class PeriodDateRangeComponent implements OnInit {
         this.from = new Date(new Date(this.from).setMonth(0));
         this.from = new Date(new Date(this.from).setDate(1));
         this.fromDateFormControl.setValue(this.hidePeriod === true ? normalizedYear.year() : this.from);
-        this.periodDateRangeService.editStartDate(toSqlDate(this.from));
+        // this.periodDateRangeService.editStartDate(toSqlDate(this.from));
       }
     } else {
       this.to = new Date(new Date().setFullYear(normalizedYear.year()));
@@ -127,7 +128,7 @@ export class PeriodDateRangeComponent implements OnInit {
         this.to = new Date(new Date(this.to).setDate(1));
         this.to = new Date(new Date(this.to).setDate(new Date(this.to).getDate() - 1));
         this.toDateFormControl.setValue(this.hidePeriod === true ? this.to.getFullYear().toString() : this.to);
-        this.periodDateRangeService.editEndDate(toSqlDate(this.to));
+        // this.periodDateRangeService.editEndDate(toSqlDate(this.to));
       }
     }
   }
@@ -139,16 +140,17 @@ export class PeriodDateRangeComponent implements OnInit {
         datepicker.close();
         this.from = new Date(new Date(this.from).setDate(1));
         this.fromDateFormControl.setValue(this.from);
-        this.periodDateRangeService.editStartDate(toSqlDate(this.from));
+        // this.periodDateRangeService.editStartDate(toSqlDate(this.from));
       }
     } else {
       this.to = new Date(new Date(this.to).setMonth(normalizedMonth.month()));
       if (this.periodFormControl.value === 'month') {
         datepicker.close();
         this.to = new Date(new Date(this.to).setDate(1));
+        this.to = new Date(new Date(this.to).setMonth(normalizedMonth.month() + 1));
         this.to = new Date(new Date(this.to).setDate(new Date(this.to).getDate() - 1));
         this.toDateFormControl.setValue(this.to);
-        this.periodDateRangeService.editEndDate(toSqlDate(this.to));
+        // this.periodDateRangeService.editEndDate(toSqlDate(this.to));
       }
     }
   }
@@ -160,13 +162,17 @@ export class PeriodDateRangeComponent implements OnInit {
       this.from = new Date(new Date(this.from).setDate(normalizedDate.date()));
       datepicker.close();
       this.fromDateFormControl.setValue(this.from);
-      this.periodDateRangeService.editStartDate(toSqlDate(this.from));
+      // this.periodDateRangeService.editStartDate(toSqlDate(this.from));
     } else {
       this.to = new Date(new Date(this.to).setDate(normalizedDate.date()));
       datepicker.close();
       this.toDateFormControl.setValue(this.to);
-      this.periodDateRangeService.editEndDate(toSqlDate(this.to));
+      // this.periodDateRangeService.editEndDate(toSqlDate(this.to));
     }
   }
 
+  applyDateRange(): void {
+    this.periodDateRangeService.editDateRange({period: this.periodFormControl.value,
+      startDate: toSqlDate(this.from), endDate: toSqlDate(this.to)});
+  }
 }

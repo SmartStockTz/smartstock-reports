@@ -117,28 +117,13 @@ export class SalesOverviewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this._getSalesTrend();
-
-    this.periodDateRangeService.period.pipe(
+    this.periodDateRangeService.dateRange.pipe(
       takeUntil(this.destroyer)
     ).subscribe((value) => {
       if (value) {
-        this.period = value;
-        this._getSalesTrend();
-      }
-    });
-    this.periodDateRangeService.startDate.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
-      if (value) {
-        this.startDate = value;
-        this._getSalesTrend();
-      }
-    });
-    this.periodDateRangeService.endDate.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
-      if (value) {
-        this.endDate = value;
+        this.period = value.period;
+        this.startDate = value.startDate;
+        this.endDate = value.endDate;
         this._getSalesTrend();
       }
     });
