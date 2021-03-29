@@ -8,8 +8,9 @@ import {FormControl, Validators} from '@angular/forms';
 import {ReportService} from '../services/report.service';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {CartDetailsComponent} from './cart-details.component';
-import {DeviceInfoUtil, toSqlDate} from '@smartstocktz/core-libs';
+import {DeviceInfoUtil, StorageService, toSqlDate} from '@smartstocktz/core-libs';
 import * as moment from 'moment';
+import bfast from 'bfastjs';
 
 @Component({
   selector: 'app-cart-report',
@@ -122,10 +123,6 @@ import * as moment from 'moment';
 })
 export class CartComponent extends DeviceInfoUtil implements OnInit {
 
-  constructor(private readonly report: ReportService, private readonly snack: MatSnackBar, private cartDetails: MatBottomSheet) {
-    super();
-  }
-
   startDate;
   endDate;
   channel = 'retail';
@@ -144,10 +141,14 @@ export class CartComponent extends DeviceInfoUtil implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @Input() salesChannel;
 
+  constructor(private readonly report: ReportService, private readonly snack: MatSnackBar,
+              private cartDetails: MatBottomSheet, private readonly storageService: StorageService) {
+    super();
+  }
+
   ngOnInit(): void {
     this.startDate = toSqlDate(new Date());
     this.endDate = toSqlDate(new Date());
-
     this.getSoldCarts(this.channel, this.startDate, this.endDate);
     this.salesChannel.subscribe(value => {
       this.channel = value;
@@ -158,6 +159,24 @@ export class CartComponent extends DeviceInfoUtil implements OnInit {
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.carts.filter = filterValue.trim().toLowerCase();
     });
+
+    let alreadyExc = false;
+    this.storageService.getActiveUser().then(value => {
+      const salesChanges = bfast.database(value.projectId).table('sales').query().changes(() => {
+        console.log('sales track connected');
+        if (alreadyExc){
+          this.getSoldCarts('', this.startDate, this.endDate);
+        }
+        alreadyExc = true;
+      }, () => {
+        console.log('sales track disconnected');
+      });
+      salesChanges.addListener(response => {
+        if (response && response.body && response.body.change){
+          this.getSoldCarts('', this.startDate, this.endDate);
+        }
+      });
+    }).catch(_ => {});
   }
 
   getSoldCarts(channel: string, from, to: string): void {
