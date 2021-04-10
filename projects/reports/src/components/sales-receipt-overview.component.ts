@@ -82,7 +82,7 @@ _____________________________________________
         printer: 'tm20',
         data: dataToPrint,
         qr: this.data.id
-      }, true).then(_ => {
+      }, true ).then(_ => {
         this.snack.open('Receipt overview printed', 'Ok', {duration: 2000});
         this.dialogRef.close(true);
       }).catch(reason => {
