@@ -66,5 +66,6 @@ export class SalesGrowthPageComponent extends DeviceInfoUtil implements OnInit {
   }
 
   ngOnInit(): void {
+    document.title = 'Sales Growth';
   }
 }

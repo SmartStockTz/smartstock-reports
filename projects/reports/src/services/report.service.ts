@@ -17,6 +17,20 @@ export class ReportService {
               private readonly settings: SettingsService) {
   }
 
+  async getProducts(): Promise<any> {
+    return this.storage.getStocks().then(value => {
+      if (value === null) {
+        return bfast.database().table('stocks').getAll().then(data => {
+          return this.storage.saveStocks(data as any);
+        });
+      } else {
+        return value;
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+  }
+
   getFrequentlySoldProducts(beginDate: Date, endDate: Date): Promise<any> {
     return new Promise<any>(async (resolve, reject) => {
       try {
@@ -62,6 +76,18 @@ export class ReportService {
     return bfast.functions(activeShop.projectId)
       .request(FaasUtil.functionsUrl(`/reports/sales/growth/${from}/${to}/${period}`, activeShop.projectId))
       .get();
+  }
+
+  async getInvoices(from: string, to: string): Promise<any> {
+    const shop = await this.storage.getActiveShop();
+    // return bfast.functions(activeShop.projectId)
+    //   .request(FaasUtil.functionsUrl(`/reports/sales/invoices/${from}/${to}`, activeShop.projectId))
+    //   .get();
+    return await BFast.database(shop.projectId)
+      .collection('invoices')
+      .query()
+      .orderBy('_created_at', -1)
+      .find();
   }
 
   getTotalCostOfGoodSold(beginDate: Date, endDate: Date): Promise<{ total: number }[]> {
@@ -198,6 +224,14 @@ export class ReportService {
     ).get();
   }
 
+  async getStockTracking(stockId: string, from: string, to: string): Promise<any> {
+    const activeShop = await this.storage.getActiveShop();
+    return bfast.functions(activeShop.projectId)
+      .request(
+        FaasUtil.functionsUrl(`/reports/stocks/tracking/${stockId}/${from}/${to}`, activeShop.projectId)
+      ).get();
+  }
+
   async getTotalGrossSale(beginDate: Date, endDate: Date): Promise<number> {
     const activeShop = await this.storage.getActiveShop();
     const total: number = await BFast.database(activeShop.projectId).collection('sales')
@@ -274,21 +308,21 @@ export class ReportService {
     return status;
   }
 
-  async getStockTracking(from: string, to: string, channel: string, skip = 0, size = 100): Promise<CartModel[]> {
-    // const activeShop = await this.storage.getActiveShop();
-
-    return new Promise<any>(async (resolve, reject) => {
-      try {
-        const activeShop = await this.storage.getActiveShop();
-        this.httpClient.get(
-          `/report/${activeShop.projectId}/${channel}/${from}/${to}`, {}).subscribe(value => {
-          resolve(value);
-        }, error => {
-          reject(error);
-        });
-      } catch (e) {
-        reject(e);
-      }
-    });
-  }
+  // async getStockTracking(from: string, to: string, channel: string, skip = 0, size = 100): Promise<CartModel[]> {
+  //   // const activeShop = await this.storage.getActiveShop();
+  //
+  //   return new Promise<any>(async (resolve, reject) => {
+  //     try {
+  //       const activeShop = await this.storage.getActiveShop();
+  //       this.httpClient.get(
+  //         `/report/${activeShop.projectId}/${channel}/${from}/${to}`, {}).subscribe(value => {
+  //         resolve(value);
+  //       }, error => {
+  //         reject(error);
+  //       });
+  //     } catch (e) {
+  //       reject(e);
+  //     }
+  //   });
+  // }
 }

@@ -84,12 +84,13 @@ export class PeriodDateRangeComponent implements OnInit {
   minDate = new Date(new Date().setFullYear(2015));
   from = new Date(new Date().setDate(new Date().getDate() - 7));
   to = new Date();
- @ Input() hidePeriod = false;
- @ Input() setPeriod = 'day';
+  @ Input() hidePeriod = false;
+  @ Input() setPeriod = 'day';
 
   fromDateFormControl = new FormControl(moment());
   toDateFormControl = new FormControl(moment());
   periodFormControl = new FormControl();
+
   constructor(private periodDateRangeService: PeriodDateRangeService) {
     // this.dateRange = new FormGroup({
     //   from: new FormControl(new Date(new Date().setDate(new Date().getDate() - 7))),
@@ -99,14 +100,13 @@ export class PeriodDateRangeComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.fromDateFormControl.setValue(this.hidePeriod ? (this.from.getFullYear() - 1).toString() : this.from);
+    this.fromDateFormControl.setValue(this.hidePeriod === true && this.setPeriod === 'year' ?
+      (this.from.getFullYear() - 1).toString() : this.from);
     // this.fromDateFormControl.setValue(this.hidePeriod ? this.from.getFullYear() : this.from);
     this.toDateFormControl.setValue(this.to);
     // console.log(this.from.getFullYear());
     this.periodFormControl.setValue(this.setPeriod);
-    this.periodFormControl.valueChanges.subscribe(value => {
-      // this.periodDateRangeService.editPeriod(value);
-    });
+
   }
 
   chosenYearHandler(normalizedYear: Moment, datepicker: MatDatepicker<any>, selectedInput: string): any {
@@ -117,8 +117,7 @@ export class PeriodDateRangeComponent implements OnInit {
         datepicker.close();
         this.from = new Date(new Date(this.from).setMonth(0));
         this.from = new Date(new Date(this.from).setDate(1));
-        this.fromDateFormControl.setValue(this.hidePeriod === true ? normalizedYear.year() : this.from);
-        // this.periodDateRangeService.editStartDate(toSqlDate(this.from));
+        this.fromDateFormControl.setValue(this.from);
       }
     } else {
       this.to = new Date(new Date().setFullYear(normalizedYear.year()));
@@ -127,8 +126,7 @@ export class PeriodDateRangeComponent implements OnInit {
         this.to = new Date(new Date(this.to).setMonth(12));
         this.to = new Date(new Date(this.to).setDate(1));
         this.to = new Date(new Date(this.to).setDate(new Date(this.to).getDate() - 1));
-        this.toDateFormControl.setValue(this.hidePeriod === true ? this.to.getFullYear().toString() : this.to);
-        // this.periodDateRangeService.editEndDate(toSqlDate(this.to));
+        this.toDateFormControl.setValue(this.to);
       }
     }
   }
@@ -140,7 +138,6 @@ export class PeriodDateRangeComponent implements OnInit {
         datepicker.close();
         this.from = new Date(new Date(this.from).setDate(1));
         this.fromDateFormControl.setValue(this.from);
-        // this.periodDateRangeService.editStartDate(toSqlDate(this.from));
       }
     } else {
       this.to = new Date(new Date(this.to).setMonth(normalizedMonth.month()));
@@ -150,7 +147,6 @@ export class PeriodDateRangeComponent implements OnInit {
         this.to = new Date(new Date(this.to).setMonth(normalizedMonth.month() + 1));
         this.to = new Date(new Date(this.to).setDate(new Date(this.to).getDate() - 1));
         this.toDateFormControl.setValue(this.to);
-        // this.periodDateRangeService.editEndDate(toSqlDate(this.to));
       }
     }
   }
@@ -162,17 +158,18 @@ export class PeriodDateRangeComponent implements OnInit {
       this.from = new Date(new Date(this.from).setDate(normalizedDate.date()));
       datepicker.close();
       this.fromDateFormControl.setValue(this.from);
-      // this.periodDateRangeService.editStartDate(toSqlDate(this.from));
     } else {
       this.to = new Date(new Date(this.to).setDate(normalizedDate.date()));
       datepicker.close();
       this.toDateFormControl.setValue(this.to);
-      // this.periodDateRangeService.editEndDate(toSqlDate(this.to));
     }
   }
 
   applyDateRange(): void {
-    this.periodDateRangeService.editDateRange({period: this.periodFormControl.value,
-      startDate: toSqlDate(this.from), endDate: toSqlDate(this.to)});
+    this.periodDateRangeService.editDateRange({
+      period: this.periodFormControl.value,
+      startDate: toSqlDate(this.from),
+      endDate: toSqlDate(this.to)
+    });
   }
 }

@@ -29,7 +29,7 @@ export interface PeriodicElement {
 
                   <div style="min-height: 90vh;display: flex;flex-direction: column; justify-content: space-evenly">
                       <div class="row col-11 m-0 pt-5 justify-content-end">
-                          <mat-form-field appearance="outline">
+                          <mat-form-field appearance="outlinen">
                               <mat-label>Sales Type</mat-label>
                               <mat-select [formControl]="salesChannel" value="retail">
                                   <mat-option value="retail">Retail</mat-option>
