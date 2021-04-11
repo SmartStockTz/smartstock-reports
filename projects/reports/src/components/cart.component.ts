@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {json2csv} from '../services/json2csv.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
@@ -121,8 +121,9 @@ import bfast from 'bfastjs';
   `,
   styleUrls: ['../styles/cart.component.scss'],
 })
-export class CartComponent extends DeviceInfoUtil implements OnInit {
+export class CartComponent extends DeviceInfoUtil implements OnInit, OnDestroy {
 
+  salesChanges;
   startDate;
   endDate;
   channel = 'retail';
@@ -146,6 +147,12 @@ export class CartComponent extends DeviceInfoUtil implements OnInit {
     super();
   }
 
+  ngOnDestroy(): void {
+    if (this.salesChanges) {
+      this.salesChanges.close();
+    }
+  }
+
   ngOnInit(): void {
     this.startDate = toSqlDate(new Date());
     this.endDate = toSqlDate(new Date());
@@ -162,21 +169,22 @@ export class CartComponent extends DeviceInfoUtil implements OnInit {
 
     let alreadyExc = false;
     this.storageService.getActiveUser().then(value => {
-      const salesChanges = bfast.database(value.projectId).table('sales').query().changes(() => {
+      this.salesChanges = bfast.database(value.projectId).table('sales').query().changes(() => {
         console.log('sales track connected');
-        if (alreadyExc){
+        if (alreadyExc) {
           this.getSoldCarts('', this.startDate, this.endDate);
         }
         alreadyExc = true;
       }, () => {
         console.log('sales track disconnected');
       });
-      salesChanges.addListener(response => {
-        if (response && response.body && response.body.change){
+      this.salesChanges.addListener(response => {
+        if (response && response.body && response.body.change) {
           this.getSoldCarts('', this.startDate, this.endDate);
         }
       });
-    }).catch(_ => {});
+    }).catch(_ => {
+    });
   }
 
   getSoldCarts(channel: string, from, to: string): void {
