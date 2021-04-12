@@ -6,11 +6,11 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
   template: `
     <mat-sidenav-container>
       <mat-sidenav class="match-parent-side" #sidenav [mode]="enoughWidth()?'side': 'over'" [opened]="enoughWidth()">
-        <smartstock-drawer></smartstock-drawer>
+        <app-drawer></app-drawer>
       </mat-sidenav>
       <mat-sidenav-content style="min-height: 100vh">
-        <smartstock-toolbar searchPlaceholder="Filter product" [heading]="'Reports'"
-                            [sidenav]="sidenav"></smartstock-toolbar>
+        <app-toolbar searchPlaceholder="Filter product" [heading]="'Reports'"
+                            [sidenav]="sidenav"></app-toolbar>
         <div class="container col-xl-10 col-lg-10 col-sm-9 col-md-9 col-sm-12 col-10" style="padding: 16px 0">
           <h1>Go To</h1>
           <div>
@@ -79,11 +79,6 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
       name: 'Stock Tracking',
       path: '/report/stock/tracking',
       icon: 'find_in_page'
-    },
-    {
-      name: 'Invoices',
-      path: '/report/stock/invoices',
-      icon: 'task'
     }
   ];
   purchasePages = [
@@ -118,6 +113,11 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
       name: 'Sales Performance',
       path: '/report/sales/performance',
       icon: 'description'
+    },
+    {
+      name: 'Invoices',
+      path: '/report/stock/invoices',
+      icon: 'receipt'
     }
   ];
 

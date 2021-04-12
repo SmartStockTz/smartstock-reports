@@ -57,6 +57,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {InvoicesPage} from './pages/invoices.page';
 import {InvoicesComponent} from './components/invoices.component';
+import {InvoiceDetailsComponent} from './components/invoice-details.component';
 
 
 const routes: Routes = [
@@ -105,7 +106,8 @@ const routes: Routes = [
     PeriodDateRangeComponent,
     SalesReceiptOverviewComponent,
     InvoicesPage,
-    InvoicesComponent
+    InvoicesComponent,
+    InvoiceDetailsComponent
   ],
   exports: [],
   imports: [
@@ -149,7 +151,10 @@ const routes: Routes = [
     MatDialogModule,
     MatAutocompleteModule,
   ],
-  entryComponents: [CartDetailsComponent],
+  entryComponents: [
+    CartDetailsComponent,
+    InvoiceDetailsComponent
+  ],
 })
 export class ReportsModule {
 }

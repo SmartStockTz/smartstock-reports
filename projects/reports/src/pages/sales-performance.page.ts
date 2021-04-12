@@ -23,11 +23,11 @@ export interface PeriodicElement {
           class="match-parent-side"
           #sidenav [mode]="enoughWidth()?'side':'over'"
           [opened]="enoughWidth()">
-          <smartstock-drawer></smartstock-drawer>
+          <app-drawer></app-drawer>
         </mat-sidenav>
 
         <mat-sidenav-content>
-          <smartstock-toolbar [heading]="'Sales Performance'" [sidenav]="sidenav" [showProgress]="false"></smartstock-toolbar>
+          <app-toolbar [heading]="'Sales Performance'" [sidenav]="sidenav" [showProgress]="false"></app-toolbar>
 
           <div class="container col-xl-9 col-lg-9 col-sm-12 col-md-10">
             <div class="d-flex flex-row flex-wrap mx-auto pt-5">
