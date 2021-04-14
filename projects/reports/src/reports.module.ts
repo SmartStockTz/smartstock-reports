@@ -58,6 +58,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {InvoicesPage} from './pages/invoices.page';
 import {InvoicesComponent} from './components/invoices.component';
 import {InvoiceDetailsComponent} from './components/invoice-details.component';
+import {PurchasePage} from './pages/purchase.page';
+import {PurchaseComponent} from './components/purchase.component';
 
 
 const routes: Routes = [
@@ -71,6 +73,7 @@ const routes: Routes = [
   {path: 'sales/growth', component: SalesGrowthPageComponent},
   {path: 'sales/performance', component: SalesPerformancePageComponent},
   {path: 'stock/invoices', component: InvoicesPage},
+  {path: 'purchase', component: PurchasePage},
 ];
 
 @NgModule({
@@ -107,7 +110,9 @@ const routes: Routes = [
     SalesReceiptOverviewComponent,
     InvoicesPage,
     InvoicesComponent,
-    InvoiceDetailsComponent
+    InvoiceDetailsComponent,
+    PurchasePage,
+    PurchaseComponent
   ],
   exports: [],
   imports: [

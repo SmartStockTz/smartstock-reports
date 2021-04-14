@@ -20,20 +20,6 @@ import * as Highcharts from 'highcharts';
   template: `
     <div class="col-12 m-3">
       <app-period-date-range [hidePeriod]="true"></app-period-date-range>
-      <div class="row m-0">
-        <span style="flex-grow: 1;"></span>
-        <mat-form-field appearance="outline" class="mx-4">
-          <mat-select [formControl]="invoicesStatusFormControl">
-            <mat-option value="">All Invoices</mat-option>
-            <mat-option value="paid">Paid Invoices</mat-option>
-            <mat-option value="due">Unpaid Invoices</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="my-0 ml-auto mr-1">
-          <mat-label>Filter</mat-label>
-          <input matInput [formControl]="filterFormControl" placeholder="type here ...">
-        </mat-form-field>
-      </div>
 
       <div>
         <mat-card class="mat-elevation-z3">
@@ -47,7 +33,8 @@ import * as Highcharts from 'highcharts';
             <mat-spinner diameter="30" *ngIf="isLoading" class="position-absolute"></mat-spinner>
             <app-data-not-ready *ngIf="noDataRetrieved  && !isLoading" class="position-absolute"></app-data-not-ready>
 
-            <table mat-table *ngIf="!noDataRetrieved  && !isLoading && invoicesStatusFormControl.value !== 'paid'" [dataSource]="invoiceSummaryData" class="col-12 col-lg-7">
+            <table mat-table *ngIf="!noDataRetrieved  && !isLoading && invoicesStatusFormControl.value !== 'paid'"
+                   [dataSource]="invoiceSummaryData" class="col-12 col-lg-7">
               <ng-container matColumnDef="daysLate">
                 <td mat-cell *matCellDef="let element" class=" border-bottom-0"> {{element.daysLate}}</td>
               </ng-container>
@@ -66,7 +53,7 @@ import * as Highcharts from 'highcharts';
                 </td>
               </ng-container>
 
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;" [hidden]="!row.displarRow"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
 
             <div class="col-12 col-lg-5">
@@ -76,7 +63,30 @@ import * as Highcharts from 'highcharts';
           </div>
 
         </mat-card>
-        <mat-card class="mat-elevation-z3 my-4">
+
+        <div class="row m-0 mt-4 pt-3">
+          <span style="flex-grow: 1;"></span>
+          <mat-form-field appearance="outline" class="mx-4">
+            <mat-select [formControl]="invoicesStatusFormControl">
+              <mat-option value="">All Invoices</mat-option>
+              <mat-option value="paid">Paid Invoices</mat-option>
+              <mat-option value="due">Unpaid Invoices</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="mx-4">
+            <mat-select [formControl]="daysLateFormControl">
+              <mat-option value="">All Invoices</mat-option>
+              <mat-option *ngFor="let daysLate of invoiceSummaryData; let i = index" [hidden]="i === 4"
+                          [value]="daysLate.daysLate">{{daysLate.daysLate}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="my-0 ml-auto mr-1">
+            <mat-label>Filter</mat-label>
+            <input matInput [formControl]="filterFormControl" placeholder="type here ...">
+          </mat-form-field>
+        </div>
+
+        <mat-card class="mat-elevation-z3 mb-4">
           <div class="d-flex flex-row pt-3 m-0 justify-content-center align-items-center">
             <mat-icon color="primary" class="ml-auto report-header-icon">receipt</mat-icon>
             <p class="mr-auto my-0 h6 ">Invoices</p>
@@ -102,7 +112,7 @@ import * as Highcharts from 'highcharts';
             <ng-container matColumnDef="batchId">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
               <td mat-cell *matCellDef="let row; let i = index"> {{i + 1}} </td>
-<!--              <td mat-cell *matCellDef="let row"> {{row.batchId}} </td>-->
+              <!--              <td mat-cell *matCellDef="let row"> {{row.batchId}} </td>-->
             </ng-container>
             <ng-container matColumnDef="customer">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer</th>
@@ -110,19 +120,19 @@ import * as Highcharts from 'highcharts';
             </ng-container>
             <ng-container matColumnDef="amount">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount Due</th>
-              <td mat-cell *matCellDef="let row"> {{row.amount}} </td>
+              <td mat-cell *matCellDef="let row"> {{row.amount | currency:  ' '}} </td>
             </ng-container>
             <ng-container matColumnDef="amountPaid">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount Paid</th>
-              <td mat-cell *matCellDef="let row"> {{row.amountPaid}} </td>
+              <td mat-cell *matCellDef="let row"> {{row.amountPaid | currency:  ' '}} </td>
             </ng-container>
             <ng-container matColumnDef="dueDate">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Due Date</th>
-              <td mat-cell *matCellDef="let row"> {{row.dueDate | date: 'MMM d, y, H:mm'}} </td>
+              <td mat-cell *matCellDef="let row"> {{row.dueDate | date}} </td>
             </ng-container>
             <ng-container matColumnDef="date">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Date of Sale</th>
-              <td mat-cell *matCellDef="let row"> {{row.date | date: 'MMM d, y, H:mm'}}</td>
+              <td mat-cell *matCellDef="let row"> {{row.date | date}}</td>
             </ng-container>
             <ng-container matColumnDef="seller">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Seller</th>
@@ -161,15 +171,16 @@ export class InvoicesComponent extends DeviceInfoUtil implements OnInit, OnDestr
   invoicesBackup: MatTableDataSource<any>;
   displayedColumns: string[] = ['daysLate', 'quantity', 'amount', 'percent'];
   invoiceSummaryData = [
-    {daysLate: 'Current Invoices', quantity: 0, amount: 0, displarRow: true},
-    {daysLate: '1 - 30 Days Late', quantity: 0, amount: 0, displarRow: false},
-    {daysLate: '30 - 60 Days Late', quantity: 0, amount: 0, displarRow: false},
-    {daysLate: '61+ Days Late', quantity: 0, amount: 0, displarRow: false},
-    {daysLate: 'Total', quantity: 0, amount: 0, totalReturns: 0, displarRow: true}
+    {daysLate: 'Active Invoices', quantity: 0, amount: 0},
+    {daysLate: '1 - 30 Days Late', quantity: 0, amount: 0},
+    {daysLate: '30 - 60 Days Late', quantity: 0, amount: 0},
+    {daysLate: '61+ Days Late', quantity: 0, amount: 0},
+    {daysLate: 'Total', quantity: 0, amount: 0, totalReturns: 0}
   ];
   invoicesColumns = ['batchId', 'customer', 'amount', 'amountPaid', 'dueDate', 'date', 'seller'];
   filterFormControl = new FormControl('', [Validators.nullValidator]);
   invoicesStatusFormControl = new FormControl('', [Validators.nullValidator]);
+  daysLateFormControl = new FormControl('', [Validators.nullValidator]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -215,7 +226,6 @@ export class InvoicesComponent extends DeviceInfoUtil implements OnInit, OnDestr
           this.invoices.paginator = this.paginator;
           this.invoices.sort = this.sort;
         });
-        this.calculateLateInvoices(data);
         this.initiateGraph(this.invoiceSummaryData[4]);
         this.noDataRetrieved = false;
       } else {
@@ -236,11 +246,14 @@ export class InvoicesComponent extends DeviceInfoUtil implements OnInit, OnDestr
       this.invoices.filter = filterValue.trim().toLowerCase();
       filterVal = this.invoices.filteredData;
       this.filterFormControl.setValue('');
-      console.log(this.invoicesBackup.data);
-      console.log(filterVal);
+    });
+    this.daysLateFormControl.valueChanges.subscribe(filterValue => {
+      this.invoices.data = this.invoicesBackup.data;
+      this.invoices.filter = filterValue.trim().toLowerCase();
+      filterVal = this.invoices.filteredData;
+      this.filterFormControl.setValue('');
     });
     this.filterFormControl.valueChanges.subscribe(filterValue => {
-      console.log(filterVal);
       this.invoices.data = filterVal === undefined ? this.invoicesBackup.data : filterVal;
       this.invoices.filter = filterValue.trim().toLowerCase();
     });
@@ -254,6 +267,7 @@ export class InvoicesComponent extends DeviceInfoUtil implements OnInit, OnDestr
         seller: row.sellerObject.firstname + ' ' + row.sellerObject.lastname,
         amountPaid: this.calculateTotalReturns(row.returns),
         status: (row.amount - this.calculateTotalReturns(row.returns) > 0 ? 'due' : 'paid'),
+        daysLate: this.calculateLateInvoices(row),
       })
     );
   }
@@ -268,40 +282,44 @@ export class InvoicesComponent extends DeviceInfoUtil implements OnInit, OnDestr
     }
   }
 
-  calculateLateInvoices(invoices): any {
+  calculateLateInvoices(row): any {
 
-    let selctedDateDiff = Math.abs(new Date(this.endDate).getTime() - new Date(this.startDate).getTime());
-    selctedDateDiff = Math.ceil(selctedDateDiff / (1000 * 3600 * 24));
+    // let selctedDateDiff = Math.abs(new Date(this.endDate).getTime() - new Date(this.startDate).getTime());
+    // selctedDateDiff = Math.ceil(selctedDateDiff / (1000 * 3600 * 24));
+    // this.invoiceSummaryData[1].displarRow = selctedDateDiff > 0;
+    //
+    // this.invoiceSummaryData[2].displarRow = selctedDateDiff > 30;
+    //
+    // this.invoiceSummaryData[3].displarRow = selctedDateDiff > 60;
 
-    invoices.forEach(value => {
-      let dateDiff = Math.abs(new Date().getTime() - new Date(value.dueDate).getTime());
-      dateDiff = Math.ceil(dateDiff / (1000 * 3600 * 24));
-      this.invoiceSummaryData[4].totalReturns += this.calculateTotalReturns(value.returns);
-      const amountDue = value.amount - this.calculateTotalReturns(value.returns);
-      if (dateDiff <= 0 && amountDue > 0) {
-        this.invoiceSummaryData[0].quantity++;
-        this.invoiceSummaryData[0].amount += amountDue;
-      } else if (dateDiff <= 30 && amountDue > 0) {
-        this.invoiceSummaryData[1].quantity++;
-        this.invoiceSummaryData[1].amount += amountDue;
-        this.invoiceSummaryData[1].displarRow = selctedDateDiff > 0;
-      } else if (dateDiff > 30 && dateDiff <= 60 && amountDue > 0) {
-        this.invoiceSummaryData[2].quantity++;
-        this.invoiceSummaryData[2].amount += amountDue;
-        this.invoiceSummaryData[2].displarRow = selctedDateDiff > 30;
-      } else if (dateDiff > 60 && amountDue > 0) {
-        this.invoiceSummaryData[3].quantity++;
-        this.invoiceSummaryData[3].amount += amountDue;
-        this.invoiceSummaryData[3].displarRow = selctedDateDiff > 60;
-      }
-    });
+    // invoices.forEach(value => {
+    let dateDiff = Math.abs(new Date().getTime() - new Date(row.dueDate).getTime());
+    dateDiff = Math.ceil(dateDiff / (1000 * 3600 * 24));
+    this.invoiceSummaryData[4].totalReturns += this.calculateTotalReturns(row.returns);
+    const amountDue = row.amount - this.calculateTotalReturns(row.returns);
+    if (amountDue > 0) {
+      this.invoiceSummaryData[4].quantity++;
+      this.invoiceSummaryData[4].amount += amountDue;
+    }
+    if (dateDiff <= 0 && amountDue > 0) {
+      this.invoiceSummaryData[0].quantity++;
+      this.invoiceSummaryData[0].amount += amountDue;
+      return 'Active Invoices';
+    } else if (dateDiff <= 30 && amountDue > 0) {
+      this.invoiceSummaryData[1].quantity++;
+      this.invoiceSummaryData[1].amount += amountDue;
+      return '1 - 30 Days Late';
+    } else if (dateDiff > 30 && dateDiff <= 60 && amountDue > 0) {
+      this.invoiceSummaryData[2].quantity++;
+      this.invoiceSummaryData[2].amount += amountDue;
+      return '30 - 60 Days Late';
+    } else if (dateDiff > 60 && amountDue > 0) {
+      this.invoiceSummaryData[3].quantity++;
+      this.invoiceSummaryData[3].amount += amountDue;
+      return '61+ Days Late';
+    }
+    // });
 
-    this.invoiceSummaryData[4].quantity = this.invoiceSummaryData.map(a => a.quantity).reduce((a, b, i = 4) => {
-      return a + b;
-    });
-    this.invoiceSummaryData[4].amount = this.invoiceSummaryData.map(a => a.amount).reduce((a, b, i = 4) => {
-      return a + b;
-    });
   }
 
   exportReport(): void {
@@ -331,6 +349,7 @@ export class InvoicesComponent extends DeviceInfoUtil implements OnInit, OnDestr
       }
     });
   }
+
   // toLocalTime(date: any, time): string {
   //   // return moment(date).local().format('YYYY-MM-DD');
   //   return `${date} ${time}`

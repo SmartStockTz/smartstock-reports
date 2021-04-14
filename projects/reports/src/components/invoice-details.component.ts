@@ -67,7 +67,7 @@ import {MatTableDataSource} from '@angular/material/table';
         <table mat-table [dataSource]="returnsData">
           <ng-container matColumnDef="date">
             <th mat-header-cell *matHeaderCellDef>Date</th>
-            <td mat-cell *matCellDef="let element">{{element.date | date}}</td>
+            <td mat-cell *matCellDef="let element">{{element.date | date: 'MMM d, y, H:mm'}}</td>
           </ng-container>
           <ng-container matColumnDef="amount">
             <th mat-header-cell *matHeaderCellDef>Amount</th>
