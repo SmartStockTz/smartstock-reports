@@ -57,40 +57,40 @@ export class AppModule {
       appPassword: 'ZMUGVn72o3yd8kSbMGhfWpI80N9nA2IHjxWKlAhG'
     });
 
-    this.configs.menu = [
-      {
-        name: 'Report',
-        link: '/report',
-        roles: ['admin'],
-        icon: 'table_chart',
-        pages: [
-          {
-            link: '/report/sales/overview',
-            name: 'sales overviews',
-            roles: ['*']
-          },
-          {
-            link: '/report/sales/tracking',
-            name: 'sales tracking',
-            roles: ['*']
-          },
-          {
-            link: '/report/sales/growth',
-            name: 'sales growth',
-            roles: ['*']
-          },
-          {
-            link: '/report/sales/performance',
-            name: 'sales performance',
-            roles: ['*']
-          },
-          {
-            link: '/report/stock/overview',
-            name: 'stocks overviews',
-            roles: ['*']
-          }
-        ]
-      }
-    ];
+    // this.configs.menu = [
+    //   {
+    //     name: 'Report',
+    //     link: '/report',
+    //     roles: ['admin'],
+    //     icon: 'table_chart',
+    //     pages: [
+    //       {
+    //         link: '/report/sales/overview',
+    //         name: 'sales overviews',
+    //         roles: ['*']
+    //       },
+    //       {
+    //         link: '/report/sales/tracking',
+    //         name: 'sales tracking',
+    //         roles: ['*']
+    //       },
+    //       {
+    //         link: '/report/sales/growth',
+    //         name: 'sales growth',
+    //         roles: ['*']
+    //       },
+    //       {
+    //         link: '/report/sales/performance',
+    //         name: 'sales performance',
+    //         roles: ['*']
+    //       },
+    //       {
+    //         link: '/report/stock/overview',
+    //         name: 'stocks overviews',
+    //         roles: ['*']
+    //       }
+    //     ]
+    //   }
+    // ];
   }
 }

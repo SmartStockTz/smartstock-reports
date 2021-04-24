@@ -1,11 +1,10 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as Highcharts from 'highcharts';
 import {toSqlDate} from '@smartstocktz/core-libs';
 import {ReportService} from '../services/report.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import {CartModel} from '../models/cart.model';
 import {json2csv} from '../services/json2csv.service';
 import {DatePipe} from '@angular/common';
 import {PeriodDateRangeService} from '../services/period-date-range.service';
@@ -55,7 +54,7 @@ import {FormControl} from '@angular/forms';
           <div class="d-flex justify-content-center align-items-center m-0 p-0" style="min-height: 200px">
             <div id="salesGrowth" class="w-100"></div>
             <app-data-not-ready style="position: absolute" [width]="100" height="100" [isLoading]="isLoading"
-                                       *ngIf="noDataRetrieved || isLoading"></app-data-not-ready>
+                                *ngIf="noDataRetrieved || isLoading"></app-data-not-ready>
           </div>
         </mat-card>
       </div>
@@ -92,7 +91,7 @@ import {FormControl} from '@angular/forms';
           </div>
           <div class="d-flex justify-content-center">
             <app-data-not-ready [width]="100" height="100" [isLoading]="isLoading"
-                                       *ngIf="noDataRetrieved  && !isLoading"></app-data-not-ready>
+                                *ngIf="noDataRetrieved  && !isLoading"></app-data-not-ready>
           </div>
 
 
@@ -215,10 +214,10 @@ export class SalesGrowthComponent implements OnInit, OnDestroy {
         });
 
         // Calculate Weeks
-        const oneJan =  new Date(new Date(this.endDate).getFullYear(), 0, 1);
+        const oneJan = new Date(new Date(this.endDate).getFullYear(), 0, 1);
         // @ts-ignore
-        const numberOfDays =  Math.floor((new Date(this.endDate) - oneJan) / (24 * 60 * 60 * 1000));
-        const lastWeek = Math.ceil(( new Date(this.endDate).getDay() + 1 + numberOfDays) / 7);
+        const numberOfDays = Math.floor((new Date(this.endDate) - oneJan) / (24 * 60 * 60 * 1000));
+        const lastWeek = Math.ceil((new Date(this.endDate).getDay() + 1 + numberOfDays) / 7);
 
         // @ts-ignore
         this.days = Array.from(this.days).sort((a, b) => a - b);
@@ -275,7 +274,7 @@ export class SalesGrowthComponent implements OnInit, OnDestroy {
         });
         this.salesByDayTrendProgress = false;
       }).catch(_ => {
-        console.log(_);
+        // console.log(_);
         this.isLoading = false;
         this.noDataRetrieved = true;
         this.salesByDayTrendProgress = false;
@@ -358,7 +357,7 @@ export class SalesGrowthComponent implements OnInit, OnDestroy {
       // @ts-ignore
       series: [
         {
-          name: new Date(this.startDate).getFullYear() ,
+          name: new Date(this.startDate).getFullYear(),
           color: 'rgba(124, 181, 236, 1)',
           data: data.origin,
           pointPadding: 0,

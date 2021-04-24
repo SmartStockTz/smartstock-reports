@@ -15,7 +15,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatNativeDateModule, MatOptionModule, MatRippleModule} from '@angular/material/core';
+import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDividerModule} from '@angular/material/divider';
@@ -26,7 +26,7 @@ import {CartComponent} from './components/cart.component';
 import {ExpiredComponent} from './components/expired.component';
 import {ProfitByCategoryComponent} from './components/profit-by-category.component';
 import {RouterModule, ROUTES, Routes} from '@angular/router';
-import {LibModule} from '@smartstocktz/core-libs';
+import {ConfigsService, LibModule} from '@smartstocktz/core-libs';
 import {ProductPerformanceComponent} from './components/product-performance.component';
 import {IndexPage} from './pages/index.page';
 import {ReorderReportPageComponent} from './pages/reorder-report.page';
@@ -52,20 +52,16 @@ import {SalesOrderPageComponent} from './pages/sales-order.page';
 import {SalesPerformancePageComponent} from './pages/sales-performance.page';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 import {PeriodDateRangeComponent} from './components/period-date-range.component';
-import { SalesReceiptOverviewComponent } from './components/sales-receipt-overview.component';
+import {SalesReceiptOverviewComponent} from './components/sales-receipt-overview.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {InvoicesPage} from './pages/invoices.page';
 import {InvoicesComponent} from './components/invoices.component';
 import {InvoiceDetailsComponent} from './components/invoice-details.component';
-import {PurchasePage} from './pages/purchase.page';
-import {PurchaseComponent} from './components/purchase.component';
 
 
 const routes: Routes = [
-  // {path: 'sales', component: SalesPageComponent},
-  // {path: 'stock', component: StockPageComponent},
-  {path: '', component: IndexPage},
+  {path: '', component: SalesOverviewPage},
   {path: 'stock/overview', component: StockPageComponent},
   {path: 'sales/overview', component: SalesOverviewPage},
   {path: 'sales/tracking', component: SalesOrderPageComponent},
@@ -73,7 +69,6 @@ const routes: Routes = [
   {path: 'sales/growth', component: SalesGrowthPageComponent},
   {path: 'sales/performance', component: SalesPerformancePageComponent},
   {path: 'stock/invoices', component: InvoicesPage},
-  {path: 'purchase', component: PurchasePage},
 ];
 
 @NgModule({
@@ -111,8 +106,6 @@ const routes: Routes = [
     InvoicesPage,
     InvoicesComponent,
     InvoiceDetailsComponent,
-    PurchasePage,
-    PurchaseComponent
   ],
   exports: [],
   imports: [
@@ -162,4 +155,50 @@ const routes: Routes = [
   ],
 })
 export class ReportsModule {
+  constructor(private readonly configs: ConfigsService) {
+    this.configs.addMenu({
+      name: 'Report',
+      link: '/report',
+      roles: ['admin'],
+      icon: 'table_chart',
+      pages: [
+        {
+          link: '/report/sales/overview',
+          name: 'sales overviews',
+          roles: ['admin']
+        },
+        {
+          link: '/report/sales/tracking',
+          name: 'sales tracking',
+          roles: ['*']
+        },
+        {
+          link: '/report/sales/growth',
+          name: 'sales growth',
+          roles: ['admin']
+        },
+        {
+          link: '/report/sales/performance',
+          name: 'sales performance',
+          roles: ['admin']
+        },
+        {
+          name: 'invoices',
+          link: '/report/stock/invoices',
+          roles: ['admin']
+        },
+        {
+          link: '/report/stock/overview',
+          name: 'stocks overviews',
+          roles: ['admin']
+        },
+        {
+          name: 'stock tracking',
+          link: '/report/stock/tracking',
+          roles: ['admin']
+        }
+      ]
+    });
+    this.configs.selectedModuleName = 'report';
+  }
 }

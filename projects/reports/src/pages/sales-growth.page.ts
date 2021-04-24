@@ -33,7 +33,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
         </mat-sidenav>
 
         <mat-sidenav-content>
-          <app-toolbar [heading]="'Sales Reports'" [sidenav]="sidenav" [showProgress]="false"></app-toolbar>
+          <app-toolbar [heading]="'Growth Reports'" [sidenav]="sidenav" [showProgress]="false"></app-toolbar>
 
 
           <div class="pt-5 container col-xl-9 col-lg-9 col-sm-12 col-md-10" style="min-height: 90vh;">

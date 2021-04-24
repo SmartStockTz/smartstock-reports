@@ -140,21 +140,11 @@ export class CartComponent extends DeviceInfoUtil implements OnInit, OnDestroy {
     super();
   }
 
-  ngOnDestroy(): void {
-    if (this.salesChanges) {
-      this.salesChanges.close();
-    }
-  }
-
   ngOnInit(): void {
     this.startDate = toSqlDate(new Date(new Date().setDate(new Date().getDate() - 7)));
 
     this.endDate = toSqlDate(new Date());
     this.getSoldCarts(this.channel, this.startDate, this.endDate);
-    // this.salesChannel.subscribe(value => {
-    //   this.channel = value;
-    //   this.getSoldCarts(value, this.startDate, this.endDate);
-    // });
     this.periodDateRangeService.dateRange.pipe(
       takeUntil(this.destroyer)
     ).subscribe((value) => {
@@ -166,15 +156,6 @@ export class CartComponent extends DeviceInfoUtil implements OnInit, OnDestroy {
     });
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.carts.filter = filterValue.trim().toLowerCase();
-    });
-
-    const salesChange = bfast.database().table('sales').query().changes(() => {
-      console.log('conncted');
-    }, () => {
-      console.log('your disconnected');
-    });
-    salesChange.addListener(response => {
-      console.log(response);
     });
 
     let alreadyExc = false;
@@ -249,12 +230,10 @@ export class CartComponent extends DeviceInfoUtil implements OnInit, OnDestroy {
     });
   }
 
-  // toLocalTime(date: any, time): string {
-  //   // return moment(date).local().format('YYYY-MM-DD');
-  //   return `${date} ${time}`
-  // }
-
   ngOnDestroy(): void {
     this.destroyer.next('done');
+    if (this.salesChanges) {
+      this.salesChanges.close();
+    }
   }
 }
