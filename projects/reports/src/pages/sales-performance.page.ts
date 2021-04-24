@@ -63,6 +63,7 @@ export class SalesPerformancePageComponent extends DeviceInfoUtil implements OnI
   }
 
   ngOnInit(): void {
+    document.title = 'Sales Performance';
 
   }
 }

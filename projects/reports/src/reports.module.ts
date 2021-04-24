@@ -15,7 +15,7 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
+import {MatNativeDateModule, MatOptionModule, MatRippleModule} from '@angular/material/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDividerModule} from '@angular/material/divider';
@@ -54,6 +54,12 @@ import {MatMomentDateModule} from '@angular/material-moment-adapter';
 import {PeriodDateRangeComponent} from './components/period-date-range.component';
 import { SalesReceiptOverviewComponent } from './components/sales-receipt-overview.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {InvoicesPage} from './pages/invoices.page';
+import {InvoicesComponent} from './components/invoices.component';
+import {InvoiceDetailsComponent} from './components/invoice-details.component';
+import {PurchasePage} from './pages/purchase.page';
+import {PurchaseComponent} from './components/purchase.component';
 
 
 const routes: Routes = [
@@ -63,8 +69,11 @@ const routes: Routes = [
   {path: 'stock/overview', component: StockPageComponent},
   {path: 'sales/overview', component: SalesOverviewPage},
   {path: 'sales/tracking', component: SalesOrderPageComponent},
+  {path: 'stock/tracking', component: StockTrackingPage},
   {path: 'sales/growth', component: SalesGrowthPageComponent},
   {path: 'sales/performance', component: SalesPerformancePageComponent},
+  {path: 'stock/invoices', component: InvoicesPage},
+  {path: 'purchase', component: PurchasePage},
 ];
 
 @NgModule({
@@ -98,7 +107,12 @@ const routes: Routes = [
     SalesPerformancePageComponent,
     SalesGrowthPageComponent,
     PeriodDateRangeComponent,
-    SalesReceiptOverviewComponent
+    SalesReceiptOverviewComponent,
+    InvoicesPage,
+    InvoicesComponent,
+    InvoiceDetailsComponent,
+    PurchasePage,
+    PurchaseComponent
   ],
   exports: [],
   imports: [
@@ -139,9 +153,13 @@ const routes: Routes = [
     MatBottomSheetModule,
     MatListModule,
     MatMomentDateModule,
-    MatDialogModule
+    MatDialogModule,
+    MatAutocompleteModule,
   ],
-  entryComponents: [CartDetailsComponent],
+  entryComponents: [
+    CartDetailsComponent,
+    InvoiceDetailsComponent
+  ],
 })
 export class ReportsModule {
 }

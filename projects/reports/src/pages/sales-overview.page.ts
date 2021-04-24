@@ -51,6 +51,7 @@ export class SalesOverviewPage extends DeviceInfoUtil implements OnInit {
   }
 
   ngOnInit(): void {
+    document.title = 'Sales Overview';
   }
 
 }

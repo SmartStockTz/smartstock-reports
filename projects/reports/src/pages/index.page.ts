@@ -74,6 +74,11 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
       name: 'Stock',
       path: '/report/stock/overview',
       icon: 'description'
+    },
+    {
+      name: 'Stock Tracking',
+      path: '/report/stock/tracking',
+      icon: 'find_in_page'
     }
   ];
   purchasePages = [
@@ -108,6 +113,11 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
       name: 'Sales Performance',
       path: '/report/sales/performance',
       icon: 'description'
+    },
+    {
+      name: 'Invoices',
+      path: '/report/stock/invoices',
+      icon: 'receipt'
     }
   ];
 
@@ -116,6 +126,8 @@ export class IndexPage extends DeviceInfoUtil implements OnInit {
   }
 
   ngOnInit(): void {
+    document.title = 'Reports';
+
   }
 
 }

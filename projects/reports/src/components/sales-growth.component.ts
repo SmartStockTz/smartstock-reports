@@ -25,7 +25,7 @@ import {FormControl} from '@angular/forms';
           <mat-option value="month">Month</mat-option>
         </mat-select>
       </mat-form-field>
-      <app-period-date-range hidePeriod="true" setPeriod="year"></app-period-date-range>
+      <app-period-date-range [hidePeriod]="true" setPeriod="year"></app-period-date-range>
     </div>
     <div class=" mx-auto" style="margin-top: 1em">
       <div class="py-3">

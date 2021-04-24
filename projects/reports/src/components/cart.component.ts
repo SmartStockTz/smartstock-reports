@@ -10,6 +10,9 @@ import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {CartDetailsComponent} from './cart-details.component';
 import {DeviceInfoUtil, StorageService, toSqlDate} from '@smartstocktz/core-libs';
 import * as moment from 'moment';
+import {PeriodDateRangeService} from '../services/period-date-range.service';
+import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
 import bfast from 'bfastjs';
 
 @Component({
@@ -17,21 +20,8 @@ import bfast from 'bfastjs';
   template: `
     <div class="col-12" style="margin-top: 1em">
 
-      <div>
-        <mat-form-field style="margin: 0 4px;" appearance="outline">
-          <mat-label>From date</mat-label>
-          <input matInput (click)="startDatePicker.open()" [matDatepicker]="startDatePicker"
-                 [formControl]="startDateFormControl">
-          <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #startDatePicker></mat-datepicker>
-        </mat-form-field>
-        <mat-form-field style="margin: 0 4px;" appearance="outline">
-          <mat-label>To date</mat-label>
-          <input matInput (click)="endDatePicker.open()" [matDatepicker]="endDatePicker"
-                 [formControl]="endDateFormControl">
-          <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-          <mat-datepicker #endDatePicker></mat-datepicker>
-        </mat-form-field>
+      <div class="row m-0">
+        <app-period-date-range [hidePeriod]="true"></app-period-date-range>
         <span style="flex-grow: 1;"></span>
         <mat-form-field appearance="outline">
           <mat-label>Filter</mat-label>
@@ -101,7 +91,7 @@ import bfast from 'bfastjs';
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="cartColumns"></tr>
-            <tr matTooltip="{{row.product}}" class="table-data-row" mat-row
+            <tr matTooltip="Click for more details" class="table-data-row" mat-row
                 *matRowDef="let row; columns: cartColumns;" (click)="openCartDetails(row)"></tr>
             <tr mat-footer-row style="font-size: 36px" *matFooterRowDef="cartColumns"></tr>
 
@@ -141,9 +131,12 @@ export class CartComponent extends DeviceInfoUtil implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Input() salesChannel;
+  destroyer = new Subject();
 
   constructor(private readonly report: ReportService, private readonly snack: MatSnackBar,
-              private cartDetails: MatBottomSheet, private readonly storageService: StorageService) {
+              private cartDetails: MatBottomSheet, private readonly storageService: StorageService,
+              private readonly periodDateRangeService: PeriodDateRangeService
+  ) {
     super();
   }
 
@@ -154,17 +147,34 @@ export class CartComponent extends DeviceInfoUtil implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.startDate = toSqlDate(new Date());
+    this.startDate = toSqlDate(new Date(new Date().setDate(new Date().getDate() - 7)));
+
     this.endDate = toSqlDate(new Date());
     this.getSoldCarts(this.channel, this.startDate, this.endDate);
-    this.salesChannel.subscribe(value => {
-      this.channel = value;
-      this.getSoldCarts(value, this.startDate, this.endDate);
+    // this.salesChannel.subscribe(value => {
+    //   this.channel = value;
+    //   this.getSoldCarts(value, this.startDate, this.endDate);
+    // });
+    this.periodDateRangeService.dateRange.pipe(
+      takeUntil(this.destroyer)
+    ).subscribe((value) => {
+      if (value.startDate) {
+        this.startDate = value.startDate;
+        this.endDate = value.endDate;
+        this.getSoldCarts(this.channel, this.startDate, this.endDate);
+      }
     });
-    this.dateRangeListener();
-
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.carts.filter = filterValue.trim().toLowerCase();
+    });
+
+    const salesChange = bfast.database().table('sales').query().changes(() => {
+      console.log('conncted');
+    }, () => {
+      console.log('your disconnected');
+    });
+    salesChange.addListener(response => {
+      console.log(response);
     });
 
     let alreadyExc = false;
@@ -220,17 +230,6 @@ export class CartComponent extends DeviceInfoUtil implements OnInit, OnDestroy {
     });
   }
 
-  private dateRangeListener(): void {
-    this.startDateFormControl.valueChanges.subscribe(value => {
-      this.startDate = toSqlDate(new Date(value));
-      this.getSoldCarts(this.channel, this.startDate, this.endDate);
-    });
-    this.endDateFormControl.valueChanges.subscribe(value => {
-      this.endDate = toSqlDate(new Date(value));
-      this.getSoldCarts(this.channel, this.startDate, this.endDate);
-    });
-  }
-
   openCartDetails(cartDetailsData): any {
     this.cartDetails.open(CartDetailsComponent, {
       data: {
@@ -254,4 +253,8 @@ export class CartComponent extends DeviceInfoUtil implements OnInit, OnDestroy {
   //   // return moment(date).local().format('YYYY-MM-DD');
   //   return `${date} ${time}`
   // }
+
+  ngOnDestroy(): void {
+    this.destroyer.next('done');
+  }
 }

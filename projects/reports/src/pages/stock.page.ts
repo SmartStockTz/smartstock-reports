@@ -45,5 +45,6 @@ export class StockPageComponent extends DeviceInfoUtil implements OnInit {
   }
 
   ngOnInit(): void {
+    document.title = 'Stock Overview';
   }
 }

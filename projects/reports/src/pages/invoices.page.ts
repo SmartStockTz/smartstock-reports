@@ -2,28 +2,28 @@ import {Component, OnInit} from '@angular/core';
 import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 
 @Component({
-  selector: 'app-report-stock-tracking',
+  selector: 'app-report-invoices-page',
   template: `
     <app-layout-sidenav [leftDrawerOpened]="enoughWidth()"
                                [leftDrawerMode]="enoughWidth()?'side': 'over'" [leftDrawer]="leftDrawer"
-                               [body]="body" [heading]="'Stock Tracking'">
+                               [body]="body" [heading]="'Invoices'">
       <ng-template #leftDrawer>
         <app-drawer></app-drawer>
       </ng-template>
       <ng-template #body>
         <div class="container col-xl-9 col-lg-9 col-md-10 col-sm-11 pt-5">
-              <app-stock-tracking></app-stock-tracking>
+              <app-invoices></app-invoices>
         </div>
       </ng-template>
     </app-layout-sidenav>
   `
 })
-export class StockTrackingPage extends DeviceInfoUtil implements OnInit {
+export class InvoicesPage extends DeviceInfoUtil implements OnInit {
   constructor() {
     super();
   }
 
   ngOnInit(): void {
-    document.title = 'Stock Tracking';
+    document.title = 'Invoices';
   }
 }
