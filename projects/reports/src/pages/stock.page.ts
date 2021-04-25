@@ -42,9 +42,9 @@ export class StockPageComponent extends DeviceInfoUtil implements OnInit {
 
   constructor() {
     super();
+    document.title = 'SmartStock - Stock Overview Reports';
   }
 
   ngOnInit(): void {
-    document.title = 'Stock Overview';
   }
 }

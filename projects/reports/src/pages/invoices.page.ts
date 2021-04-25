@@ -21,9 +21,9 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 export class InvoicesPage extends DeviceInfoUtil implements OnInit {
   constructor() {
     super();
+    document.title = 'SmartStock - Invoices Reports';
   }
 
   ngOnInit(): void {
-    document.title = 'Invoices';
   }
 }

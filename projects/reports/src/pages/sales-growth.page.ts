@@ -63,9 +63,9 @@ export class SalesGrowthPageComponent extends DeviceInfoUtil implements OnInit {
 
   constructor() {
     super();
+    document.title = 'SmartStock - Sales Growth Reports';
   }
 
   ngOnInit(): void {
-    document.title = 'Sales Growth';
   }
 }

@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
 import {DeviceInfoUtil} from '@smartstocktz/core-libs';
-import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-sales-reports',
@@ -30,7 +29,7 @@ import {FormControl} from '@angular/forms';
             <!--                      </mat-select>-->
             <!--                    </mat-form-field>-->
             <!--                  </div>-->
-<!--                              <app-total-sales ></app-total-sales>-->
+            <!--                              <app-total-sales ></app-total-sales>-->
             <app-period-date-range></app-period-date-range>
             <app-report-sale-overview></app-report-sale-overview>
           </div>
@@ -48,10 +47,10 @@ export class SalesOverviewPage extends DeviceInfoUtil implements OnInit {
 
   constructor() {
     super();
+    document.title = 'SmartStock - Sales Overview Reports';
   }
 
   ngOnInit(): void {
-    document.title = 'Sales Overview';
   }
 
 }

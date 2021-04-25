@@ -90,6 +90,7 @@ export class CartReportPageComponent extends DeviceInfoUtil implements OnInit {
 
   constructor() {
     super();
+    document.title = 'Cart Report';
   }
 
   ngOnInit(): void {

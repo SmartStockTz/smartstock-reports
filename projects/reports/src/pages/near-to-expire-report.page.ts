@@ -42,6 +42,7 @@ export class NearToExpireReportPageComponent extends DeviceInfoUtil implements O
 
   constructor() {
     super();
+    document.title = 'SmartStock - Near To Expire Stocks';
   }
 
   ngOnInit(): void {

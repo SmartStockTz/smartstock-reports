@@ -41,6 +41,7 @@ export class ExpiredReportPageComponent extends DeviceInfoUtil implements OnInit
 
   constructor() {
     super();
+    document.title = 'SmartStock - Expired Stocks Report';
   }
 
   ngOnInit(): void {

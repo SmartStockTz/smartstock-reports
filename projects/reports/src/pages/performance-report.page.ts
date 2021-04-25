@@ -53,6 +53,7 @@ export class PerformanceReportPageComponent extends DeviceInfoUtil implements On
 
   constructor() {
     super();
+    document.title = 'SmartStock - Performance Reports';
   }
 
   ngOnInit(): void {

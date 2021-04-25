@@ -60,10 +60,9 @@ export class SalesPerformancePageComponent extends DeviceInfoUtil implements OnI
 
   constructor() {
     super();
+    document.title = 'SmartStock - Sales Performance Reports';
   }
 
   ngOnInit(): void {
-    document.title = 'Sales Performance';
-
   }
 }
