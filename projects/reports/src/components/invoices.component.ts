@@ -9,7 +9,7 @@ import {ReportService} from '../services/report.service';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {DeviceInfoUtil, toSqlDate} from '@smartstocktz/core-libs';
 import * as moment from 'moment';
-import {PeriodDateRangeService} from '../services/period-date-range.service';
+import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {InvoiceDetailsComponent} from './invoice-details.component';
@@ -190,7 +190,7 @@ export class InvoicesComponent extends DeviceInfoUtil implements OnInit, OnDestr
   constructor(private readonly report: ReportService,
               private readonly snack: MatSnackBar,
               private cartDetails: MatBottomSheet,
-              private readonly periodDateRangeService: PeriodDateRangeService,
+              private readonly periodDateRangeService: PeriodDateRangeState,
               private invoiceDetails: MatBottomSheet
   ) {
     super();

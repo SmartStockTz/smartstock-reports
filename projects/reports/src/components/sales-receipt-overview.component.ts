@@ -55,26 +55,11 @@ export class SalesReceiptOverviewComponent implements OnInit {
   }
 
   print(): void {
+    console.log(this.data);
     const dataToPrint = `
-
-FROM : ${this.tempReceipt.value.seller}
+ITEM : ${this.tempReceipt.value.seller}
+QUANTITY : ${this.tempReceipt.value.seller} PRICE:
 _____________________________________________
-
-AMOUNT : ${this.tempReceipt.value.amount}
-_____________________________________________
-
-DATE : ${this.tempReceipt.value.date}
----------------------------------------------
-
-BUYER : ${this.tempReceipt.value.buyer}
----------------------------------------------
-
-BUYER TIN : ${this.tempReceipt.value.buyerTin}
-_____________________________________________
-
-PAID FOR : ${this.tempReceipt.value.paidFor}
-_____________________________________________
-
         `;
     if (this.tempReceipt.valid) {
       this.printService.print({
@@ -82,7 +67,7 @@ _____________________________________________
         printer: 'tm20',
         data: dataToPrint,
         qr: this.data.id
-      }, true ).then(_ => {
+      }, true).then(_ => {
         this.snack.open('Receipt overview printed', 'Ok', {duration: 2000});
         this.dialogRef.close(true);
       }).catch(reason => {

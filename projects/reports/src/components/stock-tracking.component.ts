@@ -10,7 +10,7 @@ import {StorageService, toSqlDate} from '@smartstocktz/core-libs';
 import {map, startWith, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
 import {DatePipe} from '@angular/common';
-import {PeriodDateRangeService} from '../services/period-date-range.service';
+import {PeriodDateRangeState} from '../states/period-date-range.state';
 import validate = WebAssembly.validate;
 
 
@@ -119,7 +119,7 @@ function autocompleteObjectValidator(): ValidatorFn {
 export class StockTrackingComponent implements OnInit, OnDestroy {
 
   constructor(private readonly report: ReportService, private readonly snack: MatSnackBar,
-              private periodDateRangeService: PeriodDateRangeService) {
+              private periodDateRangeService: PeriodDateRangeState) {
   }
   productFormControl = new FormControl('');
   products: any;

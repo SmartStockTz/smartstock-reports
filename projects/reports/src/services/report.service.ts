@@ -204,7 +204,7 @@ export class ReportService {
     return stocks.filter(stock => (stock.expire > toSqlDate(today) && (stock.expire <= toSqlDate(moment(today).add(3, 'M').toDate()))));
   }
 
-  async getSoldCarts(from: string, to: string, channel: string): Promise<CartModel[]> {
+  async getSoldCarts(from: string, to: string): Promise<CartModel[]> {
     const activeShop = await this.storage.getActiveShop();
     const url = `/reports/sales/order/${from}/${to}/cart/day`;
     const salesTracking: any[] = await bfast.functions(activeShop.projectId)

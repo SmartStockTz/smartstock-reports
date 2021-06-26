@@ -1,56 +1,58 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
+import {DeviceState} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'app-sales-reports',
   template: `
-    <div>
-      <mat-sidenav-container class="my-drawer-container">
+    <app-layout-sidenav
+      [heading]="'Sales Overview'"
+      [leftDrawer]="side"
+      backLink="/report"
+      [hasBackRoute]="true"
+      [body]="body"
+      [leftDrawerMode]="(deviceState.enoughWidth | async) === true?'side':'over'"
+      [leftDrawerOpened]="(deviceState.enoughWidth | async) === true">
+      <ng-template #side>
+        <app-drawer></app-drawer>
+      </ng-template>
+      <ng-template #body>
+        <div class="pt-3 container col-xl-9 col-lg-9 col-sm-12 col-md-10" style="min-height: 90vh;">
+          <app-period-date-range></app-period-date-range>
+          <app-report-sale-overview></app-report-sale-overview>
+        </div>
+      </ng-template>
+    </app-layout-sidenav>
 
-        <mat-sidenav
-          [fixedInViewport]="true"
-          class="match-parent-side"
-          #sidenav [mode]="enoughWidth()?'side':'over'"
-          [opened]="enoughWidth()">
-          <app-drawer></app-drawer>
-        </mat-sidenav>
 
-        <mat-sidenav-content>
-          <app-toolbar [heading]="'Sales Overview'" [sidenav]="sidenav" [showProgress]="false"></app-toolbar>
+    <!--    <div>-->
+    <!--      <mat-sidenav-container class="my-drawer-container">-->
 
-          <div class="pt-5 container col-xl-9 col-lg-9 col-sm-12 col-md-10" style="min-height: 90vh;">
-            <!--                  <div class="row col-11 m-0 pt-5 justify-content-end">-->
-            <!--                    <mat-form-field appearance="outline">-->
-            <!--                      <mat-label>Sales Type</mat-label>-->
-            <!--                      <mat-select [formControl]="salesChannel" value="retail">-->
-            <!--                        <mat-option value="retail">Retail</mat-option>-->
-            <!--                        <mat-option value="whole">Wholesale</mat-option>-->
-            <!--                      </mat-select>-->
-            <!--                    </mat-form-field>-->
-            <!--                  </div>-->
-            <!--                              <app-total-sales ></app-total-sales>-->
-            <app-period-date-range></app-period-date-range>
-            <app-report-sale-overview></app-report-sale-overview>
-          </div>
+    <!--        <mat-sidenav-->
+    <!--          [fixedInViewport]="true"-->
+    <!--          class="match-parent-side"-->
+    <!--          #sidenav [mode]="enoughWidth()?'side':'over'"-->
+    <!--          [opened]="enoughWidth()">-->
+    <!--          <app-drawer></app-drawer>-->
+    <!--        </mat-sidenav>-->
 
-        </mat-sidenav-content>
-      </mat-sidenav-container>
-    </div>
+    <!--        <mat-sidenav-content>-->
+    <!--          <app-toolbar></app-toolbar>-->
+    <!--        </mat-sidenav-content>-->
+    <!--      </mat-sidenav-container>-->
+    <!--    </div>-->
   `,
   styleUrls: ['../styles/sales.style.scss']
 })
-export class SalesOverviewPage extends DeviceInfoUtil implements OnInit {
+export class SalesOverviewPage implements OnInit {
   isMobile = false;
-  // salesChannel = new FormControl('retail');
   @ViewChild('sidenav') sidenav: MatSidenav;
 
-  constructor() {
-    super();
+  constructor(public readonly deviceState: DeviceState) {
     document.title = 'SmartStock - Sales Overview Reports';
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
   }
 
 }

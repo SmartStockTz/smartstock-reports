@@ -9,7 +9,7 @@ import {FormControl, Validators} from '@angular/forms';
 import {MatSort} from '@angular/material/sort';
 import {ReportService} from '../services/report.service';
 import {json2csv} from '../services/json2csv.service';
-import {PeriodDateRangeService} from '../services/period-date-range.service';
+import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {takeUntil} from 'rxjs/operators';
 
 
@@ -165,7 +165,7 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
               private readonly snack: MatSnackBar,
               private readonly logger: LogService,
               private readonly reportService: ReportService,
-              private periodDateRangeService: PeriodDateRangeService
+              private periodDateRangeService: PeriodDateRangeState
   ) {
     super();
   }

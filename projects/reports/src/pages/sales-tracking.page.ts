@@ -19,30 +19,30 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 @Component({
-  selector: 'app-sales-growth-page',
+  selector: 'app-sales-order',
   template: `
     <app-layout-sidenav
-      [heading]="'Growth Reports'"
+      [heading]="'Sales Tracking'"
       [leftDrawer]="side"
       [body]="body"
       backLink="/report"
       [hasBackRoute]="true"
-      [leftDrawerMode]="(deviceState.enoughWidth | async)===true?'side':'over'"
+      [leftDrawerMode]="(deviceState.enoughWidth | async)===true?'side': 'over'"
       [leftDrawerOpened]="(deviceState.enoughWidth | async)===true"
       [showProgress]="false">
       <ng-template #side>
         <app-drawer></app-drawer>
       </ng-template>
       <ng-template #body>
-        <div class="pt-3 container col-xl-9 col-lg-9 col-sm-12 col-md-10 col-12" style="min-height: 100vh;">
-          <app-report-sales-growth></app-report-sales-growth>
+        <div class="container pt-3 col-xl-9 col-lg-9 col-sm-12 col-md-10 col-12">
+          <app-cart-report></app-cart-report>
         </div>
       </ng-template>
     </app-layout-sidenav>
   `,
   styleUrls: ['../styles/cart.component.scss']
 })
-export class SalesGrowthPageComponent implements OnInit {
+export class SalesOrderPageComponent implements OnInit {
   isMobile = false;
   displayedColumns: string[] = ['position', 'name', 'weight'];
   dataSource = ELEMENT_DATA;
@@ -50,7 +50,7 @@ export class SalesGrowthPageComponent implements OnInit {
   @ViewChild('sidenav') sidenav: MatSidenav;
 
   constructor(public readonly deviceState: DeviceState) {
-    document.title = 'SmartStock - Sales Growth Reports';
+    document.title = 'SmartStock - Sales Tracking Reports';
   }
 
   ngOnInit(): void {

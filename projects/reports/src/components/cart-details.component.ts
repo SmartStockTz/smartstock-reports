@@ -4,7 +4,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatDialog} from '@angular/material/dialog';
-import {SalesReceiptOverviewComponent} from './sales-receipt-overview.component';
+import {PrintService} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'app-cart-details',
@@ -91,6 +91,7 @@ export class CartDetailsComponent implements OnInit {
 
   constructor(private cartDetailsSheetRef: MatBottomSheetRef<CartDetailsComponent>,
               private readonly matDialog: MatDialog,
+              public readonly printService: PrintService,
               @Inject(MAT_BOTTOM_SHEET_DATA) public data) {
   }
 
@@ -104,15 +105,28 @@ export class CartDetailsComponent implements OnInit {
     this.cartDetailsSheetRef.dismiss();
   }
 
-  printReceipt(data): void {
-    console.log(data);
-  }
-
-  printReceiptOverview(data): void {
+  printReceiptOverview(data: any): void {
     this.cartDetailsSheetRef.dismiss();
-    this.matDialog.open(SalesReceiptOverviewComponent, {
-      data,
-      closeOnNavigation: true
+    console.log(this.data);
+    let dataToPrint = `
+CUSTOMER : ${data.customer}
+TOTAL: ${data.amount}
+DATE: ${data.date}
+________________________________________
+    `;
+    this.data.items.forEach(x => {
+      dataToPrint += `
+ITEM : ${x.product}
+PRICE: ${x.amount} QTY : ${x.quantity}
+________________________________________
+        `;
     });
+    this.printService.print({
+      id: '',
+      qr: '',
+      printer: 'tm20',
+      data: dataToPrint
+    }).catch(console.log)
+      .then(console.log);
   }
 }

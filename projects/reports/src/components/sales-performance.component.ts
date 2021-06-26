@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as Highcharts from 'highcharts';
-import {LogService, toSqlDate} from '@smartstocktz/core-libs';
+import {DeviceState, LogService, toSqlDate} from '@smartstocktz/core-libs';
 import {ReportService} from '../services/report.service';
 import {FormControl, Validators} from '@angular/forms';
 import {MatTableDataSource} from '@angular/material/table';
@@ -8,7 +8,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {json2csv} from '../services/json2csv.service';
 import {DatePipe} from '@angular/common';
-import {PeriodDateRangeService} from '../services/period-date-range.service';
+import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
@@ -17,7 +17,6 @@ import {Subject} from 'rxjs';
   template: `
     <div>
       <div class="m-0">
-
         <div *ngIf="performanceBy !== 'product'" class=" py-3 mx-auto">
           <mat-card class="mat-elevation-z3">
             <div class="d-flex pt-3 m-0 justify-content-center align-items-center">
@@ -31,23 +30,21 @@ import {Subject} from 'rxjs';
             <div class="d-flex justify-content-center align-items-center py-3" style="min-height: 200px">
               <div style="width: 100%; height: 100%" id="salesBySeller"></div>
               <app-data-not-ready style="position: absolute" [width]="100" height="100"
-                                         [isLoading]="salesStatusProgress"
-                                         *ngIf="salesStatusProgress  || (!salesPerformanceData)">
+                                  [isLoading]="salesStatusProgress"
+                                  *ngIf="salesStatusProgress  || (!salesPerformanceData)">
               </app-data-not-ready>
             </div>
           </mat-card>
         </div>
 
         <div class="py-3 mx-auto">
-          <mat-card-header>
-            <span style="flex-grow: 1;"></span>
-            <mat-form-field appearance="outline">
-              <mat-label>Filter</mat-label>
-              <input matInput [formControl]="filterFormControl" placeholder="Type here...">
-            </mat-form-field>
-          </mat-card-header>
-          <mat-card class="mat-elevation-z3">
 
+          <mat-form-field class="btn-block">
+            <mat-label>Filter</mat-label>
+            <input matInput [formControl]="filterFormControl" placeholder="Type here...">
+          </mat-form-field>
+
+          <mat-card class="mat-elevation-z3">
             <div class="d-flex pt-3 m-0 justify-content-center align-items-center">
               <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">
                 {{performanceBy === 'seller' ? 'people' : 'category'}}
@@ -57,14 +54,17 @@ import {Subject} from 'rxjs';
                 <mat-icon>get_app</mat-icon>
               </button>
             </div>
+
             <hr class="w-75 mt-0 mx-auto">
 
             <div class="d-flex justify-content-center">
               <app-data-not-ready [width]="100" height="100" [isLoading]="salesStatusProgress"
-                                         *ngIf="salesStatusProgress  || (!salesPerformanceData)">
+                                  *ngIf="salesStatusProgress  || (!salesPerformanceData)">
               </app-data-not-ready>
             </div>
-            <table *ngIf="!salesStatusProgress  && salesPerformanceData" mat-table [dataSource]="salesPerformanceData" matSort>
+
+            <table *ngIf="!salesStatusProgress  && salesPerformanceData"
+                   mat-table [dataSource]="salesPerformanceData" matSort>
 
               <ng-container *ngIf="performanceBy === 'product'" matColumnDef="product">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
@@ -102,34 +102,52 @@ import {Subject} from 'rxjs';
                 </td>
               </ng-container>
 
-              <ng-container *ngIf="performanceBy === 'product'" matColumnDef="firstSold">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>First sold</th>
-                <td mat-cell *matCellDef="let element">{{element.firstSold}}</td>
-                <td mat-footer-cell *matFooterCellDef>
-                </td>
-              </ng-container>
+              <!--              <ng-container *ngIf="performanceBy === 'product'" matColumnDef="firstSold">-->
+              <!--                <th mat-header-cell *matHeaderCellDef mat-sort-header>First sold</th>-->
+              <!--                <td mat-cell *matCellDef="let element">{{element.firstSold}}</td>-->
+              <!--                <td mat-footer-cell *matFooterCellDef>-->
+              <!--                </td>-->
+              <!--              </ng-container>-->
 
-              <ng-container *ngIf="performanceBy === 'product'" matColumnDef="lastSold">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Last sold</th>
-                <td matRipple mat-cell *matCellDef="let element">{{element.lastSold}}</td>
+              <!--              <ng-container *ngIf="performanceBy === 'product'" matColumnDef="lastSold">-->
+              <!--                <th mat-header-cell *matHeaderCellDef mat-sort-header>Last sold</th>-->
+              <!--                <td matRipple mat-cell *matCellDef="let element">{{element.lastSold}}</td>-->
+              <!--              </ng-container>-->
+
+              <ng-container *ngIf="performanceBy === 'product'" matColumnDef="sales">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Sales</th>
+                <td mat-cell
+                    *matCellDef="let element">{{element.sales | currency: ' '}}</td>
               </ng-container>
 
               <ng-container *ngIf="performanceBy === 'product'" matColumnDef="costOfGoodSold">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost of goods sold</th>
                 <td mat-cell
-                    *matCellDef="let element">{{element.costOfGoodsSold | currency: ' TZS'}}</td>
+                    *matCellDef="let element">{{element.costOfGoodsSold | currency: ' '}}</td>
               </ng-container>
 
               <ng-container *ngIf="performanceBy === 'product'" matColumnDef="grossProfit">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Gross profit</th>
-                <td mat-cell *matCellDef="let element">{{element.sales - element.costOfGoodsSold | currency: ' TZS'}}</td>
+                <td mat-cell *matCellDef="let element">{{element.sales - element.costOfGoodsSold | currency: ' '}}</td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
+
+              <ng-container *ngIf="performanceBy === 'product'" matColumnDef="detail_mobile">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Details</th>
+                <td mat-cell *matCellDef="let element">
+                  <p><b>{{element.id}}</b></p>
+                  <p>Quantity : {{element.quantitySold | number}}</p>
+                  <p>Sales : {{element.sales | currency: ' '}}</p>
+                  <p>Cost : {{element.costOfGoodsSold | currency: ' '}}</p>
+                  <p>Gross Profit : {{element.sales - element.costOfGoodsSold | currency: ' '}}</p>
+                </td>
                 <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
 
               <ng-template [ngIf]="performanceBy === 'product'">
-                <tr mat-header-row *matHeaderRowDef="productColumns"></tr>
+                <tr mat-header-row *matHeaderRowDef="(deiveState.isSmallScreen | async)?productColumnsMobile:productColumns"></tr>
                 <tr matTooltip="{{row.product}}" class="table-data-row" mat-row
-                    *matRowDef="let row; columns: productColumns;"></tr>
+                    *matRowDef="let row; columns: (deiveState.isSmallScreen | async)?productColumnsMobile:productColumns;"></tr>
               </ng-template>
               <ng-template [ngIf]="performanceBy != 'product'">
                 <tr mat-header-row *matHeaderRowDef="performanceByColumns"></tr>
@@ -137,9 +155,10 @@ import {Subject} from 'rxjs';
                     *matRowDef="let row; columns: performanceByColumns;"></tr>
               </ng-template>
             </table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 20, 100]" showFirstLastButtons></mat-paginator>
+            <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
 
           </mat-card>
+
         </div>
       </div>
       <mat-menu #exportMenu>
@@ -157,7 +176,8 @@ export class SalesPerformanceComponent implements OnInit, OnDestroy {
   salesPerformanceData: MatTableDataSource<any>;
   salesBySellerChart: Highcharts.Chart = undefined;
   performanceByColumns = ['seller/category', 'quantity', 'amount', 'date'];
-  productColumns = ['product', 'seller/category', 'quantity', 'firstSold', 'lastSold', 'costOfGoodSold', 'grossProfit'];
+  productColumns = ['product', 'quantity', 'sales', 'costOfGoodSold', 'grossProfit'];
+  productColumnsMobile = ['detail_mobile'];
   filterFormControl = new FormControl('', [Validators.nullValidator]);
   period = 'day';
   startDate = toSqlDate(new Date(new Date().setDate(new Date().getDate() - 7)));
@@ -170,10 +190,11 @@ export class SalesPerformanceComponent implements OnInit, OnDestroy {
   destroyer = new Subject();
 
 
-  constructor(private readonly  report: ReportService,
-              private readonly logger: LogService,
-              private datePipe: DatePipe,
-              private periodDateRangeService: PeriodDateRangeService) {
+  constructor(private readonly report: ReportService,
+              public readonly logger: LogService,
+              public datePipe: DatePipe,
+              public readonly deiveState: DeviceState,
+              public periodDateRangeService: PeriodDateRangeState) {
   }
 
   ngOnInit(): void {

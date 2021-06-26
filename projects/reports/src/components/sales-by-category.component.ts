@@ -8,7 +8,7 @@ import {json2csv} from '../services/json2csv.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {PeriodDateRangeService} from '../services/period-date-range.service';
+import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
@@ -127,7 +127,7 @@ export class SalesByCategoryComponent implements OnInit, OnDestroy {
   constructor(
     private readonly report: ReportService,
     private readonly logger: LogService,
-    private periodDateRangeService: PeriodDateRangeService
+    private periodDateRangeService: PeriodDateRangeState
   ) {
   }
 

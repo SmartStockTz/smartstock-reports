@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
@@ -6,14 +6,14 @@ import {MatSort} from '@angular/material/sort';
 import {json2csv} from '../services/json2csv.service';
 import {FormControl, Validators} from '@angular/forms';
 import {ReportService} from '../services/report.service';
+import {DeviceState} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'app-products-about-to-expire',
   template: `
     <div>
-      <div style="display: flex; flex-wrap: wrap; flex-flow: row; align-items: center;">
-        <span class="flex-grow-1"></span>
-        <mat-form-field appearance="outline">
+      <div>
+        <mat-form-field class="btn-block">
           <mat-label>Filter</mat-label>
           <input matInput [formControl]="filterFormControl" placeholder="type here...">
         </mat-form-field>
@@ -21,7 +21,7 @@ import {ReportService} from '../services/report.service';
       <mat-card class="mat-elevation-z3">
         <div class="row pt-3 m-0 justify-content-center align-items-center">
           <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">auto_delete</mat-icon>
-          <p class="mr-auto my-0 h6">Products About to Expire</p>
+          <p class="mr-auto my-0 h6">About to Expire</p>
           <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
             <mat-icon>more_vert</mat-icon>
           </button>
@@ -31,6 +31,15 @@ import {ReportService} from '../services/report.service';
         <app-data-not-ready [isLoading]="isLoading" *ngIf="noDataRetrieved  || isLoading"></app-data-not-ready>
 
         <table mat-table *ngIf="!noDataRetrieved  && !isLoading" [dataSource]="expiredProducts" matSort>
+
+          <ng-container matColumnDef="details">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Details</th>
+            <td mat-cell *matCellDef="let element">
+              <p><b>{{element.product}}</b></p>
+              <p>Expire at : {{element.expire | date}}</p>
+              <p>Remain : {{element.quantity | number}}</p>
+            </td>
+          </ng-container>
 
           <ng-container matColumnDef="product">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Product</th>
@@ -47,9 +56,9 @@ import {ReportService} from '../services/report.service';
             <td mat-cell *matCellDef="let element">{{element.quantity | number}}</td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="stockColumns"></tr>
+          <tr mat-header-row *matHeaderRowDef="(deviceState.isSmallScreen | async)===true?stockColumnsMobile:stockColumns"></tr>
           <tr matTooltip="{{row.product}}" class="table-data-row" mat-row
-              *matRowDef="let row; columns: stockColumns;"></tr>
+              *matRowDef="let row; columns: (deviceState.isSmallScreen | async)===true?stockColumnsMobile:stockColumns;"></tr>
 
         </table>
 
@@ -70,34 +79,35 @@ import {ReportService} from '../services/report.service';
     ReportService
   ]
 })
-export class ExpireNearComponent implements OnInit {
-
-  constructor(private readonly report: ReportService,
-              private readonly snack: MatSnackBar) {
-  }
+export class ExpireNearComponent implements OnInit, AfterViewInit {
 
   isLoading = false;
   noDataRetrieved = true;
   stocks = [];
-  expiredProducts: MatTableDataSource<any>;
+  expiredProducts: MatTableDataSource<any> = new MatTableDataSource<any>([]);
   stockColumns = ['product', 'expire', 'quantity'];
-
+  stockColumnsMobile = ['details'];
   filterFormControl = new FormControl('', [Validators.nullValidator]);
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  constructor(private readonly report: ReportService,
+              public readonly deviceState: DeviceState,
+              private readonly snack: MatSnackBar) {
+  }
+
+  ngAfterViewInit(): void {
+    this.expiredProducts.sort = this.sort;
+    this.expiredProducts.paginator = this.paginator;
+  }
 
   ngOnInit(): void {
     this.isLoading = true;
     this.report.getProductsAboutToExpire().then(data => {
       this.isLoading = false;
       if (data && Array.isArray(data) && data.length > 0) {
-        this.expiredProducts = new MatTableDataSource(data);
+        this.expiredProducts.data = data;
         this.stocks = data;
-        setTimeout(() => {
-          this.expiredProducts.sort = this.sort;
-          this.expiredProducts.paginator = this.paginator;
-        });
         this.noDataRetrieved = false;
       } else {
         this.noDataRetrieved = true;

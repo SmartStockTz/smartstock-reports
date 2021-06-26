@@ -1,50 +1,41 @@
 import {Component, OnInit} from '@angular/core';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
+import {DeviceState} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'app-stock-reports',
   template: `
-    <div>
-      <mat-sidenav-container class="my-drawer-container">
-        <mat-sidenav
-          [fixedInViewport]="true"
-          class="match-parent-side"
-          #sidenav
-          [mode]="enoughWidth() ? 'side' : 'over'"
-          [opened]="enoughWidth()"
-        >
-          <app-drawer></app-drawer>
-        </mat-sidenav>
-
-        <mat-sidenav-content>
-          <app-toolbar
-            [heading]="'Stock Reports'"
-            [sidenav]="sidenav"
-            [showProgress]="false"
-          ></app-toolbar>
-
-          <div class="container pt-5 col-xl-9 col-lg-9 col-sm-11 col-md-10">
-            <app-expired-products-report></app-expired-products-report>
-            <div class="pt-5"></div>
-            <app-products-about-to-expire></app-products-about-to-expire>
-            <div class="pt-5"></div>
-            <app-stock-reorder-report></app-stock-reorder-report>
-            <div class="pt-5"></div>
-          </div>
-        </mat-sidenav-content>
-      </mat-sidenav-container>
-    </div>
+    <app-layout-sidenav
+      [heading]="'Stock Reports'"
+      [leftDrawer]="side"
+      [body]="body"
+      [leftDrawerMode]="(deviceState.enoughWidth | async)===true?'side':'over'"
+      [leftDrawerOpened]="(deviceState.enoughWidth | async)===true"
+      backLink="/report"
+      [hasBackRoute]="true"
+      [showProgress]="false">
+      <ng-template #side>
+        <app-drawer></app-drawer>
+      </ng-template>
+      <ng-template #body>
+        <div class="container pt-3 col-xl-9 col-lg-9 col-sm-11 col-md-10 col-12" style="min-height: 100vh">
+          <app-expired-products-report></app-expired-products-report>
+          <div class="pt-3"></div>
+          <app-products-about-to-expire></app-products-about-to-expire>
+          <div class="pt-3"></div>
+          <app-stock-reorder-report></app-stock-reorder-report>
+          <div class="pt-3"></div>
+        </div>
+      </ng-template>
+    </app-layout-sidenav>
   `,
   styleUrls: ['../styles/stock.style.scss'],
 })
-export class StockPageComponent extends DeviceInfoUtil implements OnInit {
-  isMobile = false;
+export class StockPageComponent implements OnInit {
 
-  constructor() {
-    super();
+  constructor(public readonly deviceState: DeviceState) {
     document.title = 'SmartStock - Stock Overview Reports';
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
   }
 }

@@ -26,7 +26,7 @@ import {CartComponent} from './components/cart.component';
 import {ExpiredComponent} from './components/expired.component';
 import {ProfitByCategoryComponent} from './components/profit-by-category.component';
 import {RouterModule, ROUTES, Routes} from '@angular/router';
-import {ConfigsService, LibModule} from '@smartstocktz/core-libs';
+import {LibModule} from '@smartstocktz/core-libs';
 import {ProductPerformanceComponent} from './components/product-performance.component';
 import {IndexPage} from './pages/index.page';
 import {ReorderReportPageComponent} from './pages/reorder-report.page';
@@ -48,7 +48,7 @@ import {CartDetailsComponent} from './components/cart-details.component';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatListModule} from '@angular/material/list';
 import {SalesGrowthPageComponent} from './pages/sales-growth.page';
-import {SalesOrderPageComponent} from './pages/sales-order.page';
+import {SalesOrderPageComponent} from './pages/sales-tracking.page';
 import {SalesPerformancePageComponent} from './pages/sales-performance.page';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
 import {PeriodDateRangeComponent} from './components/period-date-range.component';
@@ -58,17 +58,18 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {InvoicesPage} from './pages/invoices.page';
 import {InvoicesComponent} from './components/invoices.component';
 import {InvoiceDetailsComponent} from './components/invoice-details.component';
+import {ReportNavigationService} from './services/report-navigation.service';
 
 
 const routes: Routes = [
-  {path: '', component: SalesOverviewPage},
+  {path: '', component: IndexPage},
   {path: 'stock/overview', component: StockPageComponent},
   {path: 'sales/overview', component: SalesOverviewPage},
   {path: 'sales/tracking', component: SalesOrderPageComponent},
   {path: 'stock/tracking', component: StockTrackingPage},
   {path: 'sales/growth', component: SalesGrowthPageComponent},
   {path: 'sales/performance', component: SalesPerformancePageComponent},
-  {path: 'stock/invoices', component: InvoicesPage},
+  // {path: 'stock/invoices', component: InvoicesPage},
 ];
 
 @NgModule({
@@ -155,50 +156,8 @@ const routes: Routes = [
   ],
 })
 export class ReportsModule {
-  constructor(private readonly configs: ConfigsService) {
-    this.configs.addMenu({
-      name: 'Report',
-      link: '/report',
-      roles: ['admin'],
-      icon: 'table_chart',
-      pages: [
-        {
-          link: '/report/sales/overview',
-          name: 'sales overviews',
-          roles: ['admin']
-        },
-        {
-          link: '/report/sales/tracking',
-          name: 'sales tracking',
-          roles: ['*']
-        },
-        {
-          link: '/report/sales/growth',
-          name: 'sales growth',
-          roles: ['admin']
-        },
-        {
-          link: '/report/sales/performance',
-          name: 'sales performance',
-          roles: ['admin']
-        },
-        {
-          name: 'invoices',
-          link: '/report/stock/invoices',
-          roles: ['admin']
-        },
-        {
-          link: '/report/stock/overview',
-          name: 'stocks overviews',
-          roles: ['admin']
-        },
-        {
-          name: 'stock tracking',
-          link: '/report/stock/tracking',
-          roles: ['admin']
-        }
-      ]
-    });
-    this.configs.selectedModuleName = 'report';
+  constructor(private readonly reportNav: ReportNavigationService) {
+    this.reportNav.init();
+    reportNav.selected();
   }
 }

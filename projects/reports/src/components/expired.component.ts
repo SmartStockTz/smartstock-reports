@@ -11,9 +11,8 @@ import {ReportService} from '../services/report.service';
   selector: 'app-expired-products-report',
   template: `
     <div>
-      <div style="display: flex; flex-flow: row; align-items: center;">
-        <span style="flex-grow: 1"></span>
-        <mat-form-field appearance="outline">
+      <div>
+        <mat-form-field class="btn-block">
           <mat-label>Filter</mat-label>
           <input matInput [formControl]="filterFormControl" placeholder="type here...">
         </mat-form-field>
@@ -22,7 +21,7 @@ import {ReportService} from '../services/report.service';
       <mat-card class="mat-elevation-z3">
         <div class="row pt-3 m-0 justify-content-center align-items-center">
           <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">delete</mat-icon>
-          <p class="mr-auto my-0 h6">Expired Products</p>
+          <p class="mr-auto my-0 h6">Expired</p>
           <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
             <mat-icon>more_vert</mat-icon>
           </button>
@@ -38,7 +37,7 @@ import {ReportService} from '../services/report.service';
           </ng-container>
 
           <ng-container matColumnDef="expire">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Expiry Date</th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Expire Date</th>
             <td mat-cell *matCellDef="let row">{{row.expire | date}}</td>
           </ng-container>
 
@@ -70,13 +69,15 @@ export class ExpiredComponent implements OnInit, AfterViewInit {
 
   isLoading = false;
   noDataRetrieved = true;
-  expiredProducts: MatTableDataSource<any>;
+  expiredProducts: MatTableDataSource<any> = new MatTableDataSource<any>([]);
   stockColumns = ['product', 'expire'];
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
   filterFormControl = new FormControl('', [Validators.nullValidator]);
 
   ngAfterViewInit(): void {
+    this.expiredProducts.sort = this.sort;
+    this.expiredProducts.paginator = this.paginator;
   }
 
   ngOnInit(): void {
@@ -84,11 +85,7 @@ export class ExpiredComponent implements OnInit, AfterViewInit {
     this.report.getExpiredProducts(new Date(), 0, 1000).then(data => {
       this.isLoading = false;
       if (data && Array.isArray(data) && data.length > 0) {
-        this.expiredProducts = new MatTableDataSource(data);
-        setTimeout(() => {
-          this.expiredProducts.sort = this.sort;
-          this.expiredProducts.paginator = this.paginator;
-        });
+        this.expiredProducts.data = data;
         this.noDataRetrieved = false;
       } else {
         this.noDataRetrieved = true;

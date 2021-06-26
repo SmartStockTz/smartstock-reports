@@ -1,13 +1,13 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as Highcharts from 'highcharts';
-import {toSqlDate} from '@smartstocktz/core-libs';
+import {DeviceState, toSqlDate} from '@smartstocktz/core-libs';
 import {ReportService} from '../services/report.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {json2csv} from '../services/json2csv.service';
 import {DatePipe} from '@angular/common';
-import {PeriodDateRangeService} from '../services/period-date-range.service';
+import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
@@ -16,16 +16,16 @@ import {FormControl} from '@angular/forms';
 @Component({
   selector: 'app-report-sales-growth',
   template: `
-    <div class="row mt-5 justify-content-end">
-      <mat-form-field class="px-3" appearance="outline">
+    <div>
+      <mat-form-field class="px-3 btn-block">
         <mat-label>Growth By</mat-label>
         <mat-select [formControl]="periodFormControl">
           <mat-option value="week">Weeks</mat-option>
           <mat-option value="month">Month</mat-option>
         </mat-select>
       </mat-form-field>
-      <app-period-date-range [hidePeriod]="true" setPeriod="year"></app-period-date-range>
     </div>
+    <app-period-date-range [hidePeriod]="true" setPeriod="year"></app-period-date-range>
     <div class=" mx-auto" style="margin-top: 1em">
       <div class="py-3">
         <mat-card class="mat-elevation-z3">
@@ -54,7 +54,8 @@ import {FormControl} from '@angular/forms';
           <div class="d-flex justify-content-center align-items-center m-0 p-0" style="min-height: 200px">
             <div id="salesGrowth" class="w-100"></div>
             <app-data-not-ready style="position: absolute" [width]="100" height="100" [isLoading]="isLoading"
-                                *ngIf="noDataRetrieved || isLoading"></app-data-not-ready>
+                                *ngIf="noDataRetrieved || isLoading">
+            </app-data-not-ready>
           </div>
         </mat-card>
       </div>
@@ -91,7 +92,8 @@ import {FormControl} from '@angular/forms';
           </div>
           <div class="d-flex justify-content-center">
             <app-data-not-ready [width]="100" height="100" [isLoading]="isLoading"
-                                *ngIf="noDataRetrieved  && !isLoading"></app-data-not-ready>
+                                *ngIf="noDataRetrieved  || isLoading">
+            </app-data-not-ready>
           </div>
 
 
@@ -127,9 +129,29 @@ import {FormControl} from '@angular/forms';
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="salesColumns"></tr>
+            <ng-container matColumnDef="growth_mobile">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Growth</th>
+              <td mat-cell *matCellDef="let element">
+                <p>
+                  {{startDate | date: 'YYYY'}} : {{element.origin | currency: ' '}}
+                </p>
+                <p>
+                  {{endDate | date: 'YYYY'}} : {{element.compared | currency: ' '}}
+                </p>
+                <p *ngIf="element.growth < 0">
+                  <span style="color: red;padding-left: 8px;font-size: 16px">  ▼</span>
+                  <span style="color: red"> {{element.growth}}  %</span>
+                </p>
+                <p *ngIf="element.growth >= 0">
+                  <span style="color: green;padding-left: 8px;font-size: 16px"> ▲</span>
+                  <span style="color: #1b5e20">+{{element.growth}} %</span>
+                </p>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="(deviceState.isSmallScreen | async)===true?salesColumnsMobile:salesColumns"></tr>
             <tr matTooltip="{{row}}" class="table-data-row" mat-row
-                *matRowDef="let row; columns: salesColumns;"></tr>
+                *matRowDef="let row; columns: (deviceState.isSmallScreen | async)===true?salesColumnsMobile:salesColumns;"></tr>
 
 
           </table>
@@ -152,6 +174,7 @@ export class SalesGrowthComponent implements OnInit, OnDestroy {
   noDataRetrieved = true;
   salesData: MatTableDataSource<any>;
   salesColumns = ['date', 'originAmount', 'comparedAmount', 'growth'];
+  salesColumnsMobile = ['date', 'growth_mobile'];
   totalSales = 0;
   period = 'week';
   startDate = (new Date().getFullYear() - 1).toString() + '-01-01';
@@ -167,7 +190,8 @@ export class SalesGrowthComponent implements OnInit, OnDestroy {
     private readonly reportService: ReportService,
     private readonly datePipe: DatePipe,
     private readonly snack: MatSnackBar,
-    private readonly periodDateRangeService: PeriodDateRangeService
+    public readonly deviceState: DeviceState,
+    private readonly periodDateRangeService: PeriodDateRangeState
   ) {
   }
 
@@ -308,11 +332,13 @@ export class SalesGrowthComponent implements OnInit, OnDestroy {
       },
       // @ts-ignore
       xAxis: {
+        visible: this.deviceState.isSmallScreen.value !== true,
         categories: date,
         crosshair: true
       },
       // @ts-ignore
       yAxis: {
+        visible: this.deviceState.isSmallScreen.value !== true,
         title: {
           text: 'Total Sales'
         },

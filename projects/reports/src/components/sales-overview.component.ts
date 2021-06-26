@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as Highcharts from 'highcharts';
-import {toSqlDate} from '@smartstocktz/core-libs';
+import {DeviceState, toSqlDate} from '@smartstocktz/core-libs';
 import {ReportService} from '../services/report.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
@@ -8,8 +8,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import {CartModel} from '../models/cart.model';
 import {json2csv} from '../services/json2csv.service';
 import {DatePipe} from '@angular/common';
-import {PeriodDateRangeService} from '../services/period-date-range.service';
-import {connectableObservableDescriptor} from 'rxjs/internal/observable/ConnectableObservable';
+import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
@@ -19,66 +18,65 @@ import {Subject} from 'rxjs';
   template: `
     <div class=" mx-auto" style="margin-top: 1em">
       <div class="py-3">
-          <mat-card class="mat-elevation-z3">
-            <div class="row pt-3 m-0 justify-content-center align-items-center">
-              <mat-icon color="primary" style="width: 40px;height:40px;font-size: 36px">trending_up</mat-icon>
-              <p class="m-0 h6">{{period | titlecase}} sales</p>
-            </div>
-            <hr class="w-75 mt-0 mx-auto">
+        <mat-card class="mat-elevation-z3">
+          <div class="row pt-3 m-0 justify-content-center align-items-center">
+            <mat-icon color="primary" style="width: 40px;height:40px;font-size: 36px">trending_up</mat-icon>
+            <p class="m-0 h6">{{period | titlecase}} sales</p>
+          </div>
+          <hr class="w-75 mt-0 mx-auto">
 
-            <div class="d-flex justify-content-center align-items-center m-0 p-0" style="min-height: 200px">
-              <div id="salesGrowth" class="w-100"></div>
-              <app-data-not-ready style="position: absolute" [width]="100" height="100" [isLoading]="isLoading"
-                                         *ngIf="noDataRetrieved || isLoading"></app-data-not-ready>
-            </div>
-          </mat-card>
+          <div class="d-flex justify-content-center align-items-center m-0 p-0" style="min-height: 200px">
+            <div id="salesGrowth" class="w-100"></div>
+            <app-data-not-ready style="position: absolute" [width]="100" height="100" [isLoading]="isLoading"
+                                *ngIf="noDataRetrieved || isLoading">
+            </app-data-not-ready>
+          </div>
+        </mat-card>
       </div>
-        <div class="py-3">
-          <mat-card class="mat-elevation-z3">
-            <div class="row pt-3 m-0 justify-content-center align-items-center">
-              <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">trending_up</mat-icon>
-              <p class="mr-auto my-0 h6">{{period | titlecase}} sales</p>
-              <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
-                <mat-icon>get_app</mat-icon>
-              </button>
-            </div>
-            <hr class="w-75 mt-0 mx-auto">
+      <div class="py-3">
+        <mat-card class="mat-elevation-z3">
+          <div class="row pt-3 m-0 justify-content-center align-items-center">
+            <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">trending_up</mat-icon>
+            <p class="mr-auto my-0 h6">{{period | titlecase}} sales</p>
+            <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
+              <mat-icon>get_app</mat-icon>
+            </button>
+          </div>
+          <hr class="w-75 mt-0 mx-auto">
+          <div style="display: flex; flex-flow: row; align-items: center">
+            <span style="flex-grow: 1"></span>
+          </div>
+          <div class="d-flex justify-content-center">
+            <app-data-not-ready [width]="100" height="100" [isLoading]="isLoading"
+                                *ngIf="noDataRetrieved  && isLoading">
+            </app-data-not-ready>
+          </div>
 
-            <div style="display: flex; flex-flow: row; align-items: center">
-              <!--            <h6 class="col-8">Cart Report</h6>-->
-              <span style="flex-grow: 1"></span>
-            </div>
-            <div class="d-flex justify-content-center">
-              <app-data-not-ready [width]="100" height="100" [isLoading]="isLoading"
-                                         *ngIf="noDataRetrieved  && !isLoading"></app-data-not-ready>
-            </div>
+          <table mat-table *ngIf="!noDataRetrieved  && !isLoading" [dataSource]="salesData" matSort>
 
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+              <td mat-cell
+                  *matCellDef="let element">{{period === 'day' ? (element.id | date: 'dd MMM YYYY') : period === 'month' ? (element.id | date: 'MMM YYYY') : (element.id)}}</td>
+              <td mat-footer-cell *matFooterCellDef> Total</td>
+            </ng-container>
 
-            <table mat-table *ngIf="!noDataRetrieved  && !isLoading" [dataSource]="salesData" matSort>
+            <ng-container matColumnDef="amount">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+              <td mat-cell *matCellDef="let element">{{element.amount | currency: ' '}}</td>
+              <td mat-footer-cell *matFooterCellDef> {{totalSales | currency: ' '}}</td>
+            </ng-container>
 
-              <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-                <td mat-cell
-                    *matCellDef="let element">{{period === 'day' ? (element.id | date: 'dd MMM YYYY') : period === 'month' ? (element.id | date: 'MMM YYYY') : (element.id)}}</td>
-                <td mat-footer-cell *matFooterCellDef> Total</td>
-              </ng-container>
-
-              <ng-container matColumnDef="amount">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
-                <td mat-cell *matCellDef="let element">{{element.amount | currency: ' '}}</td>
-                <td mat-footer-cell *matFooterCellDef> {{totalSales | currency: ' '}}</td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="salesColumns"></tr>
-              <tr matTooltip="{{row}}" class="table-data-row" mat-row
-                  *matRowDef="let row; columns: salesColumns;"></tr>
-              <tr class="font-weight-bold" mat-footer-row *matFooterRowDef="salesColumns"></tr>
+            <tr mat-header-row *matHeaderRowDef="salesColumns"></tr>
+            <tr matTooltip="{{row}}" class="table-data-row" mat-row
+                *matRowDef="let row; columns: salesColumns;"></tr>
+            <tr class="font-weight-bold" mat-footer-row *matFooterRowDef="salesColumns"></tr>
 
 
-            </table>
-            <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
-          </mat-card>
-        </div>
+          </table>
+          <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
+        </mat-card>
+      </div>
     </div>
     <mat-menu #exportMenu>
       <button mat-menu-item (click)="exportReport()">
@@ -99,20 +97,17 @@ export class SalesOverviewComponent implements OnInit, OnDestroy {
   period = 'day';
   startDate = toSqlDate(new Date(new Date().setDate(new Date().getDate() - 7)));
   endDate = toSqlDate(new Date());
-
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   destroyer = new Subject();
 
   constructor(
-    private readonly reportService: ReportService,
-    private readonly datePipe: DatePipe,
-    private readonly snack: MatSnackBar,
-    private readonly periodDateRangeService: PeriodDateRangeService
-  ) {
+    public readonly reportService: ReportService,
+    public readonly datePipe: DatePipe,
+    public readonly snack: MatSnackBar,
+    public readonly deviceState: DeviceState,
+    public readonly periodDateRangeService: PeriodDateRangeState) {
   }
-
 
 
   ngOnInit(): void {
@@ -122,8 +117,8 @@ export class SalesOverviewComponent implements OnInit, OnDestroy {
     ).subscribe((value) => {
       if (value) {
         this.period = value.period;
-        this.startDate = value.startDate;
-        this.endDate = value.endDate;
+        this.startDate = toSqlDate(value.startDate);
+        this.endDate = toSqlDate(value.endDate);
         this._getSalesTrend();
       }
     });
@@ -186,6 +181,7 @@ export class SalesOverviewComponent implements OnInit, OnDestroy {
       // @ts-ignore
       xAxis: {
         // allowDecimals: false,
+        visible: this.deviceState.isSmallScreen.value !== true,
         categories: saleDays,
         title: {
           text: this.period.charAt(0).toUpperCase() + this.period.substr(1)
@@ -199,6 +195,7 @@ export class SalesOverviewComponent implements OnInit, OnDestroy {
       },
       // @ts-ignore
       yAxis: {
+        visible: this.deviceState.isSmallScreen.value !== true,
         title: {
           text: 'Total Sales'
         },
@@ -211,8 +208,8 @@ export class SalesOverviewComponent implements OnInit, OnDestroy {
         }
       },
       tooltip: {
-          valueDecimals: 2,
-    pointFormat: '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
+        valueDecimals: 2,
+        pointFormat: '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
       },
       // @ts-ignore
       series: [{
