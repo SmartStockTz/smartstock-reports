@@ -40,6 +40,7 @@ export const MY_FORMATS = {
                  (dateChange)="chosenDayHandler($event, dp, 'startDate')">
           <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
           <mat-datepicker #dp
+                          [touchUi]="true"
                           [startView]="periodFormControl.value === 'day' ? 'month' : periodFormControl.value === 'month' ? 'year' : 'multi-year'"
                           (yearSelected)="chosenYearHandler($event, dp, 'startDate')"
                           (monthSelected)="chosenMonthHandler($event, dp, 'startDate')">
@@ -53,6 +54,7 @@ export const MY_FORMATS = {
                  (dateChange)="chosenDayHandler($event, dp, 'endDate')">
           <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
           <mat-datepicker dataformatas="DD-MMM-YYYY" #dp2
+                          [touchUi]="true"
                           [startView]="periodFormControl.value === 'day' ? 'month' : periodFormControl.value === 'month' ? 'year' : 'multi-year'"
                           (yearSelected)="chosenYearHandler($event, dp2, 'endDate')"
                           (monthSelected)="chosenMonthHandler($event, dp2, 'endDate')"

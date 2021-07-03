@@ -133,8 +133,8 @@ export class CartComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyer)
     ).subscribe((value) => {
       if (value.startDate) {
-        this.startDate = value.startDate;
-        this.endDate = value.endDate;
+        this.startDate = toSqlDate(value.startDate);
+        this.endDate = toSqlDate(value.endDate);
         this.getSoldCarts(this.startDate, this.endDate);
       }
     });
