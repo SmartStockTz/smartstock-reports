@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {MatDatepicker} from '@angular/material/datepicker';
 import * as moment from 'moment';
@@ -82,7 +82,7 @@ export const MY_FORMATS = {
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
   ],
 })
-export class PeriodDateRangeComponent implements OnInit {
+export class PeriodDateRangeComponent implements OnInit, OnDestroy {
   dateRange: FormGroup;
   maxDate = new Date();
   minDate = new Date(new Date().setFullYear(2015));
@@ -100,6 +100,9 @@ export class PeriodDateRangeComponent implements OnInit {
     //   from: new FormControl(new Date(new Date().setDate(new Date().getDate() - 7))),
     //   to: new FormControl(new Date())
     // });
+  }
+  ngOnDestroy(): void {
+    this.periodDateRangeService.dateRange.next(null);
   }
 
 

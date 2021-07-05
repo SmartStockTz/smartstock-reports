@@ -1,16 +1,13 @@
 import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {DeviceInfoUtil, LogService, StorageService, toSqlDate} from '@smartstocktz/core-libs';
+import {toSqlDate} from '@smartstocktz/core-libs';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {Router} from '@angular/router';
 import {Observable, of, Subject} from 'rxjs';
 import {FormControl, Validators} from '@angular/forms';
 import {MatSort} from '@angular/material/sort';
 import {ReportService} from '../services/report.service';
 import {json2csv} from '../services/json2csv.service';
-import {PeriodDateRangeState} from '../states/period-date-range.state';
-import {takeUntil} from 'rxjs/operators';
 
 
 export interface ProductPerformanceI {
@@ -141,7 +138,7 @@ export interface ProductPerformanceI {
     ReportService
   ]
 })
-export class ProductPerformanceComponent extends DeviceInfoUtil implements OnInit, OnDestroy {
+export class ProductPerformanceComponent implements OnInit, OnDestroy {
   private productPerformanceFetchProgress = false;
   startDateFormControl = new FormControl(new Date(), [Validators.nullValidator]);
   endDateFormControl = new FormControl('', [Validators.nullValidator]);
@@ -160,14 +157,8 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
   @ViewChild(MatSort) sort: MatSort;
   destroyer = new Subject();
 
-  constructor(private readonly router: Router,
-              private readonly indexDb: StorageService,
-              private readonly snack: MatSnackBar,
-              private readonly logger: LogService,
-              private readonly reportService: ReportService,
-              private periodDateRangeService: PeriodDateRangeState
-  ) {
-    super();
+  constructor(private readonly snack: MatSnackBar,
+              private readonly reportService: ReportService) {
   }
 
   hotReloadProgress = false;
@@ -185,21 +176,22 @@ export class ProductPerformanceComponent extends DeviceInfoUtil implements OnIni
     this.getProductReport(this.channel, this.startDate, this.endDate);
     // this.dateRangeListener();
 
-    this.periodDateRangeService.period.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
-      this.getProductReport(this.channel, this.startDate, this.endDate);
-    });
-    this.periodDateRangeService.startDate.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
-      this.getProductReport(this.channel, value, this.endDate);
-    });
-    this.periodDateRangeService.endDate.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
-      this.getProductReport(this.channel, this.startDate, value);
-    });
+    // this.periodDateRangeService.period.pipe(
+    //   takeUntil(this.destroyer)
+    // ).subscribe((value) => {
+    //   this.getProductReport(this.channel, this.startDate, this.endDate);
+    // });
+
+    // this.periodDateRangeService.startDate.pipe(
+    //   takeUntil(this.destroyer)
+    // ).subscribe((value) => {
+    //   this.getProductReport(this.channel, value, this.endDate);
+    // });
+    // this.periodDateRangeService.endDate.pipe(
+    //   takeUntil(this.destroyer)
+    // ).subscribe((value) => {
+    //   this.getProductReport(this.channel, this.startDate, value);
+    // });
 
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.productPerformanceDatasource.filter = filterValue.trim().toLowerCase();

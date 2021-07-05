@@ -38,7 +38,7 @@ export interface PeriodicElement {
               </mat-select>
             </mat-form-field>
           </div>
-          <app-period-date-range class=""></app-period-date-range>
+          <app-period-date-range [hidePeriod]="true" class=""></app-period-date-range>
           <app-sales-performance-component
             [performanceByForm]="performanceBy.valueChanges"></app-sales-performance-component>
         </div>

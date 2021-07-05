@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {SettingsService, StorageService, toSqlDate} from '@smartstocktz/core-libs';
+import {SettingsService, StorageService} from '@smartstocktz/core-libs';
 import {bfast, BFast} from 'bfastjs';
 import {CartModel} from '../models/cart.model';
 import {SalesModel} from '../models/sale.model';
@@ -31,7 +31,9 @@ export class ReportService {
     });
   }
 
-  getFrequentlySoldProducts(beginDate: Date, endDate: Date): Promise<any> {
+  getFrequentlySoldProducts(beginDate: any, endDate: any): Promise<any> {
+    beginDate = moment(beginDate).format('YYYY-MM-DD');
+    endDate = moment(endDate).format('YYYY-MM-DD');
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
@@ -48,6 +50,8 @@ export class ReportService {
   }
 
   getSalesTrendold(beginDate: string, endDate: string, channel: string): Promise<any> {
+    beginDate = moment(beginDate).format('YYYY-MM-DD');
+    endDate = moment(endDate).format('YYYY-MM-DD');
     return new Promise<any>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
@@ -64,6 +68,8 @@ export class ReportService {
   }
 
   async getSalesOverview(from: string, to: string, period: string): Promise<any> {
+    from = moment(from).format('YYYY-MM-DD');
+    to = moment(to).format('YYYY-MM-DD');
     const activeShop = await this.storage.getActiveShop();
     return bfast.functions(activeShop.projectId)
       .request(FaasUtil.functionsUrl(`/reports/sales/overview/${from}/${to}/${period}`, activeShop.projectId))
@@ -71,6 +77,8 @@ export class ReportService {
   }
 
   async getSalesGrowth(from: string, to: string, period: string): Promise<any> {
+    from = moment(from).format('YYYY-MM-DD');
+    to = moment(to).format('YYYY-MM-DD');
     const activeShop = await this.storage.getActiveShop();
     // console.log(`http://localhost:3000/reports/sales/growth/${from}/${to}/${period}`);
     return bfast.functions(activeShop.projectId)
@@ -79,6 +87,8 @@ export class ReportService {
   }
 
   async getInvoices(from: string, to: string): Promise<any> {
+    from = moment(from).format('YYYY-MM-DD');
+    to = moment(to).format('YYYY-MM-DD');
     const shop = await this.storage.getActiveShop();
     // return bfast.functions(activeShop.projectId)
     //   .request(FaasUtil.functionsUrl(`/reports/sales/invoices/${from}/${to}`, activeShop.projectId))
@@ -90,7 +100,9 @@ export class ReportService {
       .find();
   }
 
-  getTotalCostOfGoodSold(beginDate: Date, endDate: Date): Promise<{ total: number }[]> {
+  getTotalCostOfGoodSold(beginDate: any, endDate: any): Promise<{ total: number }[]> {
+    beginDate = moment(beginDate).format('YYYY-MM-DD');
+    endDate = moment(endDate).format('YYYY-MM-DD');
     return new Promise<{ total: number }[]>(async (resolve, reject) => {
       try {
         const activeShop = await this.storage.getActiveShop();
@@ -106,19 +118,21 @@ export class ReportService {
     });
   }
 
-  async getTotalSale(beginDate: Date, endDate: Date, channel: string): Promise<number> {
+  async getTotalSale(beginDate: any, endDate: any, channel: string): Promise<number> {
+    beginDate = moment(beginDate).format('YYYY-MM-DD');
+    endDate = moment(endDate).format('YYYY-MM-DD');
     const activeShop = await this.storage.getActiveShop();
     const total: number = await BFast.database(activeShop.projectId).collection('sales')
       .query()
       // .equalTo('channel', channel)
-      .lessThanOrEqual('date', toSqlDate(endDate))
-      .greaterThanOrEqual('date', toSqlDate(beginDate))
+      .lessThanOrEqual('date', endDate)
+      .greaterThanOrEqual('date', beginDate)
       .count(true).find();
     let sales: SalesModel[] = await BFast.database(activeShop.projectId).collection('sales')
       .query()
       // .equalTo('channel', channel)
-      .lessThanOrEqual('date', toSqlDate(endDate))
-      .greaterThanOrEqual('date', toSqlDate(beginDate))
+      .lessThanOrEqual('date', endDate)
+      .greaterThanOrEqual('date', beginDate)
       .skip(0)
       .size(total)
       .find<SalesModel[]>({
@@ -138,6 +152,8 @@ export class ReportService {
   }
 
   async getProductPerformanceReport(period: string, from: string, to: string): Promise<any> {
+    from = moment(from).format('YYYY-MM-DD');
+    to = moment(to).format('YYYY-MM-DD');
     const activeShop = await this.storage.getActiveShop();
     return bfast.functions(activeShop.projectId).request(
       FaasUtil.functionsUrl(`/reports/sales/performance/${from}/${to}/product/${period}`, activeShop.projectId)
@@ -145,6 +161,8 @@ export class ReportService {
   }
 
   async getSalesByCategory(period: string, from: string, to: string): Promise<any> {
+    from = moment(from).format('YYYY-MM-DD');
+    to = moment(to).format('YYYY-MM-DD');
     const activeShop = await this.storage.getActiveShop();
     return bfast.functions(activeShop.projectId)
       .request(
@@ -181,11 +199,13 @@ export class ReportService {
     return stocks.filter(stock => stock.reorder >= stock.quantity);
   }
 
-  async getExpiredProducts(date: Date, skip = 0, size = 1000): Promise<any[]> {
+  async getExpiredProducts(date: any, skip = 0, size = 1000): Promise<any[]> {
+    date = moment(date).format('YYYY-MM-DD');
+    // endDate = moment(endDate).format('YYYY-MM-DD');
     const activeShop = await this.storage.getActiveShop();
     return BFast.database(activeShop.projectId).collection('stocks')
       .query()
-      .lessThanOrEqual('expire', toSqlDate(date))
+      .lessThanOrEqual('expire', date)
       .skip(skip)
       .size(size)
       .find<any[]>();
@@ -194,17 +214,19 @@ export class ReportService {
   async getProductsAboutToExpire(): Promise<any[]> {
     const activeShop = await this.storage.getActiveShop();
     let stocks = await this.storage.getStocks();
-    const today = new Date();
+    const today = moment(new Date()).format('YYYY-MM-DD');
     if (!(stocks && Array.isArray(stocks) && stocks.length > 0)) {
       stocks = await BFast.database(activeShop.projectId).collection('stocks').getAll(null, {
         cacheEnable: false,
         dtl: 0,
       });
     }
-    return stocks.filter(stock => (stock.expire > toSqlDate(today) && (stock.expire <= toSqlDate(moment(today).add(3, 'M').toDate()))));
+    return stocks.filter(stock => (stock.expire > today && (stock.expire <= moment(today).add(3, 'M').format('YYYY-MM-DD'))));
   }
 
   async getSoldCarts(from: string, to: string): Promise<CartModel[]> {
+    from = moment(from).format('YYYY-MM-DD');
+    to = moment(to).format('YYYY-MM-DD');
     const activeShop = await this.storage.getActiveShop();
     const url = `/reports/sales/order/${from}/${to}/cart/day`;
     const salesTracking: any[] = await bfast.functions(activeShop.projectId)
@@ -218,6 +240,8 @@ export class ReportService {
   }
 
   async getSellerSales(from: string, to: string, period: string): Promise<CartModel[]> {
+    from = moment(from).format('YYYY-MM-DD');
+    to = moment(to).format('YYYY-MM-DD');
     const activeShop = await this.storage.getActiveShop();
     return bfast.functions(activeShop.projectId).request(
       FaasUtil.functionsUrl(`/reports/sales/performance/${from}/${to}/seller/${period}`, activeShop.projectId)
@@ -225,6 +249,8 @@ export class ReportService {
   }
 
   async getStockTracking(stockId: string, from: string, to: string): Promise<any> {
+    from = moment(from).format('YYYY-MM-DD');
+    to = moment(to).format('YYYY-MM-DD');
     const activeShop = await this.storage.getActiveShop();
     return bfast.functions(activeShop.projectId)
       .request(
@@ -232,26 +258,26 @@ export class ReportService {
       ).get();
   }
 
-  async getTotalGrossSale(beginDate: Date, endDate: Date): Promise<number> {
+  async getTotalGrossSale(beginDate: any, endDate: any): Promise<number> {
+    beginDate = moment(beginDate).format('YYYY-MM-DD');
+    endDate = moment(endDate).format('YYYY-MM-DD');
     const activeShop = await this.storage.getActiveShop();
     const total: number = await BFast.database(activeShop.projectId).collection('sales')
       .query()
-      .lessThanOrEqual('date', toSqlDate(endDate))
-      .greaterThanOrEqual('date', toSqlDate(beginDate))
+      .lessThanOrEqual('date', endDate)
+      .greaterThanOrEqual('date', beginDate)
       .count(true)
       .find();
     let sales = await BFast.database(activeShop.projectId).collection('sales')
       .query()
-      .lessThanOrEqual('date', toSqlDate(endDate))
-      .greaterThanOrEqual('date', toSqlDate(beginDate))
+      .lessThanOrEqual('date', endDate)
+      .greaterThanOrEqual('date', beginDate)
       .skip(0)
       .size(total)
       .find<SalesModel[]>({
         returnFields: ['amount', 'batch', 'quantity', 'stock'],
       });
-
     const duplication: { batch: string, value: any } = {batch: 'a', value: 'a'};
-
     sales = sales.filter(value => {
       if (duplication[value.batch] === value.batch) {
         return false;
@@ -259,7 +285,6 @@ export class ReportService {
       duplication[value.batch] = value.batch;
       return true;
     });
-
     const salesCost = sales.map(value => value.amount).reduce((a, b) => a + b, 0);
     const costOfGoodSold = sales.map(value => (value.quantity * value.stock.purchase)).reduce((a, b) => a + b, 0);
     return salesCost - costOfGoodSold;

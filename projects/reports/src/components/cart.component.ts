@@ -126,15 +126,15 @@ export class CartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.startDate = toSqlDate(new Date());
-    this.endDate = toSqlDate(new Date());
+    this.startDate = new Date();
+    this.endDate = new Date();
     this.getSoldCarts(this.startDate, this.endDate);
     this.periodDateRangeService.dateRange.pipe(
       takeUntil(this.destroyer)
     ).subscribe((value) => {
-      if (value.startDate) {
-        this.startDate = toSqlDate(value.startDate);
-        this.endDate = toSqlDate(value.endDate);
+      if (value && value.startDate) {
+        this.startDate = value.startDate;
+        this.endDate = value.endDate;
         this.getSoldCarts(this.startDate, this.endDate);
       }
     });
@@ -219,5 +219,6 @@ export class CartComponent implements OnInit, OnDestroy {
     if (this.salesChanges) {
       this.salesChanges.close();
     }
+    this.periodDateRangeService.dateRange.next(null);
   }
 }

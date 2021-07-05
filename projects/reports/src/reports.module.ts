@@ -4,7 +4,7 @@ import {CommonModule, DatePipe} from '@angular/common';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {StockPageComponent} from './pages/stock.page';
 import {ReorderComponent} from './components/reorder.component';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatSidenavModule} from '@angular/material/sidenav'; 
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {ReactiveFormsModule} from '@angular/forms';

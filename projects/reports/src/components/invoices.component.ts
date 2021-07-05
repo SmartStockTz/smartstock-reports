@@ -406,5 +406,6 @@ export class InvoicesComponent extends DeviceInfoUtil implements OnInit, OnDestr
 
   ngOnDestroy(): void {
     this.destroyer.next('done');
+    this.periodDateRangeService.dateRange.next(null);
   }
 }
