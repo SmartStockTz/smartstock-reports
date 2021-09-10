@@ -12,7 +12,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatButtonModule} from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
-import {BFast} from 'bfastjs';
+import {init} from 'bfast';
 import {AuthGuard} from './guards/auth.guard';
 import {HttpClientModule} from '@angular/common/http';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -51,7 +51,7 @@ const routes: Routes = [
 })
 export class AppModule {
   constructor(private readonly configs: ConfigsService) {
-    BFast.init({
+    init({
       applicationId: 'smartstock_lb',
       projectId: 'smartstock',
       appPassword: 'ZMUGVn72o3yd8kSbMGhfWpI80N9nA2IHjxWKlAhG'

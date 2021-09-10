@@ -2,7 +2,6 @@ import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import * as Highcharts from 'highcharts';
 import {LogService, toSqlDate} from '@smartstocktz/core-libs';
 import {ReportService} from '../services/report.service';
-import {MatDatepicker} from '@angular/material/datepicker';
 import {FormControl, Validators} from '@angular/forms';
 import {json2csv} from '../services/json2csv.service';
 import {MatTableDataSource} from '@angular/material/table';

@@ -6,18 +6,16 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {AbstractControl, FormControl, ValidatorFn, Validators} from '@angular/forms';
 import {ReportService} from '../services/report.service';
-import {StorageService, toSqlDate} from '@smartstocktz/core-libs';
+import {toSqlDate} from '@smartstocktz/core-libs';
 import {map, startWith, takeUntil} from 'rxjs/operators';
 import {Observable, Subject} from 'rxjs';
-import {DatePipe} from '@angular/common';
 import {PeriodDateRangeState} from '../states/period-date-range.state';
-import validate = WebAssembly.validate;
 
 
 function autocompleteObjectValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     if (typeof control.value === 'string') {
-      return { invalidAutocompleteObject: { value: control.value } }
+      return {invalidAutocompleteObject: {value: control.value}}
     }
     return null;  /* valid option selected */
   };
@@ -28,31 +26,31 @@ function autocompleteObjectValidator(): ValidatorFn {
   template: `
     <div class=" mx-auto" style="margin-top: 1em">
       <div class="row mx-0 justify-content-between">
-          <mat-form-field appearance="outline" class="col-md-10 col-lg-5 ">
-            <mat-label>Product</mat-label>
-            <input type="text"
-                   matInput
-                   [formControl]="productFormControl"
-                   [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
-              <mat-option *ngFor="let product of filteredProducts | async" [value]="product.product"
-                          (onSelectionChange)="updateStockId(product)">
-                {{product.product}}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-error *ngIf="productFormControl.hasError('invalidAutocompleteObject')">
-              Product name not recognized. Click one of the autocomplete options.
-            </mat-error>
-          </mat-form-field>
+        <mat-form-field appearance="outline" class="col-md-10 col-lg-5 ">
+          <mat-label>Product</mat-label>
+          <input type="text"
+                 matInput
+                 [formControl]="productFormControl"
+                 [matAutocomplete]="auto">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let product of filteredProducts | async" [value]="product.product"
+                        (onSelectionChange)="updateStockId(product)">
+              {{product.product}}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="productFormControl.hasError('invalidAutocompleteObject')">
+            Product name not recognized. Click one of the autocomplete options.
+          </mat-error>
+        </mat-form-field>
         <div class="m-5">
-<!--          mat-error spacer-->
         </div>
         <app-period-date-range [hidePeriod]="true"></app-period-date-range>
       </div>
       <div class="py-3">
         <mat-card class="mat-elevation-z3">
           <div class="row pt-3 m-0 justify-content-center align-items-center">
-            <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">find_in_page</mat-icon>
+            <mat-icon color="primary" class="ml-auto" style="width: 40px;height:40px;font-size: 36px">find_in_page
+            </mat-icon>
             <p class="mr-auto my-0 h6">{{productName  | titlecase}} </p>
             <button [mat-menu-trigger-for]="exportMenu" class="mr-1 ml-0" mat-icon-button>
               <mat-icon>get_app</mat-icon>
@@ -61,46 +59,41 @@ function autocompleteObjectValidator(): ValidatorFn {
           <hr class="w-75 mt-0 mx-auto">
 
           <div style="display: flex; flex-flow: row; align-items: center">
-            <!--            <h6 class="col-8">Cart Report</h6>-->
             <span style="flex-grow: 1"></span>
           </div>
-          <div class="d-flex justify-content-center align-items-center m-0 p-0" >
+          <div class="d-flex justify-content-center align-items-center m-0 p-0">
             <app-data-not-ready [width]="100" height="100" [isLoading]="isLoading"
                                 *ngIf="noDataRetrieved || isLoading"></app-data-not-ready>
           </div>
           <table mat-table *ngIf="!noDataRetrieved  && !isLoading" [dataSource]="stockTrackingData" matSort>
-              <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-                <td mat-cell
-                    *matCellDef="let element">{{element.date | date: 'dd MMM YYYY'}}</td>
-                <td mat-footer-cell *matFooterCellDef> Total</td>
-              </ng-container>
-
-              <ng-container matColumnDef="in">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>IN</th>
-                <td mat-cell *matCellDef="let element">{{element.op === 'IN' ? element.quantity : ''}}</td>
-                              <td mat-footer-cell *matFooterCellDef> {{totalStockIN}}</td>
-              </ng-container>
-
-              <ng-container matColumnDef="quantity">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>OUT</th>
-                <td mat-cell *matCellDef="let element">{{element.op === 'OUT' ? element.quantity : ''}}</td>
-                              <td mat-footer-cell *matFooterCellDef>{{totalStockOUT}}</td>
-              </ng-container>
-
-
-              <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-                <td mat-cell *matCellDef="let element">{{element.op === 'IN' ? 'Purchased' : element.op === 'OUT' ? 'Sold' : 'Transferred'}}</td>
-                              <td mat-footer-cell *matFooterCellDef> Current Stock  =  {{currentStockDisplay}} </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="stockTrackingColumns"></tr>
-              <tr class="table-data-row" mat-row
-                  *matRowDef="let row; columns: stockTrackingColumns;"></tr>
-              <tr class="font-weight-bold" mat-footer-row *matFooterRowDef="stockTrackingColumns"></tr>
-            </table>
-            <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+              <td mat-cell
+                  *matCellDef="let element">{{element.date | date: 'dd MMM YYYY'}}</td>
+              <td mat-footer-cell *matFooterCellDef> Total</td>
+            </ng-container>
+            <ng-container matColumnDef="in">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>IN</th>
+              <td mat-cell *matCellDef="let element">{{element.op === 'IN' ? element.quantity : ''}}</td>
+              <td mat-footer-cell *matFooterCellDef> {{totalStockIN}}</td>
+            </ng-container>
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>OUT</th>
+              <td mat-cell *matCellDef="let element">{{element.op === 'OUT' ? element.quantity : ''}}</td>
+              <td mat-footer-cell *matFooterCellDef>{{totalStockOUT}}</td>
+            </ng-container>
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+              <td mat-cell
+                  *matCellDef="let element">{{element.op === 'IN' ? 'Purchased' : element.op === 'OUT' ? 'Sold' : 'Transferred'}}</td>
+              <td mat-footer-cell *matFooterCellDef> Current Stock =  {{currentStockDisplay}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="stockTrackingColumns"></tr>
+            <tr class="table-data-row" mat-row
+                *matRowDef="let row; columns: stockTrackingColumns;"></tr>
+            <tr class="font-weight-bold" mat-footer-row *matFooterRowDef="stockTrackingColumns"></tr>
+          </table>
+          <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
         </mat-card>
       </div>
     </div>
@@ -121,6 +114,7 @@ export class StockTrackingComponent implements OnInit, OnDestroy {
   constructor(private readonly report: ReportService, private readonly snack: MatSnackBar,
               private periodDateRangeService: PeriodDateRangeState) {
   }
+
   productFormControl = new FormControl('');
   products: any;
   filteredProducts: Observable<string[]>;
@@ -162,7 +156,7 @@ export class StockTrackingComponent implements OnInit, OnDestroy {
         this.startDate = value.startDate;
         this.endDate = value.endDate;
         if (this.stockId === '' || this.stockId === null) {
-          this.productFormControl.setValidators( [autocompleteObjectValidator(), Validators.required]);
+          this.productFormControl.setValidators([autocompleteObjectValidator(), Validators.required]);
           this.productFormControl.updateValueAndValidity();
           this.productFormControl.markAllAsTouched();
         } else {
@@ -190,7 +184,7 @@ export class StockTrackingComponent implements OnInit, OnDestroy {
         this.totalStockIN = (Object.values(data).filter(value => value.op === 'IN'))
           .map(t => t.quantity).reduce((acc, value) => acc + value, 0);
         this.totalStockOUT = (Object.values(data).filter(value => value.op === 'OUT'))
-      .map(t => t.quantity).reduce((acc, value) => acc + value, 0);
+          .map(t => t.quantity).reduce((acc, value) => acc + value, 0);
         this.stocks = data;
         this.noDataRetrieved = false;
       } else {
@@ -209,6 +203,7 @@ export class StockTrackingComponent implements OnInit, OnDestroy {
     this.stockId = product.id;
     this.currentStock = product.quantity;
   }
+
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.products.filter(option => option.product.toLowerCase().includes(filterValue));

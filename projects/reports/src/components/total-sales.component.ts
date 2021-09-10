@@ -7,7 +7,6 @@ import {toSqlDate} from '@smartstocktz/core-libs';
   selector: 'app-total-sales',
   template: `
     <div style="height: 100%" class="justify-content-center align-items-center">
-
       <div class="pb-3">
         <div class="row m-0" style="justify-content: space-evenly">
           <div class="col-md-6 col-lg-4">
@@ -100,13 +99,11 @@ import {toSqlDate} from '@smartstocktz/core-libs';
         </div>
 
       </div>
-      <!--      <span style="font-size: 30px">{{totalSale | currency: 'TZS '}}</span>-->
     </div>
   `,
   styleUrls: ['../styles/total-sales.style.scss'],
 })
 export class TotalSalesComponent implements OnInit {
-  totalSale = 0;
   todaySalesProgress = false;
   weekSalesProgress = false;
   monthlySalesProgress = false;

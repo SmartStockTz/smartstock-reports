@@ -13,7 +13,7 @@ import * as moment from 'moment';
 import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import bfast from 'bfastjs';
+import {database} from 'bfast';
 
 @Component({
   selector: 'app-cart-report',
@@ -51,7 +51,7 @@ import bfast from 'bfastjs';
             </ng-container>
             <ng-container matColumnDef="total_amount">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Amount</th>
-              <td mat-cell *matCellDef="let element">{{element.amount | currency: ' '}}</td>
+              <td mat-cell *matCellDef="let element">{{element.amount | currency: 'TZS '}}</td>
               <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
             <ng-container matColumnDef="total_items">
@@ -144,7 +144,7 @@ export class CartComponent implements OnInit, OnDestroy {
 
     let alreadyExc = false;
     this.storageService.getActiveUser().then(value => {
-      this.salesChanges = bfast.database(value.projectId).table('sales').query().changes(() => {
+      this.salesChanges = database(value.projectId).table('sales').query().changes(() => {
         console.log('sales track connected');
         if (alreadyExc) {
           this.getSoldCarts(this.startDate, this.endDate);
@@ -172,14 +172,13 @@ export class CartComponent implements OnInit, OnDestroy {
           this.carts.paginator = this.paginator;
           this.carts.sort = this.sort;
         });
-        // this.stocks = data;
         this.noDataRetrieved = false;
       } else {
         this.noDataRetrieved = true;
       }
     }).catch(_ => {
       this.isLoading = false;
-      this.snack.open('Fails to get total expired products', 'Ok', {
+      this.snack.open('Fails to get total sold products', 'Ok', {
         duration: 3000
       });
     });

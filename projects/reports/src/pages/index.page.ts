@@ -87,12 +87,12 @@ export class IndexPage implements OnInit {
       detail: 'see what product sold for specific time',
       icon: 'description'
     },
-    {
-      name: 'Sales Growth',
-      path: '/report/sales/growth',
-      detail: 'compare growth per year',
-      icon: 'description'
-    },
+    // {
+    //   name: 'Sales Growth',
+    //   path: '/report/sales/growth',
+    //   detail: 'compare growth per year',
+    //   icon: 'description'
+    // },
     {
       name: 'Sales Performance',
       path: '/report/sales/performance',

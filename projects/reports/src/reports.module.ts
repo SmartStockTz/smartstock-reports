@@ -1,10 +1,9 @@
 import {NgModule} from '@angular/core';
 import {CommonModule, DatePipe} from '@angular/common';
-
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {StockPageComponent} from './pages/stock.page';
 import {ReorderComponent} from './components/reorder.component';
-import {MatSidenavModule} from '@angular/material/sidenav'; 
+import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {ReactiveFormsModule} from '@angular/forms';
@@ -66,8 +65,8 @@ const routes: Routes = [
   {path: 'stock/overview', component: StockPageComponent},
   {path: 'sales/overview', component: SalesOverviewPage},
   {path: 'sales/tracking', component: SalesOrderPageComponent},
-  {path: 'stock/tracking', component: StockTrackingPage},
-  {path: 'sales/growth', component: SalesGrowthPageComponent},
+  // {path: 'stock/tracking', component: StockTrackingPage},
+  // {path: 'sales/growth', component: SalesGrowthPageComponent},
   {path: 'sales/performance', component: SalesPerformancePageComponent},
   // {path: 'stock/invoices', component: InvoicesPage},
 ];

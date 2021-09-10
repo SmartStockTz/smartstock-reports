@@ -26,11 +26,11 @@ export class ReportNavigationService {
           name: 'sales tracking',
           roles: ['*']
         },
-        {
-          link: '/report/sales/growth',
-          name: 'sales growth',
-          roles: ['admin']
-        },
+        // {
+        //   link: '/report/sales/growth',
+        //   name: 'sales growth',
+        //   roles: ['admin']
+        // },
         {
           link: '/report/sales/performance',
           name: 'sales performance',

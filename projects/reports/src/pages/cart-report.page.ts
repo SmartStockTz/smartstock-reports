@@ -3,13 +3,6 @@ import {MatSidenav} from '@angular/material/sidenav';
 import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 import {FormControl} from '@angular/forms';
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
 @Component({
   selector: 'app-sales-reports',
   template: `

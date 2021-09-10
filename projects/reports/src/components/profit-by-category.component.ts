@@ -182,7 +182,6 @@ export class ProfitByCategoryComponent extends DeviceInfoUtil implements OnInit 
   private getProductReport(channel: string, from: string, to: string): void {
     this.isLoading = true; // begin fetching data
     this.productPerformanceFetchProgress = true;
-    // console.log('from: ' + from + ' to: ' + to);
     this.reportService.getSalesByCategory(channel, from, to).then(data => {
       this.isLoading = false;
       this.noDataRetrieved = false; // loading is done and some data is received
