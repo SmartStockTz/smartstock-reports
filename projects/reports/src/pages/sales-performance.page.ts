@@ -3,13 +3,6 @@ import {MatSidenav} from '@angular/material/sidenav';
 import {DeviceState} from '@smartstocktz/core-libs';
 import {FormControl} from '@angular/forms';
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
 @Component({
   selector: 'app-sales-performance',
   template: `
@@ -48,7 +41,6 @@ export interface PeriodicElement {
   styleUrls: ['../styles/cart.component.scss']
 })
 export class SalesPerformancePageComponent implements OnInit {
-  isMobile = false;
   displayedColumns: string[] = ['position', 'name', 'weight'];
   performanceBy = new FormControl('product');
   @ViewChild('sidenav') sidenav: MatSidenav;

@@ -3,7 +3,7 @@ import {FormControl, Validators} from '@angular/forms';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {Router} from '@angular/router';
-import {DeviceInfoUtil, LogService, StorageService, toSqlDate} from '@smartstocktz/core-libs';
+import {LogService, StorageService, toSqlDate} from '@smartstocktz/core-libs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Observable, of} from 'rxjs';
 import {MatTableDataSource} from '@angular/material/table';
@@ -132,7 +132,7 @@ import {json2csv} from '../services/json2csv.service';
   `,
   styleUrls: ['../styles/profit-by-category.style.scss']
 })
-export class ProfitByCategoryComponent extends DeviceInfoUtil implements OnInit {
+export class ProfitByCategoryComponent implements OnInit {
   private productPerformanceFetchProgress = false;
   startDateFormControl = new FormControl(new Date(), [Validators.nullValidator]);
   endDateFormControl = new FormControl(Date.now().toString(), [Validators.nullValidator]);
@@ -155,7 +155,6 @@ export class ProfitByCategoryComponent extends DeviceInfoUtil implements OnInit 
               private readonly logService: LogService,
               private readonly reportService: ReportService,
   ) {
-    super();
   }
 
   hotReloadProgress = false;

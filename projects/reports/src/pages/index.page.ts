@@ -105,12 +105,12 @@ export class IndexPage implements OnInit {
     //   detail: 'track invoices',
     //   icon: 'receipt'
     // },
-    {
-      name: 'Stock',
-      path: '/report/stock/overview',
-      detail: 'expired and reorder stocks',
-      icon: 'description'
-    },
+    // {
+    //   name: 'Stock',
+    //   path: '/report/stock/overview',
+    //   detail: 'expired and reorder stocks',
+    //   icon: 'description'
+    // },
     // {
     //   name: 'Stock Tracking',
     //   path: '/report/stock/tracking',

@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'app-sales-reports',
@@ -55,13 +54,11 @@ import {DeviceInfoUtil} from '@smartstocktz/core-libs';
   `,
   styleUrls: ['../styles/sales.style.scss']
 })
-export class SalesPageComponent extends DeviceInfoUtil implements OnInit {
-  isMobile = false;
+export class SalesPageComponent implements OnInit {
 
   @ViewChild('sidenav') sidenav: MatSidenav;
 
   constructor() {
-    super();
   }
 
   ngOnInit(): void {

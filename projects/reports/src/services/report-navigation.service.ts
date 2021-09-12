@@ -41,11 +41,11 @@ export class ReportNavigationService {
         //   link: '/report/stock/invoices',
         //   roles: ['admin']
         // },
-        {
-          link: '/report/stock/overview',
-          name: 'stocks overviews',
-          roles: ['admin']
-        },
+        // {
+        //   link: '/report/stock/overview',
+        //   name: 'stocks overviews',
+        //   roles: ['admin']
+        // },
         // {
         //   name: 'stock tracking',
         //   link: '/report/stock/tracking',

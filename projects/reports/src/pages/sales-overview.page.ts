@@ -23,29 +23,10 @@ import {DeviceState} from '@smartstocktz/core-libs';
         </div>
       </ng-template>
     </app-layout-sidenav>
-
-
-    <!--    <div>-->
-    <!--      <mat-sidenav-container class="my-drawer-container">-->
-
-    <!--        <mat-sidenav-->
-    <!--          [fixedInViewport]="true"-->
-    <!--          class="match-parent-side"-->
-    <!--          #sidenav [mode]="enoughWidth()?'side':'over'"-->
-    <!--          [opened]="enoughWidth()">-->
-    <!--          <app-drawer></app-drawer>-->
-    <!--        </mat-sidenav>-->
-
-    <!--        <mat-sidenav-content>-->
-    <!--          <app-toolbar></app-toolbar>-->
-    <!--        </mat-sidenav-content>-->
-    <!--      </mat-sidenav-container>-->
-    <!--    </div>-->
   `,
   styleUrls: ['../styles/sales.style.scss']
 })
 export class SalesOverviewPage implements OnInit {
-  isMobile = false;
   @ViewChild('sidenav') sidenav: MatSidenav;
 
   constructor(public readonly deviceState: DeviceState) {

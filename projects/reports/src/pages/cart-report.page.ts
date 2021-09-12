@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
-import {DeviceInfoUtil} from '@smartstocktz/core-libs';
+import {DeviceState} from '@smartstocktz/core-libs';
 import {FormControl} from '@angular/forms';
 
 @Component({
@@ -12,8 +12,8 @@ import {FormControl} from '@angular/forms';
         <mat-sidenav
           [fixedInViewport]="true"
           class="match-parent-side"
-          #sidenav [mode]="enoughWidth()?'side':'over'"
-          [opened]="enoughWidth()">
+          #sidenav [mode]="(deviceState.enoughWidth | async)===true?'side':'over'"
+          [opened]="(deviceState.enoughWidth | async)===true">
           <app-drawer></app-drawer>
         </mat-sidenav>
 
@@ -31,7 +31,7 @@ import {FormControl} from '@angular/forms';
               </mat-form-field>
             </div>
             <app-total-sales></app-total-sales>
-            <app-profit [salesChannel]="salesChannel.valueChanges"></app-profit>
+<!--            <app-profit [salesChannel]="salesChannel.valueChanges"></app-profit>-->
             <div class="row m-0 py-2" style="justify-content: space-evenly">
               <div class="col-md-11 col-lg-4 py-3">
               </div>
@@ -63,15 +63,13 @@ import {FormControl} from '@angular/forms';
   `,
   styleUrls: ['../styles/cart.component.scss']
 })
-export class CartReportPageComponent extends DeviceInfoUtil implements OnInit {
-  isMobile = false;
+export class CartReportPageComponent implements OnInit {
   displayedColumns: string[] = ['position', 'name', 'weight'];
   dataSource = [];
   salesChannel = new FormControl('retail');
   @ViewChild('sidenav') sidenav: MatSidenav;
 
-  constructor() {
-    super();
+  constructor(public readonly deviceState: DeviceState) {
     document.title = 'Cart Report';
   }
 

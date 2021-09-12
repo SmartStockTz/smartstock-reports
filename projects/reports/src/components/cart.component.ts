@@ -8,7 +8,7 @@ import {FormControl, Validators} from '@angular/forms';
 import {ReportService} from '../services/report.service';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {CartDetailsComponent} from './cart-details.component';
-import {DeviceState, StorageService, toSqlDate} from '@smartstocktz/core-libs';
+import {DeviceState, StorageService, toSqlDate, UserService} from '@smartstocktz/core-libs';
 import * as moment from 'moment';
 import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {takeUntil} from 'rxjs/operators';
@@ -121,6 +121,7 @@ export class CartComponent implements OnInit, OnDestroy {
               private cartDetails: MatBottomSheet,
               public readonly deviceState: DeviceState,
               private readonly storageService: StorageService,
+              private readonly userService: UserService,
               private readonly periodDateRangeService: PeriodDateRangeState
   ) {
   }
@@ -143,7 +144,7 @@ export class CartComponent implements OnInit, OnDestroy {
     });
 
     let alreadyExc = false;
-    this.storageService.getActiveUser().then(value => {
+    this.userService.currentUser().then(value => {
       this.salesChanges = database(value.projectId).table('sales').query().changes(() => {
         console.log('sales track connected');
         if (alreadyExc) {
