@@ -49,7 +49,6 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {InvoiceDetailsComponent} from './components/invoice-details.component';
 import {ReportNavigationService} from './services/report-navigation.service';
-import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 const routes: Routes = [

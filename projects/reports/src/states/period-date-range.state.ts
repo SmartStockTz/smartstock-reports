@@ -13,7 +13,8 @@ export class PeriodDateRangeState {
   constructor() {
   }
 
-  editDateRange(dateRange: {period: string, endDate: any, startDate: any}): any {
+  editDateRange(dateRange: { period: string, endDate: any, startDate: any }): any {
+    // console.log(dateRange);
     // dateRange = Object.assign(dateRange, {
     //   endDate: moment(dateRange.endDate).format('YYYY-MM-DD'),
     //   startDate: moment(dateRange.endDate).format('YYYY-MM-DD'),
