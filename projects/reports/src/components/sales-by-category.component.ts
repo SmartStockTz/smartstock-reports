@@ -164,7 +164,7 @@ export class SalesByCategoryComponent implements OnInit, OnDestroy {
 
   // tslint:disable-next-line:typedef
   private getSalesByCategory() {
-    this.report.getSalesByCategory(this.period, this.startDate, this.endDate).then(data => {
+    this.report.getCategoryPerformanceReport(this.period, this.startDate, this.endDate).then(data => {
       this.salesStatusProgress = false;
       this.salesByCategoryData = new MatTableDataSource<any>(data);
       this.totalSales = data.map(t => t.amount).reduce((acc, value) => acc + value, 0);

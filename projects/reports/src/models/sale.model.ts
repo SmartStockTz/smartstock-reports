@@ -17,5 +17,14 @@ export interface SalesModel {
   channel?: string;
   stock?: StockModel;
   batch?: string; // for offline sync
-  stockId: string;
+  stockId?: string;
+  sellerId?: string;
+  sellerObject?: {
+    firstname: string,
+    lastname: string,
+    username: string
+  };
+  seller?: any;
+  time?: any;
+  timer?: any;
 }

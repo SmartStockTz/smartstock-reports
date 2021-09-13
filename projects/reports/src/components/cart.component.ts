@@ -178,6 +178,7 @@ export class CartComponent implements OnInit, OnDestroy {
         this.noDataRetrieved = true;
       }
     }).catch(_ => {
+      console.log(_);
       this.isLoading = false;
       this.snack.open('Fails to get total sold products', 'Ok', {
         duration: 3000

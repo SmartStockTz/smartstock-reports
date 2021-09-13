@@ -181,7 +181,7 @@ export class ProfitByCategoryComponent implements OnInit {
   private getProductReport(channel: string, from: string, to: string): void {
     this.isLoading = true; // begin fetching data
     this.productPerformanceFetchProgress = true;
-    this.reportService.getSalesByCategory(channel, from, to).then(data => {
+    this.reportService.getCategoryPerformanceReport(channel, from, to).then(data => {
       this.isLoading = false;
       this.noDataRetrieved = false; // loading is done and some data is received
       this.productPerformanceReport = data.length > 0 ? data[0].total : 0;

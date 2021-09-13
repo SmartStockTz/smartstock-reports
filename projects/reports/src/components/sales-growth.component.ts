@@ -62,7 +62,8 @@ import {FormControl} from '@angular/forms';
       <div class="py-3">
         <mat-card class="mat-elevation-z3">
           <div class="row pt-3 m-0 justify-content-center align-items-end">
-            <svg class="ml-auto" width="40" height="36" viewBox="0 0 488 412" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="ml-auto" width="40" height="36" viewBox="0 0 488 412" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M51.725 316.622C48.025 320.322 43.625 323.322 38.925 325.322V350.822V393.022C38.925 403.122 47.125 411.222 57.125 411.222H98.125C108.225 411.222 116.325 403.022 116.325 393.022V350.822V297.022V254.822C116.325 253.922 116.225 253.022 116.125 252.222L51.725 316.622Z"
                 fill="#1B5E20"/>
@@ -149,7 +150,8 @@ import {FormControl} from '@angular/forms';
               </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="(deviceState.isSmallScreen | async)===true?salesColumnsMobile:salesColumns"></tr>
+            <tr mat-header-row
+                *matHeaderRowDef="(deviceState.isSmallScreen | async)===true?salesColumnsMobile:salesColumns"></tr>
             <tr matTooltip="{{row}}" class="table-data-row" mat-row
                 *matRowDef="let row; columns: (deviceState.isSmallScreen | async)===true?salesColumnsMobile:salesColumns;"></tr>
 
@@ -218,97 +220,99 @@ export class SalesGrowthComponent implements OnInit, OnDestroy {
   }
 
   private _getSalesGrowth(): void {
-    this.isLoading = true;
-    this.salesByDayTrendProgress = true;
-    this.reportService.getSalesGrowth(this.startDate, new Date(this.startDate).getFullYear() + '-12-30', this.period).then(dataOrigin => {
-      const data = [];
-      data.push(dataOrigin[0]);
-
-      this.reportService.getSalesGrowth(new Date(this.endDate).getFullYear() + '-01-01', this.endDate, this.period).then(dataCompared => {
-        this.isLoading = false;
-        this.noDataRetrieved = false;
-        const salesGrowthData = {origin: [], compared: []};
-        const salesGrowthTableData = [];
-        this.days = new Set();
-        data.push(dataCompared[0]);
-        Object.values(data).forEach(key => {
-          key.values.forEach(value => {
-            this.days.add(value.date);
-          });
-        });
-
-        // Calculate Weeks
-        const oneJan = new Date(new Date(this.endDate).getFullYear(), 0, 1);
-        // @ts-ignore
-        const numberOfDays = Math.floor((new Date(this.endDate) - oneJan) / (24 * 60 * 60 * 1000));
-        const lastWeek = Math.ceil((new Date(this.endDate).getDay() + 1 + numberOfDays) / 7);
-
-        // @ts-ignore
-        this.days = Array.from(this.days).sort((a, b) => a - b);
-        Object.values(data).forEach(value => {
-          const tempDataArray = [];
-          this.days.forEach(date => {
-            let filterdSales;
-
-            // @ts-ignore
-            filterdSales = value.values.filter(filter => filter.date === date);
-            if (filterdSales && filterdSales.length === 1) {
-              tempDataArray.push(filterdSales[0].amount);
-            } else {
-              // if (date <= lastWeek && this.period === 'week'){
-              //   tempDataArray.push(0);
-              // } else if (date <= new Date(this.endDate).getMonth()) {
-              //   tempDataArray.push(0);
-              // }
-              tempDataArray.push(0);
-            }
-          });
-
-          let objectId = 'origin';
-          if (value.id === '2021') {
-            objectId = 'compared';
-          }
-          salesGrowthData[objectId] = tempDataArray;
-        });
-        let i = 0;
-        const growthDays = [];
-        this.days.forEach(value => {
-          let increase = salesGrowthData.compared[i] - salesGrowthData.origin[i];
-          if (salesGrowthData.origin[i] === 0) {
-            increase = increase / salesGrowthData.compared[i] * 100;
-          } else {
-            increase = increase / salesGrowthData.origin[i] * 100;
-          }
-          salesGrowthTableData.push({
-            date: value,
-            origin: salesGrowthData.origin[i],
-            compared: salesGrowthData.compared[i],
-            growth: increase.toFixed(1)
-          });
-          growthDays.push(value);
-          i++;
-        });
-
-        this.initiateGraph(growthDays, salesGrowthData);
-        this.salesData = new MatTableDataSource(salesGrowthTableData);
-        // this.totalSales = data.map(t => t.amount).reduce((acc, value) => acc + value, 0);
-        setTimeout(() => {
-          this.salesData.paginator = this.paginator;
-          this.salesData.sort = this.sort;
-        });
-        this.salesByDayTrendProgress = false;
-      }).catch(_ => {
-        // console.log(_);
-        this.isLoading = false;
-        this.noDataRetrieved = true;
-        this.salesByDayTrendProgress = false;
-      });
-    }).catch(_ => {
-      console.log(_);
-      this.isLoading = false;
-      this.noDataRetrieved = true;
-      this.salesByDayTrendProgress = false;
-    });
+    // this.isLoading = true;
+    // this.salesByDayTrendProgress = true;
+    // this.reportService.getSalesGrowth(this.startDate,
+    // new Date(this.startDate).getFullYear() + '-12-30', this.period).then(dataOrigin => {
+    //   const data = [];
+    //   data.push(dataOrigin[0]);
+    //
+    //   this.reportService.getSalesGrowth(new Date(this.endDate).getFullYear()
+    //   + '-01-01', this.endDate, this.period).then(dataCompared => {
+    //     this.isLoading = false;
+    //     this.noDataRetrieved = false;
+    //     const salesGrowthData = {origin: [], compared: []};
+    //     const salesGrowthTableData = [];
+    //     this.days = new Set();
+    //     data.push(dataCompared[0]);
+    //     Object.values(data).forEach(key => {
+    //       key.values.forEach(value => {
+    //         this.days.add(value.date);
+    //       });
+    //     });
+    //
+    //     // Calculate Weeks
+    //     const oneJan = new Date(new Date(this.endDate).getFullYear(), 0, 1);
+    //     // @ts-ignore
+    //     const numberOfDays = Math.floor((new Date(this.endDate) - oneJan) / (24 * 60 * 60 * 1000));
+    //     const lastWeek = Math.ceil((new Date(this.endDate).getDay() + 1 + numberOfDays) / 7);
+    //
+    //     // @ts-ignore
+    //     this.days = Array.from(this.days).sort((a, b) => a - b);
+    //     Object.values(data).forEach(value => {
+    //       const tempDataArray = [];
+    //       this.days.forEach(date => {
+    //         let filterdSales;
+    //
+    //         // @ts-ignore
+    //         filterdSales = value.values.filter(filter => filter.date === date);
+    //         if (filterdSales && filterdSales.length === 1) {
+    //           tempDataArray.push(filterdSales[0].amount);
+    //         } else {
+    //           // if (date <= lastWeek && this.period === 'week'){
+    //           //   tempDataArray.push(0);
+    //           // } else if (date <= new Date(this.endDate).getMonth()) {
+    //           //   tempDataArray.push(0);
+    //           // }
+    //           tempDataArray.push(0);
+    //         }
+    //       });
+    //
+    //       let objectId = 'origin';
+    //       if (value.id === '2021') {
+    //         objectId = 'compared';
+    //       }
+    //       salesGrowthData[objectId] = tempDataArray;
+    //     });
+    //     let i = 0;
+    //     const growthDays = [];
+    //     this.days.forEach(value => {
+    //       let increase = salesGrowthData.compared[i] - salesGrowthData.origin[i];
+    //       if (salesGrowthData.origin[i] === 0) {
+    //         increase = increase / salesGrowthData.compared[i] * 100;
+    //       } else {
+    //         increase = increase / salesGrowthData.origin[i] * 100;
+    //       }
+    //       salesGrowthTableData.push({
+    //         date: value,
+    //         origin: salesGrowthData.origin[i],
+    //         compared: salesGrowthData.compared[i],
+    //         growth: increase.toFixed(1)
+    //       });
+    //       growthDays.push(value);
+    //       i++;
+    //     });
+    //
+    //     this.initiateGraph(growthDays, salesGrowthData);
+    //     this.salesData = new MatTableDataSource(salesGrowthTableData);
+    //     // this.totalSales = data.map(t => t.amount).reduce((acc, value) => acc + value, 0);
+    //     setTimeout(() => {
+    //       this.salesData.paginator = this.paginator;
+    //       this.salesData.sort = this.sort;
+    //     });
+    //     this.salesByDayTrendProgress = false;
+    //   }).catch(_ => {
+    //     // console.log(_);
+    //     this.isLoading = false;
+    //     this.noDataRetrieved = true;
+    //     this.salesByDayTrendProgress = false;
+    //   });
+    // }).catch(_ => {
+    //   console.log(_);
+    //   this.isLoading = false;
+    //   this.noDataRetrieved = true;
+    //   this.salesByDayTrendProgress = false;
+    // });
   }
 
 

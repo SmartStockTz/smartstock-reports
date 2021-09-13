@@ -170,30 +170,6 @@ export class StockTrackingComponent implements OnInit, OnDestroy {
   }
 
   getStockTracking(stockId: string, from, to: string): void {
-    this.isLoading = true;
-    this.report.getStockTracking(stockId, from, to).then(data => {
-      this.isLoading = false;
-      if (data && Array.isArray(data) && data.length > 0) {
-        this.stockTrackingData = new MatTableDataSource(data);
-        setTimeout(() => {
-          this.stockTrackingData.paginator = this.paginator;
-          this.stockTrackingData.sort = this.sort;
-        });
-        this.totalStockIN = (Object.values(data).filter(value => value.op === 'IN'))
-          .map(t => t.quantity).reduce((acc, value) => acc + value, 0);
-        this.totalStockOUT = (Object.values(data).filter(value => value.op === 'OUT'))
-          .map(t => t.quantity).reduce((acc, value) => acc + value, 0);
-        this.stocks = data;
-        this.noDataRetrieved = false;
-      } else {
-        this.noDataRetrieved = true;
-      }
-    }).catch(reason => {
-      this.isLoading = false;
-      this.snack.open('Fails to get total expired products', 'Ok', {
-        duration: 3000
-      });
-    });
   }
 
   updateStockId(product: any): void {
