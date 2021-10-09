@@ -19,12 +19,14 @@ export class ReportNavigationService {
         {
           link: '/report/sales/overview',
           name: 'sales overviews',
-          roles: ['admin']
+          roles: ['admin'],
+          click: null
         },
         {
           link: '/report/sales/tracking',
           name: 'sales tracking',
-          roles: ['*']
+          roles: ['*'],
+          click: null
         },
         // {
         //   link: '/report/sales/growth',
@@ -34,7 +36,8 @@ export class ReportNavigationService {
         {
           link: '/report/sales/performance',
           name: 'sales performance',
-          roles: ['admin']
+          roles: ['admin'],
+          click: null
         },
         // {
         //   name: 'invoices',

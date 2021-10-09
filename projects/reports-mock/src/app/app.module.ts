@@ -22,7 +22,10 @@ import {ConfigsService, IpfsService} from '@smartstocktz/core-libs';
 const routes: Routes = [
   {path: '', component: WelcomePage},
   {path: 'login', component: LoginPageComponent},
-  {path: 'report', canActivate: [AuthGuard], loadChildren: () => import('../../../reports/src/public-api').then(mod => mod.ReportsModule)},
+  {
+    path: 'report', canActivate: [AuthGuard],
+    loadChildren: () => import('../../../reports/src/public-api').then(mod => mod.ReportsModule)
+  },
 ];
 
 @NgModule({
