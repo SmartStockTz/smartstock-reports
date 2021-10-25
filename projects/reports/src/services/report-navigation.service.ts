@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {ConfigsService} from '@smartstocktz/core-libs';
+import {NavigationService} from '@smartstocktz/core-libs';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class ReportNavigationService {
-  constructor(private readonly configs: ConfigsService) {
+  constructor(private readonly configs: NavigationService) {
   }
 
   init(): void {

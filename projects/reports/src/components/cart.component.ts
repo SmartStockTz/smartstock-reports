@@ -73,13 +73,17 @@ import {database} from 'bfast';
             </ng-container>
             <ng-container matColumnDef="date">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
-              <td mat-cell *matCellDef="let element">{{element.date}} {{element.timer !== null ? element.timer.split('T')[1] : ''}}</td>
+              <td mat-cell
+                  *matCellDef="let element">{{element.date}} {{element.timer !== null ? element.timer.split('T')[1] : ''}}</td>
               <td mat-footer-cell *matFooterCellDef></td>
             </ng-container>
-            <tr mat-header-row *matHeaderRowDef="(deviceState.isSmallScreen | async)===true?cartColumnsMobile:cartColumns"></tr>
+            <tr mat-header-row
+                *matHeaderRowDef="(deviceState.isSmallScreen | async)===true?cartColumnsMobile:cartColumns"></tr>
             <tr matTooltip="Click for more details" class="table-data-row" mat-row
-                *matRowDef="let row; columns: (deviceState.isSmallScreen | async)===true?cartColumnsMobile:cartColumns;" (click)="openCartDetails(row)"></tr>
-            <tr mat-footer-row style="font-size: 36px" *matFooterRowDef="(deviceState.isSmallScreen | async)===true?cartColumnsMobile:cartColumns"></tr>
+                *matRowDef="let row; columns: (deviceState.isSmallScreen | async)===true?cartColumnsMobile:cartColumns;"
+                (click)="openCartDetails(row)"></tr>
+            <tr mat-footer-row style="font-size: 36px"
+                *matFooterRowDef="(deviceState.isSmallScreen | async)===true?cartColumnsMobile:cartColumns"></tr>
 
           </table>
           <mat-paginator [pageSizeOptions]="[10, 20, 100]" showFirstLastButtons></mat-paginator>
@@ -130,9 +134,7 @@ export class CartComponent implements OnInit, OnDestroy {
     this.startDate = new Date();
     this.endDate = new Date();
     this.getSoldCarts(this.startDate, this.endDate);
-    this.periodDateRangeService.dateRange.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
+    this.periodDateRangeService.dateRange.pipe(takeUntil(this.destroyer)).subscribe((value) => {
       if (value && value.startDate) {
         this.startDate = value.startDate;
         this.endDate = value.endDate;
@@ -155,11 +157,13 @@ export class CartComponent implements OnInit, OnDestroy {
         console.log('sales track disconnected');
       });
       this.salesChanges.addListener(response => {
+        console.log(response);
         if (response && response.body && response.body.change) {
           this.getSoldCarts(this.startDate, this.endDate);
         }
       });
     }).catch(_ => {
+      console.log(_);
     });
   }
 

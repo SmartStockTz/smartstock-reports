@@ -17,7 +17,7 @@ import {AuthGuard} from './guards/auth.guard';
 import {HttpClientModule} from '@angular/common/http';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatDialogModule} from '@angular/material/dialog';
-import {ConfigsService, IpfsService} from '@smartstocktz/core-libs';
+import {IpfsService, NavigationService} from '@smartstocktz/core-libs';
 
 const routes: Routes = [
   {path: '', component: WelcomePage},
@@ -53,7 +53,7 @@ const routes: Routes = [
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(private readonly configs: ConfigsService) {
+  constructor(private readonly configs: NavigationService) {
     IpfsService.getVersion().then(value => {
       console.log('ipfs version : ', value.version);
     });
@@ -89,7 +89,7 @@ export class AppModule {
     //         link: '/report/sales/performance',
     //         name: 'sales performance',
     //         roles: ['*']
-    //       },
+    //       },ƒ
     //       {
     //         link: '/report/stock/overview',
     //         name: 'stocks overviews',

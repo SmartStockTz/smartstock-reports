@@ -342,12 +342,10 @@ export class ReportService {
     const cids: string[] = await database(activeShop.projectId)
       .table('sales')
       .query()
+      .greaterThanOrEqual('date', from)
+      .lessThanOrEqual('date', to)
       .cids(true)
-      .raw({
-        date: {
-          $fn: `return it>='${from}' && it<='${to}';`
-        }
-      });
+      .find();
     return await Promise.all(
       cids.map(c => {
         return IpfsService.getDataFromCid(c);
