@@ -107,7 +107,6 @@ import {database} from 'bfast';
   styleUrls: ['../styles/cart.component.scss'],
 })
 export class CartComponent implements OnInit, OnDestroy {
-  salesChanges;
   startDate;
   endDate;
   isLoading = false;
@@ -130,7 +129,7 @@ export class CartComponent implements OnInit, OnDestroy {
   ) {
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.startDate = new Date();
     this.endDate = new Date();
     this.getSoldCarts(this.startDate, this.endDate);
@@ -146,24 +145,13 @@ export class CartComponent implements OnInit, OnDestroy {
     });
 
     let alreadyExc = false;
-    this.userService.currentUser().then(value => {
-      this.salesChanges = database(value.projectId).table('sales').query().changes(() => {
-        console.log('sales track connected');
-        if (alreadyExc) {
-          this.getSoldCarts(this.startDate, this.endDate);
-        }
-        alreadyExc = true;
-      }, () => {
-        console.log('sales track disconnected');
-      });
-      this.salesChanges.addListener(response => {
-        console.log(response);
-        if (response && response.body && response.body.change) {
-          this.getSoldCarts(this.startDate, this.endDate);
-        }
-      });
-    }).catch(_ => {
-      console.log(_);
+    const shop = await this.userService.getCurrentShop();
+    database(shop.projectId).syncs('gossip').changes().observe(response => {
+      console.log(response, 'gossip response');
+      if (alreadyExc) {
+        this.getSoldCarts(this.startDate, this.endDate);
+      }
+      alreadyExc = true;
     });
   }
 
@@ -219,11 +207,10 @@ export class CartComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
+  async ngOnDestroy(): Promise<void> {
     this.destroyer.next('done');
-    if (this.salesChanges) {
-      this.salesChanges.close();
-    }
+    const shop = await this.userService.getCurrentShop();
+    database(shop.projectId).syncs('gossip').close();
     this.periodDateRangeService.dateRange.next(null);
   }
 }
