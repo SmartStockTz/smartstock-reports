@@ -146,12 +146,13 @@ export class CartComponent implements OnInit, OnDestroy {
 
     let alreadyExc = false;
     const shop = await this.userService.getCurrentShop();
-    database(shop.projectId).syncs('gossip').changes().observe(response => {
-      // console.log(response, 'gossip response');
-      if (alreadyExc) {
-        this.getSoldCarts(this.startDate, this.endDate);
-      }
-      alreadyExc = true;
+    database(shop.projectId).syncs('gossip', syncs => {
+      syncs.changes().observe(_ => {
+        if (alreadyExc) {
+          this.getSoldCarts(this.startDate, this.endDate);
+        }
+        alreadyExc = true;
+      });
     });
   }
 
