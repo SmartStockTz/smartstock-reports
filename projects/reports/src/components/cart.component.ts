@@ -13,7 +13,8 @@ import * as moment from 'moment';
 import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {database} from 'bfast';
+import {database, functions} from 'bfast';
+import {SocketController} from "bfast/dist/lib/controllers/socket.controller";
 
 @Component({
   selector: 'app-cart-report',
@@ -118,6 +119,7 @@ export class CartComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   destroyer = new Subject();
+  private changes: SocketController;
 
   constructor(private readonly report: ReportService,
               private readonly snack: MatSnackBar,
@@ -144,15 +146,30 @@ export class CartComponent implements OnInit, OnDestroy {
       this.carts.filter = filterValue.trim().toLowerCase();
     });
 
-    let alreadyExc = false;
     const shop = await this.userService.getCurrentShop();
-    database(shop.projectId).syncs('gossip', syncs => {
-      syncs.changes().observe(_ => {
-        if (alreadyExc) {
-          this.getSoldCarts(this.startDate, this.endDate);
-        }
-        alreadyExc = true;
-      });
+    this.changes = functions(shop.projectId).event(
+      '/daas-changes',
+      () => {
+        console.log('connected on sales changes');
+        this.changes.emit({
+          auth: {
+            masterKey: shop.masterKey
+          },
+          body: {
+            projectId: shop.projectId,
+            applicationId: shop.applicationId,
+            pipeline: [],
+            domain: 'sales'
+          }
+        });
+      },
+      () => console.log('disconnected on sales changes')
+    );
+    this.changes.listener(async response => {
+      console.log(response);
+      if (response && response.body && response.body.change) {
+        this.getSoldCarts(this.startDate, this.endDate);
+      }
     });
   }
 
@@ -210,8 +227,9 @@ export class CartComponent implements OnInit, OnDestroy {
 
   async ngOnDestroy(): Promise<void> {
     this.destroyer.next('done');
-    const shop = await this.userService.getCurrentShop();
-    database(shop.projectId).syncs('gossip').close();
     this.periodDateRangeService.dateRange.next(null);
+    if (this.changes && this.changes.close) {
+      this.changes.close();
+    }
   }
 }
