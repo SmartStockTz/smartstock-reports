@@ -8,13 +8,13 @@ import {FormControl, Validators} from '@angular/forms';
 import {ReportService} from '../services/report.service';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {CartDetailsComponent} from './cart-details.component';
-import {DeviceState, StorageService, toSqlDate, UserService} from '@smartstocktz/core-libs';
+import {DeviceState, StorageService, UserService} from '@smartstocktz/core-libs';
 import * as moment from 'moment';
 import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
-import {database, functions} from 'bfast';
-import {SocketController} from "bfast/dist/lib/controllers/socket.controller";
+import {functions} from 'bfast';
+import {SocketController} from 'bfast/dist/lib/controllers/socket.controller';
 
 @Component({
   selector: 'app-cart-report',
@@ -166,7 +166,7 @@ export class CartComponent implements OnInit, OnDestroy {
       () => console.log('disconnected on sales changes')
     );
     this.changes.listener(async response => {
-      console.log(response);
+      // console.log(response);
       if (response && response.body && response.body.change) {
         this.getSoldCarts(this.startDate, this.endDate);
       }
