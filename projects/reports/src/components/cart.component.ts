@@ -9,12 +9,12 @@ import {ReportService} from '../services/report.service';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {CartDetailsComponent} from './cart-details.component';
 import {DeviceState, StorageService, UserService} from '@smartstocktz/core-libs';
-import * as moment from 'moment';
 import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 import {functions} from 'bfast';
 import {SocketController} from 'bfast/dist/lib/controllers/socket.controller';
+import {DatePipe} from '@angular/common';
 
 @Component({
   selector: 'app-cart-report',
@@ -127,6 +127,7 @@ export class CartComponent implements OnInit, OnDestroy {
               public readonly deviceState: DeviceState,
               private readonly storageService: StorageService,
               private readonly userService: UserService,
+              private readonly datePipe: DatePipe,
               private readonly periodDateRangeService: PeriodDateRangeState
   ) {
   }
@@ -200,7 +201,7 @@ export class CartComponent implements OnInit, OnDestroy {
     const exportedDataCartColumns = ['date', 'amount', 'quantity', 'seller', 'channel', 'items'];
     json2csv('cart_report.csv', exportedDataCartColumns, this.carts.filteredData.map(x => {
       x.items = x.items.map(y => y.product).join('; ');
-      x.date = moment(x.date).local().format('YYYY-MM-DD HH:MM');
+      x.date = this.datePipe.transform(x.date, 'YYYY-MM-DD HH:MM');
       return x;
     })).catch(_ => {
     });

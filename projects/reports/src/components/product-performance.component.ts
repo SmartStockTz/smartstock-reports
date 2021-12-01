@@ -172,37 +172,17 @@ export class ProductPerformanceComponent implements OnInit, OnDestroy {
     this.channelFormControl.setValue('retail');
     this.startDate = toSqlDate(new Date());
     this.endDate = toSqlDate(new Date());
-
-    this.getProductReport(this.channel, this.startDate, this.endDate);
-    // this.dateRangeListener();
-
-    // this.periodDateRangeService.period.pipe(
-    //   takeUntil(this.destroyer)
-    // ).subscribe((value) => {
-    //   this.getProductReport(this.channel, this.startDate, this.endDate);
-    // });
-
-    // this.periodDateRangeService.startDate.pipe(
-    //   takeUntil(this.destroyer)
-    // ).subscribe((value) => {
-    //   this.getProductReport(this.channel, value, this.endDate);
-    // });
-    // this.periodDateRangeService.endDate.pipe(
-    //   takeUntil(this.destroyer)
-    // ).subscribe((value) => {
-    //   this.getProductReport(this.channel, this.startDate, value);
-    // });
-
+    this.getProductReport(this.startDate, this.endDate);
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.productPerformanceDatasource.filter = filterValue.trim().toLowerCase();
     });
   }
 
 
-  private getProductReport(channel: string, from: string, to: string): void {
+  private getProductReport(from: string, to: string): void {
     this.isLoading = true; // begin fetching data
     this.productPerformanceFetchProgress = true;
-    this.reportService.getProductPerformanceReport(channel, from, to).then(data => {
+    this.reportService.getProductPerformanceReport(from, to).then(data => {
       this.isLoading = false;
       this.noDataRetrieved = false; // loading is done and some data is received
       this.productPerformanceReport = data.length > 0 ? data[0].total : 0;
@@ -226,15 +206,15 @@ export class ProductPerformanceComponent implements OnInit, OnDestroy {
   private dateRangeListener(): void {
     this.startDateFormControl.valueChanges.subscribe(value => {
       this.startDate = toSqlDate(value);
-      this.getProductReport(this.channel, this.startDate, this.endDate);
+      this.getProductReport(this.startDate, this.endDate);
     });
     this.endDateFormControl.valueChanges.subscribe(value => {
       this.endDate = toSqlDate(value);
-      this.getProductReport(this.channel, this.startDate, this.endDate);
+      this.getProductReport(this.startDate, this.endDate);
     });
     this.channelFormControl.valueChanges.subscribe(value => {
       this.channel = value;
-      this.getProductReport(this.channel, this.startDate, this.endDate);
+      this.getProductReport(this.startDate, this.endDate);
     });
   }
 

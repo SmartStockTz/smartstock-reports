@@ -28,32 +28,12 @@ export class ReportNavigationService {
           roles: ['*'],
           click: null
         },
-        // {
-        //   link: '/report/sales/growth',
-        //   name: 'sales growth',
-        //   roles: ['admin']
-        // },
         {
           link: '/report/sales/performance',
           name: 'sales performance',
           roles: ['admin'],
           click: null
         },
-        // {
-        //   name: 'invoices',
-        //   link: '/report/stock/invoices',
-        //   roles: ['admin']
-        // },
-        // {
-        //   link: '/report/stock/overview',
-        //   name: 'stocks overviews',
-        //   roles: ['admin']
-        // },
-        // {
-        //   name: 'stock tracking',
-        //   link: '/report/stock/tracking',
-        //   roles: ['admin']
-        // }
       ]
     });
   }

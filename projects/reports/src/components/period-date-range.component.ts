@@ -1,21 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-import {MatDatepicker} from '@angular/material/datepicker';
-import * as moment from 'moment';
 import {PeriodDateRangeState} from '../states/period-date-range.state';
-
-//
-// export const MY_FORMATS = {
-//   parse: {
-//     dateInput: 'DD MMM YYYY',
-//   },
-//   display: {
-//     dateInput: 'DD MMM YYYY',
-//     monthYearLabel: 'MMM YYYY',
-//     dateA11yLabel: 'LL',
-//     monthYearA11yLabel: 'MMMM YYYY',
-//   },
-// };
 
 @Component({
   selector: 'app-period-date-range',
@@ -72,20 +57,16 @@ export class PeriodDateRangeComponent implements OnInit, OnDestroy {
   dateRange: FormGroup;
   maxDate = new Date();
   minDate = new Date(new Date().setFullYear(2015));
-  @Input() from = moment().subtract(7, 'days').toDate();
+  @Input() from = new Date(new Date().setDate(new Date().getDate() - 7));
   @Input() to = new Date();
   @Input() hidePeriod = false;
   @Input() setPeriod = 'day';
 
-  fromDateFormControl = new FormControl(moment().format('YYYY-MM-DD'));
-  toDateFormControl = new FormControl(moment().format('YYYY-MM-DD'));
+  fromDateFormControl = new FormControl(new Date());
+  toDateFormControl = new FormControl(new Date());
   periodFormControl = new FormControl();
 
   constructor(private periodDateRangeService: PeriodDateRangeState) {
-    // this.dateRange = new FormGroup({
-    //   from: new FormControl(new Date(new Date().setDate(new Date().getDate() - 7))),
-    //   to: new FormControl(new Date())
-    // });
   }
 
   ngOnDestroy(): void {
@@ -95,9 +76,7 @@ export class PeriodDateRangeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fromDateFormControl.setValue(this.from);
-    // this.fromDateFormControl.setValue(this.hidePeriod ? this.from.getFullYear() : this.from);
     this.toDateFormControl.setValue(this.to);
-    // console.log(this.from.getFullYear());
     this.periodFormControl.setValue(this.setPeriod);
 
   }
@@ -105,8 +84,8 @@ export class PeriodDateRangeComponent implements OnInit, OnDestroy {
   applyDateRange(): void {
     this.periodDateRangeService.editDateRange({
       period: this.periodFormControl.value,
-      startDate: moment(this.fromDateFormControl.value).toDate(),
-      endDate: moment(this.toDateFormControl.value).toDate()
+      startDate: this.fromDateFormControl.value,
+      endDate: this.toDateFormControl.value
     });
   }
 }

@@ -18,6 +18,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatDialogModule} from '@angular/material/dialog';
 import {IpfsService, NavigationService} from '@smartstocktz/core-libs';
+import {DatePipe} from "@angular/common";
 
 const routes: Routes = [
   {path: '', component: WelcomePage},
@@ -49,7 +50,9 @@ const routes: Routes = [
     MatSnackBarModule,
     MatDialogModule
   ],
-  providers: [],
+  providers: [
+    DatePipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -30,12 +30,10 @@ import {PerformanceReportPageComponent} from './pages/performance-report.page';
 import {ProfitCategoryPageComponent} from './pages/profit-category.page';
 import {CartReportPageComponent} from './pages/cart-report.page';
 import {SalesOverviewComponent} from './components/sales-overview.component';
-import {StockTrackingPage} from './pages/stock-tracking.page';
 import {SalesByCategoryComponent} from './components/sales-by-category.component';
 import {TotalSalesComponent} from './components/total-sales.component';
 import {SalesGrowthComponent} from './components/sales-growth.component';
 import {SalesPerformanceComponent} from './components/sales-performance.component';
-import {StockTrackingComponent} from './components/stock-tracking.component';
 import {CartDetailsComponent} from './components/cart-details.component';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatListModule} from '@angular/material/list';
@@ -53,19 +51,13 @@ import {ReportNavigationService} from './services/report-navigation.service';
 
 const routes: Routes = [
   {path: '', component: IndexPage},
-  // {path: 'stock/overview', component: StockPageComponent},
   {path: 'sales/overview', component: SalesOverviewPage},
   {path: 'sales/tracking', component: SalesOrderPageComponent},
-  // {path: 'stock/tracking', component: StockTrackingPage},
-  // {path: 'sales/growth', component: SalesGrowthPageComponent},
   {path: 'sales/performance', component: SalesPerformancePageComponent},
-  // {path: 'stock/invoices', component: InvoicesPage},
 ];
 
 @NgModule({
   declarations: [
-    StockTrackingPage,
-    StockTrackingComponent,
     CartComponent,
     ProfitByCategoryComponent,
     SalesOverviewComponent,
@@ -99,8 +91,7 @@ const routes: Routes = [
           multi: true,
           provide: ROUTES,
           useValue: routes
-        },
-        DatePipe
+        }
       ]
     },
     MatSidenavModule,

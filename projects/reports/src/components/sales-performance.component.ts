@@ -226,7 +226,7 @@ export class SalesPerformanceComponent implements OnInit, OnDestroy {
   private getSalesPerformance(): any {
     this.salesStatusProgress = true;
     if (this.performanceBy === 'seller') {
-      this.report.getSellerPerformanceReport(this.startDate, this.endDate, this.period).then(sellerData => {
+      this.report.getSellerPerformanceReport(this.startDate, this.endDate).then(sellerData => {
         this.salesStatusProgress = false;
         this.salesPerformanceData = new MatTableDataSource<any>(sellerData);
         setTimeout(() => {
@@ -240,7 +240,7 @@ export class SalesPerformanceComponent implements OnInit, OnDestroy {
         this.logger.i(reason);
       });
     } else if (this.performanceBy === 'category') {
-      this.report.getCategoryPerformanceReport(this.period, this.startDate, this.endDate).then(categoryData => {
+      this.report.getCategoryPerformanceReport(this.startDate, this.endDate).then(categoryData => {
         this.salesStatusProgress = false;
         this.salesPerformanceData = new MatTableDataSource<any>(categoryData);
         setTimeout(() => {
@@ -253,7 +253,7 @@ export class SalesPerformanceComponent implements OnInit, OnDestroy {
         this.logger.i(reason);
       });
     } else if (this.performanceBy === 'product') {
-      this.report.getProductPerformanceReport(this.period, this.startDate, this.endDate).then(productData => {
+      this.report.getProductPerformanceReport(this.startDate, this.endDate).then(productData => {
         this.salesStatusProgress = false;
         this.salesPerformanceData = new MatTableDataSource<any>(productData);
         setTimeout(() => {
