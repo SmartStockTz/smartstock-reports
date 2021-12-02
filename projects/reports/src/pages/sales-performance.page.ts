@@ -1,7 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from '@angular/material/sidenav';
 import {DeviceState} from '@smartstocktz/core-libs';
 import {FormControl} from '@angular/forms';
+import {MatTableDataSource} from "@angular/material/table";
+import {json2csv} from "../services/json2csv.service";
+import {ReportState} from "../states/report.state";
 
 @Component({
   selector: 'app-sales-performance',
@@ -31,7 +34,7 @@ import {FormControl} from '@angular/forms';
               </mat-select>
             </mat-form-field>
           </div>
-          <app-period-date-range [hidePeriod]="true" class=""></app-period-date-range>
+          <app-date-range></app-date-range>
           <app-sales-performance-component
             [performanceByForm]="performanceBy.valueChanges"></app-sales-performance-component>
         </div>
@@ -40,7 +43,7 @@ import {FormControl} from '@angular/forms';
   `,
   styleUrls: ['../styles/cart.component.scss']
 })
-export class SalesPerformancePageComponent implements OnInit {
+export class SalesPerformancePageComponent implements OnInit{
   displayedColumns: string[] = ['position', 'name', 'weight'];
   performanceBy = new FormControl('product');
   @ViewChild('sidenav') sidenav: MatSidenav;

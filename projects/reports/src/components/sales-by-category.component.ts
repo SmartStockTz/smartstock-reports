@@ -7,7 +7,6 @@ import {json2csv} from '../services/json2csv.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
@@ -125,37 +124,36 @@ export class SalesByCategoryComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly report: ReportService,
-    private readonly logger: LogService,
-    private periodDateRangeService: PeriodDateRangeState
+    private readonly logger: LogService
   ) {
   }
 
   ngOnInit(): void {
-    this.getSalesByCategory();
-    this.periodDateRangeService.period.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
-      if (value) {
-        this.period = value;
-        this.getSalesByCategory();
-      }
-    });
-    this.periodDateRangeService.startDate.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
-      if (value) {
-        this.startDate = value;
-        this.getSalesByCategory();
-      }
-    });
-    this.periodDateRangeService.endDate.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
-      if (value) {
-        this.endDate = value;
-        this.getSalesByCategory();
-      }
-    });
+    // this.getSalesByCategory();
+    // this.periodDateRangeService.period.pipe(
+    //   takeUntil(this.destroyer)
+    // ).subscribe((value) => {
+    //   if (value) {
+    //     this.period = value;
+    //     this.getSalesByCategory();
+    //   }
+    // });
+    // this.periodDateRangeService.startDate.pipe(
+    //   takeUntil(this.destroyer)
+    // ).subscribe((value) => {
+    //   if (value) {
+    //     this.startDate = value;
+    //     this.getSalesByCategory();
+    //   }
+    // });
+    // this.periodDateRangeService.endDate.pipe(
+    //   takeUntil(this.destroyer)
+    // ).subscribe((value) => {
+    //   if (value) {
+    //     this.endDate = value;
+    //     this.getSalesByCategory();
+    //   }
+    // });
 
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.salesByCategoryData.filter = filterValue.trim().toLowerCase();

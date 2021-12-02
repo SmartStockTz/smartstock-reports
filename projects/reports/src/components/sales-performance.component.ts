@@ -8,7 +8,6 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {json2csv} from '../services/json2csv.service';
 import {DatePipe} from '@angular/common';
-import {PeriodDateRangeState} from '../states/period-date-range.state';
 import {takeUntil} from 'rxjs/operators';
 import {Subject} from 'rxjs';
 
@@ -193,30 +192,29 @@ export class SalesPerformanceComponent implements OnInit, OnDestroy {
   constructor(private readonly report: ReportService,
               public readonly logger: LogService,
               public datePipe: DatePipe,
-              public readonly deiveState: DeviceState,
-              public periodDateRangeService: PeriodDateRangeState) {
+              public readonly deiveState: DeviceState) {
   }
 
   ngOnInit(): void {
-    this.getSalesPerformance();
-    this.performanceByForm.subscribe(value => {
-      this.performanceBy = value;
-      this.getSalesPerformance();
-    });
-    this.periodDateRangeService.dateRange.pipe(
-      takeUntil(this.destroyer)
-    ).subscribe((value) => {
-      if (value) {
-        this.period = value.period;
-        this.startDate = value.startDate;
-        this.endDate = value.endDate;
-        this.getSalesPerformance();
-      }
-    });
-
-    this.filterFormControl.valueChanges.subscribe(filterValue => {
-      this.salesPerformanceData.filter = filterValue.trim().toLowerCase();
-    });
+    // this.getSalesPerformance();
+    // this.performanceByForm.subscribe(value => {
+    //   this.performanceBy = value;
+    //   this.getSalesPerformance();
+    // });
+    // this.periodDateRangeService.dateRange.pipe(
+    //   takeUntil(this.destroyer)
+    // ).subscribe((value) => {
+    //   if (value) {
+    //     this.period = value.period;
+    //     this.startDate = value.startDate;
+    //     this.endDate = value.endDate;
+    //     this.getSalesPerformance();
+    //   }
+    // });
+    //
+    // this.filterFormControl.valueChanges.subscribe(filterValue => {
+    //   this.salesPerformanceData.filter = filterValue.trim().toLowerCase();
+    // });
   }
 
   capitalizeFirstLetter(data): any {

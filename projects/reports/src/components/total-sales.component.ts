@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
 import {ReportService} from '../services/report.service';
-import {toSqlDate} from '@smartstocktz/core-libs';
 
 @Component({
   selector: 'app-total-sales',
@@ -128,46 +127,46 @@ export class TotalSalesComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   getTodaySales() {
-    this.todaySalesProgress = true;
-    this.report.getSalesOverview(toSqlDate(this.startDate), toSqlDate(this.endDate), 'day').then(data => {
-      this.todaySales = data[0].amount;
-      this.todaySalesProgress = false;
-    }).catch(reason => {
-      this.todaySalesProgress = false;
-      // this.snack.open('Fails to get Total Sales', 'Ok', {
-      //   duration: 3000
-      // });
-    });
+    // this.todaySalesProgress = true;
+    // this.report.getSalesOverview(toSqlDate(this.startDate), toSqlDate(this.endDate), 'day').then(data => {
+    //   this.todaySales = data[0].amount;
+    //   this.todaySalesProgress = false;
+    // }).catch(reason => {
+    //   this.todaySalesProgress = false;
+    //   // this.snack.open('Fails to get Total Sales', 'Ok', {
+    //   //   duration: 3000
+    //   // });
+    // });
   }
 
   // tslint:disable-next-line:typedef
   getWeekSales() {
-    this.weekSalesProgress = true;
-    this.startDate = new Date(new Date().setDate(new Date().getDate() - new Date().getDay()));
-    this.report.getSalesOverview(toSqlDate(this.startDate), toSqlDate(this.endDate), 'month').then(data => {
-      this.weekSales = data[0].amount;
-      this.weekSalesProgress = false;
-    }).catch(reason => {
-      this.weekSalesProgress = false;
-      // this.snack.open('Fails to get Total Sales', 'Ok', {
-      //   duration: 3000
-      // });
-    });
+    // this.weekSalesProgress = true;
+    // this.startDate = new Date(new Date().setDate(new Date().getDate() - new Date().getDay()));
+    // this.report.getSalesOverview(toSqlDate(this.startDate), toSqlDate(this.endDate), 'month').then(data => {
+    //   this.weekSales = data[0].amount;
+    //   this.weekSalesProgress = false;
+    // }).catch(reason => {
+    //   this.weekSalesProgress = false;
+    //   // this.snack.open('Fails to get Total Sales', 'Ok', {
+    //   //   duration: 3000
+    //   // });
+    // });
   }
 
   // tslint:disable-next-line:typedef
   getMonthSales(){
-    this.monthlySalesProgress = true;
-    this.startDate = new Date(new Date().setDate(new Date().getDate() - (new Date().getDate() - 1)));
-    this.report.getSalesOverview(toSqlDate(this.startDate), toSqlDate(this.endDate), 'month').then(data => {
-      this.monthlySales = data[0].amount;
-      this.monthlySalesProgress = false;
-    }).catch(reason => {
-      this.monthlySalesProgress = false;
-      // this.snack.open('Fails to get Total Sales', 'Ok', {
-      //   duration: 3000
-      // });
-    });
+    // this.monthlySalesProgress = true;
+    // this.startDate = new Date(new Date().setDate(new Date().getDate() - (new Date().getDate() - 1)));
+    // this.report.getSalesOverview(toSqlDate(this.startDate), toSqlDate(this.endDate), 'month').then(data => {
+    //   this.monthlySales = data[0].amount;
+    //   this.monthlySalesProgress = false;
+    // }).catch(reason => {
+    //   this.monthlySalesProgress = false;
+    //   // this.snack.open('Fails to get Total Sales', 'Ok', {
+    //   //   duration: 3000
+    //   // });
+    // });
   }
 
 

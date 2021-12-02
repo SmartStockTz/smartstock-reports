@@ -17,15 +17,45 @@ export class ReportNavigationService {
       icon: 'table_chart',
       pages: [
         {
-          link: '/report/sales/overview',
-          name: 'sales overviews',
+          link: '/report/sales/overview/cash/day',
+          name: 'Days cash sale',
           roles: ['admin'],
           click: null
         },
         {
-          link: '/report/sales/tracking',
-          name: 'sales tracking',
-          roles: ['*'],
+          link: '/report/sales/overview/cash/month',
+          name: 'Months cash sales',
+          roles: ['admin'],
+          click: null
+        },
+        {
+          link: '/report/sales/overview/cash/year',
+          name: 'Years cash sales',
+          roles: ['admin'],
+          click: null
+        },
+        {
+          link: '/report/sales/overview/invoice/day',
+          name: 'Days invoice sale',
+          roles: ['admin'],
+          click: null
+        },
+        {
+          link: '/report/sales/overview/invoice/month',
+          name: 'Months invoice sale',
+          roles: ['admin'],
+          click: null
+        },
+        {
+          link: '/report/sales/overview/invoice/year',
+          name: 'Years invoice sale',
+          roles: ['admin'],
+          click: null
+        },
+        {
+          link: '/report/sales/track/cash',
+          name: 'Cash sales tracking',
+          roles: ['manager', 'user', 'admin'],
           click: null
         },
         {

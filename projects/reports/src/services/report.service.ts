@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {getDaasAddress, UserService} from '@smartstocktz/core-libs';
 import {functions} from 'bfast';
 import {CartModel} from '../models/cart.model';
+import {InvoiceSalesOverviewModel} from "../models/invoice-sales-overview.model";
+import {CashSalesTrackModel} from "../models/cash-sales-track.model";
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +13,7 @@ export class ReportService {
   constructor(private readonly userService: UserService) {
   }
 
-  async getSalesOverview(from: string, to: string, period: string): Promise<any> {
+  async getSalesOverview(from: Date, to: Date, period: string): Promise<any> {
     const shop = await this.userService.getCurrentShop();
     return functions(shop.projectId).request(
       getDaasAddress(shop) + '/report/sales/overview/cash/' + period
@@ -39,10 +41,17 @@ export class ReportService {
     ).get({params: {from, to}});
   }
 
-  async getSoldCarts(from: string, to: string): Promise<CartModel[]> {
+  async getSoldCarts(from: Date, to: Date): Promise<CashSalesTrackModel[]> {
     const shop = await this.userService.getCurrentShop();
     return functions(shop.projectId).request(
       getDaasAddress(shop) + '/report/sales/track/cash'
+    ).get({params: {from, to}});
+  }
+
+  async getInvoiceSalesOverview(from: Date, to: Date, period: string): Promise<InvoiceSalesOverviewModel[]> {
+    const shop = await this.userService.getCurrentShop();
+    return functions(shop.projectId).request(
+      getDaasAddress(shop) + '/report/sales/overview/invoice/' + period
     ).get({params: {from, to}});
   }
 }
