@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
@@ -6,8 +6,6 @@ import {FormControl, Validators} from '@angular/forms';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {CartDetailsComponent} from './cart-details.component';
 import {DeviceState, UserService} from '@smartstocktz/core-libs';
-import {functions} from 'bfast';
-import {SocketController} from 'bfast/dist/lib/controllers/socket.controller';
 import {CashSalesTrackModel} from '../models/cash-sales-track.model';
 
 @Component({
@@ -63,9 +61,9 @@ import {CashSalesTrackModel} from '../models/cash-sales-track.model';
       </div>
     </div>
   `,
-  styleUrls: ['../styles/cart.component.scss', '../styles/cash-sale.style.scss'],
+  styleUrls: ['../styles/cart.component.scss', '../styles/index.style.scss'],
 })
-export class CashSalesTrackingComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CashSalesTrackingComponent implements OnInit, AfterViewInit {
   @Input() data: CashSalesTrackModel[] = [];
   carts = new MatTableDataSource<any>();
   cartColumns = ['date', 'channel', 'total_amount', 'seller', 'customer'];
@@ -75,8 +73,6 @@ export class CashSalesTrackingComponent implements OnInit, AfterViewInit, OnDest
   @ViewChild(MatSort) sort: MatSort;
   @Output() reload = new EventEmitter<{ from: Date, to: Date }>();
 
-  private changes: SocketController;
-
   constructor(private cartDetails: MatBottomSheet,
               public readonly deviceState: DeviceState,
               private readonly userService: UserService) {
@@ -85,34 +81,6 @@ export class CashSalesTrackingComponent implements OnInit, AfterViewInit, OnDest
   async ngOnInit(): Promise<void> {
     this.filterFormControl.valueChanges.subscribe(filterValue => {
       this.carts.filter = filterValue.trim().toLowerCase();
-    });
-    const shop = await this.userService.getCurrentShop();
-    this.changes = functions(shop.projectId).event(
-      '/daas-changes',
-      () => {
-        console.log('connected on sales track changes');
-        this.changes.emit({
-          auth: {
-            masterKey: shop.masterKey
-          },
-          body: {
-            projectId: shop.projectId,
-            applicationId: shop.applicationId,
-            pipeline: [],
-            domain: 'sales'
-          }
-        });
-      },
-      () => console.log('disconnected on sales changes')
-    );
-    this.changes.listener(async response => {
-      // console.log(response);
-      if (response && response.body && response.body.change) {
-        this.reload.emit({
-          from: new Date(),
-          to: new Date()
-        });
-      }
     });
   }
 
@@ -139,11 +107,5 @@ export class CashSalesTrackingComponent implements OnInit, AfterViewInit, OnDest
       this.carts.paginator = this.paginator;
       this.carts.sort = this.sort;
     }, 100);
-  }
-
-  ngOnDestroy(): void {
-    if (this.changes && this.changes.close) {
-      this.changes.close();
-    }
   }
 }

@@ -6,7 +6,9 @@ import {CashSalesOverviewModel} from '../models/cash-sales-overview.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {json2csv} from '../services/json2csv.service';
 import {InvoiceSalesOverviewModel} from '../models/invoice-sales-overview.model';
-import {CashSalesTrackModel} from "../models/cash-sales-track.model";
+import {CashSalesTrackModel} from '../models/cash-sales-track.model';
+import {CashSalesPerformanceProductModel} from '../models/cash-sales-performance-product.model';
+import {CashSalesPerformanceSellerModel} from '../models/cash-sales-performance-seller.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +19,8 @@ export class ReportState {
   loadMonthCashSales = new BehaviorSubject(false);
   loadMonthInvoiceSales = new BehaviorSubject(false);
   loadYearInvoiceSales = new BehaviorSubject(false);
+  loadCashPerformanceByProduct = new BehaviorSubject(false);
+  loadCashPerformanceBySeller = new BehaviorSubject(false);
   cashSalesByDay = new BehaviorSubject<CashSalesOverviewModel[]>([]);
   invoiceSalesByDay = new BehaviorSubject<InvoiceSalesOverviewModel[]>([]);
   cashSalesByMonth = new BehaviorSubject<CashSalesOverviewModel[]>([]);
@@ -24,8 +28,12 @@ export class ReportState {
   invoiceSalesByMonth = new BehaviorSubject<InvoiceSalesOverviewModel[]>([]);
   invoiceSalesByYear = new BehaviorSubject<InvoiceSalesOverviewModel[]>([]);
   cashSalesTracking = new BehaviorSubject<CashSalesTrackModel[]>([]);
+  cashPerformanceByProduct = new BehaviorSubject<CashSalesPerformanceProductModel[]>([]);
+  cashPerformanceBySeller = new BehaviorSubject<CashSalesPerformanceSellerModel[]>([]);
+  cashPerformanceByCategory = new BehaviorSubject<CashSalesPerformanceSellerModel[]>([]);
   loadYearCashSales = new BehaviorSubject(false);
   loadCashSalesTracking = new BehaviorSubject(false);
+  loadCashPerformanceByCategory = new BehaviorSubject(false);
 
   constructor(private readonly reportService: ReportService,
               private readonly snack: MatSnackBar) {
@@ -87,12 +95,18 @@ export class ReportState {
     this.loadMonthInvoiceSales.next(false);
     this.loadYearInvoiceSales.next(false);
     this.loadCashSalesTracking.next(false);
+    this.loadCashPerformanceByProduct.next(false);
+    this.loadCashPerformanceBySeller.next(false);
+    this.loadCashPerformanceByCategory.next(false);
     this.cashSalesByDay.next([]);
     this.invoiceSalesByDay.next([]);
     this.cashSalesByMonth.next([]);
     this.cashSalesByYear.next([]);
     this.invoiceSalesByMonth.next([]);
     this.invoiceSalesByYear.next([]);
+    this.cashPerformanceByProduct.next([]);
+    this.cashPerformanceBySeller.next([]);
+    this.cashPerformanceByCategory.next([]);
   }
 
   fetchCashSaleByMonth(date: DateRangeModel): void {
@@ -190,7 +204,6 @@ export class ReportState {
       })).then(_23 => {
       this.message('Report exported');
     }).catch(_ => {
-      console.log(_);
       this.message('Fails to export reports');
     });
   }
@@ -205,4 +218,76 @@ export class ReportState {
       this.loadCashSalesTracking.next(false);
     });
   }
+
+  fetchCashPerformanceByProduct(date: DateRangeModel): void {
+    this.loadCashPerformanceByProduct.next(true);
+    this.reportService.getProductPerformanceReport(date.from, date.to).then(value => {
+      this.cashPerformanceByProduct.next(value);
+    }).catch(reason => {
+      this.message(reason ? reason.message : 'Fail to get performance');
+    }).finally(() => {
+      this.loadCashPerformanceByProduct.next(false);
+    });
+  }
+
+  exportCashPerformanceByProduct(): void {
+    const exportedDataColumns = ['product', 'quantity', 'amount', 'date', 'margin', 'profit'];
+    json2csv('cash_sales_performance_product.csv', exportedDataColumns,
+      this.cashPerformanceByProduct.value).then(_23 => {
+      this.message('Report exported');
+    }).catch(_ => {
+      this.message('Fails to export reports');
+    });
+  }
+
+  fetchCashPerformanceBySeller(date: DateRangeModel): void {
+    this.loadCashPerformanceBySeller.next(true);
+    this.reportService.getSellerPerformanceReport(date.from, date.to).then(value => {
+      this.cashPerformanceBySeller.next(value);
+    }).catch(reason => {
+      this.message(reason ? reason.message : 'Fail to get performance');
+    }).finally(() => {
+      this.loadCashPerformanceBySeller.next(false);
+    });
+  }
+
+  exportCashPerformanceBySeller(): void {
+    const exportedDataColumns = ['id', 'amount_refund', 'quantity_refund', 'amount_sales', 'amount', 'quantity'];
+    json2csv('cash_sales_performance_seller.csv', exportedDataColumns,
+      this.cashPerformanceBySeller.value).then(_23 => {
+      this.message('Report exported');
+    }).catch(_ => {
+      this.message('Fails to export reports');
+    });
+  }
+
+  fetchCashPerformanceByCategory(date: DateRangeModel): void {
+    this.loadCashPerformanceByCategory.next(true);
+    this.reportService.getCategoryPerformanceReport(date.from, date.to).then(value => {
+      this.cashPerformanceByCategory.next(value);
+    }).catch(reason => {
+      this.message(reason ? reason.message : 'Fail to get performance');
+    }).finally(() => {
+      this.loadCashPerformanceByCategory.next(false);
+    });
+  }
+
+  exportCashPerformanceByCategory(): void {
+    const exportedDataColumns = ['id', 'amount_refund', 'quantity_refund', 'amount_sales', 'amount', 'quantity'];
+    json2csv('cash_sales_performance_category.csv', exportedDataColumns,
+      this.cashPerformanceByCategory.value).then(_23 => {
+      this.message('Report exported');
+    }).catch(_ => {
+      this.message('Fails to export reports');
+    });
+  }
 }
+
+
+
+
+
+
+
+
+

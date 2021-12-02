@@ -47,7 +47,7 @@ import {ReportState} from '../states/report.state';
       </div>
     </div>
   `,
-  styleUrls: ['../styles/cash-sale.style.scss'],
+  styleUrls: ['../styles/index.style.scss'],
 })
 export class CashSalesOverviewComponent implements OnInit, AfterViewInit {
   @Input() sales: CashSalesOverviewModel[] = [];
