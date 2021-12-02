@@ -169,81 +169,61 @@ export class ProductPerformanceComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.channelFormControl.setValue('retail');
-    this.startDate = toSqlDate(new Date());
-    this.endDate = toSqlDate(new Date());
-
-    this.getProductReport(this.channel, this.startDate, this.endDate);
-    // this.dateRangeListener();
-
-    // this.periodDateRangeService.period.pipe(
-    //   takeUntil(this.destroyer)
-    // ).subscribe((value) => {
-    //   this.getProductReport(this.channel, this.startDate, this.endDate);
+    // this.channelFormControl.setValue('retail');
+    // this.startDate = toSqlDate(new Date());
+    // this.endDate = toSqlDate(new Date());
+    // this.getProductReport(this.startDate, this.endDate);
+    // this.filterFormControl.valueChanges.subscribe(filterValue => {
+    //   this.productPerformanceDatasource.filter = filterValue.trim().toLowerCase();
     // });
-
-    // this.periodDateRangeService.startDate.pipe(
-    //   takeUntil(this.destroyer)
-    // ).subscribe((value) => {
-    //   this.getProductReport(this.channel, value, this.endDate);
-    // });
-    // this.periodDateRangeService.endDate.pipe(
-    //   takeUntil(this.destroyer)
-    // ).subscribe((value) => {
-    //   this.getProductReport(this.channel, this.startDate, value);
-    // });
-
-    this.filterFormControl.valueChanges.subscribe(filterValue => {
-      this.productPerformanceDatasource.filter = filterValue.trim().toLowerCase();
-    });
   }
 
 
-  private getProductReport(channel: string, from: string, to: string): void {
-    this.isLoading = true; // begin fetching data
-    this.productPerformanceFetchProgress = true;
-    this.reportService.getProductPerformanceReport(channel, from, to).then(data => {
-      this.isLoading = false;
-      this.noDataRetrieved = false; // loading is done and some data is received
-      this.productPerformanceReport = data.length > 0 ? data[0].total : 0;
-      this.productPerformanceDatasource = new MatTableDataSource(data);
-      setTimeout(() => {
-        this.productPerformanceDatasource.paginator = this.paginator;
-        this.productPerformanceDatasource.sort = this.sort;
-      });
-      this.productPerformanceFetchProgress = false;
-    }).catch(reason => {
-      this.isLoading = false;
-      this.noDataRetrieved = true;
-      this.productPerformanceReport = 0;
-      this.snack.open('Fails to get product performance report', 'Ok', {
-        duration: 3000
-      });
-      this.productPerformanceFetchProgress = false;
-    });
+  private getProductReport(from: string, to: string): void {
+    // this.isLoading = true; // begin fetching data
+    // this.productPerformanceFetchProgress = true;
+    // this.reportService.getProductPerformanceReport(from, to).then(data => {
+    //   this.isLoading = false;
+    //   this.noDataRetrieved = false; // loading is done and some data is received
+    //   this.productPerformanceReport = data.length > 0 ? data[0].total : 0;
+    //   this.productPerformanceDatasource = new MatTableDataSource(data);
+    //   setTimeout(() => {
+    //     this.productPerformanceDatasource.paginator = this.paginator;
+    //     this.productPerformanceDatasource.sort = this.sort;
+    //   });
+    //   this.productPerformanceFetchProgress = false;
+    // }).catch(reason => {
+    //   this.isLoading = false;
+    //   this.noDataRetrieved = true;
+    //   this.productPerformanceReport = 0;
+    //   this.snack.open('Fails to get product performance report', 'Ok', {
+    //     duration: 3000
+    //   });
+    //   this.productPerformanceFetchProgress = false;
+    // });
   }
 
   private dateRangeListener(): void {
-    this.startDateFormControl.valueChanges.subscribe(value => {
-      this.startDate = toSqlDate(value);
-      this.getProductReport(this.channel, this.startDate, this.endDate);
-    });
-    this.endDateFormControl.valueChanges.subscribe(value => {
-      this.endDate = toSqlDate(value);
-      this.getProductReport(this.channel, this.startDate, this.endDate);
-    });
-    this.channelFormControl.valueChanges.subscribe(value => {
-      this.channel = value;
-      this.getProductReport(this.channel, this.startDate, this.endDate);
-    });
+    // this.startDateFormControl.valueChanges.subscribe(value => {
+    //   this.startDate = toSqlDate(value);
+    //   this.getProductReport(this.startDate, this.endDate);
+    // });
+    // this.endDateFormControl.valueChanges.subscribe(value => {
+    //   this.endDate = toSqlDate(value);
+    //   this.getProductReport(this.startDate, this.endDate);
+    // });
+    // this.channelFormControl.valueChanges.subscribe(value => {
+    //   this.channel = value;
+    //   this.getProductReport(this.startDate, this.endDate);
+    // });
   }
 
   exportReport(): void {
-    const exportedDataColumns = ['_id', 'category', 'quantitySold', 'firstSold', 'lastSold', 'costOfGoodsSold', 'grossProfit'];
-    json2csv('product_performance.csv', exportedDataColumns, this.productPerformanceDatasource.filteredData).catch();
+    // const exportedDataColumns = ['_id', 'category', 'quantitySold', 'firstSold', 'lastSold', 'costOfGoodsSold', 'grossProfit'];
+    // json2csv('product_performance.csv', exportedDataColumns, this.productPerformanceDatasource.filteredData).catch();
   }
 
   ngOnDestroy(): void {
-    this.destroyer.next('done');
+    // this.destroyer.next('done');
   }
 }

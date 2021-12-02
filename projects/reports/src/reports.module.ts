@@ -1,7 +1,6 @@
 import {NgModule} from '@angular/core';
-import {CommonModule, DatePipe} from '@angular/common';
+import {CommonModule} from '@angular/common';
 import {MatDatepickerModule} from '@angular/material/datepicker';
-import {StockPageComponent} from './pages/stock.page';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -18,76 +17,68 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatMenuModule} from '@angular/material/menu';
-import {SalesPageComponent} from './pages/sales.page';
-import {CartComponent} from './components/cart.component';
-import {ProfitByCategoryComponent} from './components/profit-by-category.component';
+import {CashSalesTrackingComponent} from './components/cash-sales-tracking.component';
 import {RouterModule, ROUTES, Routes} from '@angular/router';
 import {LibModule} from '@smartstocktz/core-libs';
 import {ProductPerformanceComponent} from './components/product-performance.component';
 import {IndexPage} from './pages/index.page';
-import {SalesOverviewPage} from './pages/sales-overview.page';
-import {PerformanceReportPageComponent} from './pages/performance-report.page';
-import {ProfitCategoryPageComponent} from './pages/profit-category.page';
-import {CartReportPageComponent} from './pages/cart-report.page';
-import {SalesOverviewComponent} from './components/sales-overview.component';
-import {StockTrackingPage} from './pages/stock-tracking.page';
-import {SalesByCategoryComponent} from './components/sales-by-category.component';
-import {TotalSalesComponent} from './components/total-sales.component';
-import {SalesGrowthComponent} from './components/sales-growth.component';
-import {SalesPerformanceComponent} from './components/sales-performance.component';
-import {StockTrackingComponent} from './components/stock-tracking.component';
+import {CashSalesOverviewDayPage} from './pages/cash-sales-overview-day.page';
+import {CashSalesOverviewComponent} from './components/cash-sales-overview.component';
+import {CashSalesPerformanceComponent} from './components/cash-sales-performance.component';
 import {CartDetailsComponent} from './components/cart-details.component';
 import {MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {MatListModule} from '@angular/material/list';
-import {SalesGrowthPageComponent} from './pages/sales-growth.page';
-import {SalesOrderPageComponent} from './pages/sales-tracking.page';
-import {SalesPerformancePageComponent} from './pages/sales-performance.page';
+import {CashSalesTrackPage} from './pages/cash-sales-track.page';
+import {CashSalesPerformanceProductPage} from './pages/cash-sales-performance-product.page';
 import {MatMomentDateModule} from '@angular/material-moment-adapter';
-import {PeriodDateRangeComponent} from './components/period-date-range.component';
-import {SalesReceiptOverviewComponent} from './components/sales-receipt-overview.component';
+import {DateRangeComponent} from './components/date-range.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {InvoiceDetailsComponent} from './components/invoice-details.component';
 import {ReportNavigationService} from './services/report-navigation.service';
+import {CashSalesOverviewMonthPage} from './pages/cash-sales-overview-month.page';
+import {CashSalesOverviewYearPage} from './pages/cash-sales-overview-year.page';
+import {InvoiceSalesOverviewComponent} from './components/invoice-sales-overview.component';
+import {InvoiceSalesOverviewDayPage} from './pages/invoice-sales-overview-day.page';
+import {InvoiceSalesOverviewMonthPage} from './pages/invoice-sales-overview-month.page';
+import {InvoiceSalesOverviewYearPage} from './pages/invoice-sales-overview-year.page';
+import {CashSalesPerformanceSellerPage} from './pages/cash-sales-performance-seller.page';
+import {CashSalesPerformanceCategoryPage} from './pages/cash-sales-performance-category.page';
 
 
 const routes: Routes = [
   {path: '', component: IndexPage},
-  // {path: 'stock/overview', component: StockPageComponent},
-  {path: 'sales/overview', component: SalesOverviewPage},
-  {path: 'sales/tracking', component: SalesOrderPageComponent},
-  // {path: 'stock/tracking', component: StockTrackingPage},
-  // {path: 'sales/growth', component: SalesGrowthPageComponent},
-  {path: 'sales/performance', component: SalesPerformancePageComponent},
-  // {path: 'stock/invoices', component: InvoicesPage},
+  {path: 'sales/overview/cash/day', component: CashSalesOverviewDayPage},
+  {path: 'sales/overview/cash/month', component: CashSalesOverviewMonthPage},
+  {path: 'sales/overview/cash/year', component: CashSalesOverviewYearPage},
+  {path: 'sales/overview/invoice/day', component: InvoiceSalesOverviewDayPage},
+  {path: 'sales/overview/invoice/month', component: InvoiceSalesOverviewMonthPage},
+  {path: 'sales/overview/invoice/year', component: InvoiceSalesOverviewYearPage},
+  {path: 'sales/track/cash', component: CashSalesTrackPage},
+  {path: 'sales/performance/product', component: CashSalesPerformanceProductPage},
+  {path: 'sales/performance/seller', component: CashSalesPerformanceSellerPage},
+  {path: 'sales/performance/category', component: CashSalesPerformanceCategoryPage},
 ];
 
 @NgModule({
   declarations: [
-    StockTrackingPage,
-    StockTrackingComponent,
-    CartComponent,
-    ProfitByCategoryComponent,
-    SalesOverviewComponent,
+    CashSalesTrackingComponent,
+    CashSalesPerformanceSellerPage,
+    CashSalesOverviewMonthPage,
+    CashSalesPerformanceCategoryPage,
+    CashSalesOverviewComponent,
     ProductPerformanceComponent,
-    CartReportPageComponent,
     IndexPage,
-    PerformanceReportPageComponent,
-    ProfitCategoryPageComponent,
-    SalesPageComponent,
-    SalesOverviewPage,
-    StockPageComponent,
-    SalesByCategoryComponent,
-    TotalSalesComponent,
-    SalesGrowthComponent,
-    SalesPerformanceComponent,
+    CashSalesOverviewDayPage,
+    CashSalesPerformanceComponent,
     CartDetailsComponent,
-    SalesOrderPageComponent,
-    SalesPerformancePageComponent,
-    SalesGrowthPageComponent,
-    PeriodDateRangeComponent,
-    SalesReceiptOverviewComponent,
-    InvoiceDetailsComponent,
+    CashSalesPerformanceProductPage,
+    DateRangeComponent,
+    CashSalesOverviewYearPage,
+    InvoiceSalesOverviewComponent,
+    InvoiceSalesOverviewDayPage,
+    InvoiceSalesOverviewMonthPage,
+    InvoiceSalesOverviewYearPage,
+    CashSalesTrackPage
   ],
   exports: [],
   imports: [
@@ -99,8 +90,7 @@ const routes: Routes = [
           multi: true,
           provide: ROUTES,
           useValue: routes
-        },
-        DatePipe
+        }
       ]
     },
     MatSidenavModule,
