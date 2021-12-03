@@ -231,7 +231,7 @@ export class ReportState {
   }
 
   exportCashPerformanceByProduct(): void {
-    const exportedDataColumns = ['product', 'quantity', 'amount', 'date', 'margin', 'profit'];
+    const exportedDataColumns = ['product', 'quantity', 'amount', 'margin', 'profit'];
     json2csv('cash_sales_performance_product.csv', exportedDataColumns,
       this.cashPerformanceByProduct.value).then(_23 => {
       this.message('Report exported');

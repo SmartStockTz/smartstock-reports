@@ -123,11 +123,11 @@ export class InvoiceSalesOverviewComponent implements OnInit, AfterViewInit {
       },
       plotOptions: {
         column: {
-          pointPadding: 0,
-          borderWidth: 1,
-          groupPadding: 0,
-          shadow: false,
-          stacking: 'overlap'
+          // pointPadding: 0,
+          // borderWidth: 1,
+          // groupPadding: 0,
+          // shadow: false,
+          // stacking: 'overlap'
         }
       },
       series: [
