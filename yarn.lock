@@ -1328,9 +1328,6 @@
   version "7.14.5"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-unicode-regex/-/plugin-transform-unicode-regex-7.14.5.tgz#4cd09b6c8425dd81255c7ceb3fb1836e7414382e"
   integrity sha512-UygduJpC5kHeCiRw/xDVzC+wj8VaYSoKl5JNVmbP7MadpNinAm3SvZCxZ42H37KZBKztz46YC73i9yV34d0Tzw==
-  dependencies:
-    "@babel/helper-create-regexp-features-plugin" "^7.14.5"
-    "@babel/helper-plugin-utils" "^7.14.5"
 
 "@babel/preset-env@7.15.8":
   version "7.15.8"
@@ -1690,13 +1687,6 @@
     "@angular-devkit/core" "13.0.3"
     "@angular-devkit/schematics" "13.0.3"
     jsonc-parser "3.0.0"
-
-"@smartstocktz/core-libs@^0.4.11":
-  version "0.4.11"
-  resolved "https://npm.pkg.github.com/download/@smartstocktz/core-libs/0.4.11/3b6f8b8bff5e3fd92903b81d5bff45fa9b117c4d4e3d93cfc4baa6f66cd214ae#450a04863a4fdfaf2a060900a06e320a42aefe5f"
-  integrity sha512-if0kPMCo9RII2lGzO+YTiKjrbA4x61eCsrgZPQby3c5u1i9e8bsmiRnVpkpzoV+7nmp365EgjFXvLrIKuEcpQw==
-  dependencies:
-    tslib "^2.0.0"
 
 "@tootallnate/once@1":
   version "1.1.2"
@@ -7059,6 +7049,13 @@ smart-buffer@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.1.0.tgz#91605c25d91652f4661ea69ccf45f1b331ca21ba"
   integrity sha512-iVICrxOzCynf/SNaBQCw34eM9jROU/s5rzIhpOvzhzuYHfJR/DhZfDkXiZSgKXfgv26HT3Yni3AV/DGw0cGnnw==
+
+smartstock-core@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/smartstock-core/-/smartstock-core-1.0.1.tgz#a9036725e8b6a8a2d7225c6356cd9309ef70ddc6"
+  integrity sha512-MEFGz2eYGnKMnEy1bU2sLAziVmTL8jVGnuXhYExOuvZnAcYmVzsf3zy+gHwKeK8Fv2z6YxWsiMBEfAWe5120Pg==
+  dependencies:
+    tslib "^2.0.0"
 
 socket.io-adapter@~2.4.0:
   version "2.4.0"
