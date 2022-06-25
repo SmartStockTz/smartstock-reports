@@ -1,8 +1,9 @@
 {
   "name": "smartstock-reports",
-  "version": "0.1.4",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
+    "box":"yarn install && yarn start",
     "start": "ng serve",
     "build": "ng build",
     "publish": "ng build -c production reports && cd dist/reports && npm publish --ignore-script",
@@ -23,7 +24,7 @@
     "@angular/platform-browser": "~13.0.2",
     "@angular/platform-browser-dynamic": "~13.0.2",
     "@angular/router": "~13.0.2",
-    "@smartstocktz/core-libs": "^0.4.11",
+    "smartstock-core": "^1.0.1",
     "bfast": "^6.0.0-alpha.17",
     "comlink": "^4.3.1",
     "highcharts": "^9.2.2",
