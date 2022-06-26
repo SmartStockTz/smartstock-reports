@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {UntypedFormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-date-range',
@@ -39,8 +39,8 @@ export class DateRangeComponent implements OnInit {
   @Output() export = new EventEmitter();
   @Input() view: 'month' | 'year' | 'multi-year' = 'month';
 
-  fromDateFormControl = new FormControl(new Date(new Date().setDate(new Date().getDate() - 7)));
-  toDateFormControl = new FormControl(new Date());
+  fromDateFormControl = new UntypedFormControl(new Date(new Date().setDate(new Date().getDate() - 7)));
+  toDateFormControl = new UntypedFormControl(new Date());
 
   constructor() {
   }

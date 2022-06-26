@@ -63,7 +63,8 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "webWorkerTsConfig": "projects/reports-mock/tsconfig.worker.json"
           },
           "configurations": {
             "production": {
@@ -127,7 +128,8 @@
             "styles": [
               "projects/reports-mock/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "webWorkerTsConfig": "projects/reports-mock/tsconfig.worker.json"
           }
         },
         "e2e": {
@@ -146,6 +148,5 @@
     }},
   "cli": {
     "analytics": "a5708436-be0a-4017-b531-40b1f561eca2"
-  },
-  "defaultProject": "reports"
+  }
 }
