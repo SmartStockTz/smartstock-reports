@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {UntypedFormControl, Validators} from '@angular/forms';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
@@ -63,7 +63,7 @@ import {CashSalesPerformanceProductModel} from '../models/cash-sales-performance
 export class CashSalesPerformanceComponent implements AfterViewInit {
   salesPerformanceData = new MatTableDataSource<CashSalesPerformanceProductModel>([]);
   @Input() columns = [];
-  filterFormControl = new FormControl('', [Validators.nullValidator]);
+  filterFormControl = new UntypedFormControl('', [Validators.nullValidator]);
   @Input() data: any[];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

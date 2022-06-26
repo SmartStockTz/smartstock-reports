@@ -4,7 +4,7 @@ import { toSqlDate } from "smartstock-core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Observable, of, Subject } from "rxjs";
-import { FormControl, Validators } from "@angular/forms";
+import { UntypedFormControl, Validators } from "@angular/forms";
 import { MatSort } from "@angular/material/sort";
 import { ReportService } from "../services/report.service";
 import { json2csv } from "../services/json2csv.service";
@@ -201,12 +201,12 @@ export interface ProductPerformanceI {
 })
 export class ProductPerformanceComponent implements OnInit, OnDestroy {
   private productPerformanceFetchProgress = false;
-  startDateFormControl = new FormControl(new Date(), [
+  startDateFormControl = new UntypedFormControl(new Date(), [
     Validators.nullValidator
   ]);
-  endDateFormControl = new FormControl("", [Validators.nullValidator]);
-  channelFormControl = new FormControl("", [Validators.nullValidator]);
-  filterFormControl = new FormControl("", [Validators.nullValidator]);
+  endDateFormControl = new UntypedFormControl("", [Validators.nullValidator]);
+  channelFormControl = new UntypedFormControl("", [Validators.nullValidator]);
+  filterFormControl = new UntypedFormControl("", [Validators.nullValidator]);
 
   startDate;
   endDate;

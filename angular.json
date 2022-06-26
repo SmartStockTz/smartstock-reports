@@ -146,6 +146,5 @@
     }},
   "cli": {
     "analytics": "a5708436-be0a-4017-b531-40b1f561eca2"
-  },
-  "defaultProject": "reports"
+  }
 }

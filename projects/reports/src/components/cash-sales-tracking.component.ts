@@ -10,7 +10,7 @@ import {
 import { MatTableDataSource } from "@angular/material/table";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
-import { FormControl, Validators } from "@angular/forms";
+import { UntypedFormControl, Validators } from "@angular/forms";
 import { MatBottomSheet } from "@angular/material/bottom-sheet";
 import { CartDetailsComponent } from "./cart-details.component";
 import { DeviceState, UserService } from "smartstock-core";
@@ -140,7 +140,7 @@ export class CashSalesTrackingComponent implements OnInit, AfterViewInit {
   carts = new MatTableDataSource<any>();
   cartColumns = ["date", "channel", "total_amount", "seller", "customer"];
   cartColumnsMobile = ["date", "total_amount", "customer"];
-  filterFormControl = new FormControl("", [Validators.nullValidator]);
+  filterFormControl = new UntypedFormControl("", [Validators.nullValidator]);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Output() reload = new EventEmitter<{ from: Date; to: Date }>();
